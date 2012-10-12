@@ -1,4 +1,5 @@
 ﻿using Distrib.Plugins;
+using Distrib.Plugins.Discovery;
 using Distrib.Processes;
 using System;
 using System.Collections.Concurrent;
