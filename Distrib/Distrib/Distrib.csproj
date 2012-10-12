@@ -45,6 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Jobs\DistribJob.cs" />
+    <Compile Include="Plugins\DistribPlugin.cs" />
+    <Compile Include="Plugins\DistribPluginFactory.cs" />
+    <Compile Include="Plugins\PluginInitialiser.cs" />
     <Compile Include="Processes\IDistribProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
