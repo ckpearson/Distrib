@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Jobs\DistribJob.cs" />
+    <Compile Include="Plugins\Discovery\DistribPluginDetailsAttribute.cs" />
     <Compile Include="Plugins\Discovery\DistribPluginType.cs" />
     <Compile Include="Plugins\Discovery\DistribPluginTypes.cs" />
     <Compile Include="Plugins\DistribPlugin.cs" />
