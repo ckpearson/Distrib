@@ -45,15 +45,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Jobs\DistribJob.cs" />
-    <Compile Include="Plugins\Discovery\DistribPluginDetailsAttribute.cs" />
-    <Compile Include="Plugins\Discovery\DistribPluginType.cs" />
-    <Compile Include="Plugins\Discovery\DistribPluginTypes.cs" />
-    <Compile Include="Plugins\DistribPlugin.cs" />
-    <Compile Include="Plugins\DistribPluginFactory.cs" />
-    <Compile Include="Plugins\PluginInitialiser.cs" />
+    <Compile Include="Plugins\Discovery\DistribPluginAttribute.cs" />
+    <Compile Include="Plugins\DistribPluginAssembly.cs" />
+    <Compile Include="Plugins\DistribPluginAssemblyInitialiser.cs" />
     <Compile Include="Processes\IDistribProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

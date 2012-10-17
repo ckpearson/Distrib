@@ -8,19 +8,16 @@ using System.Threading.Tasks;
 
 namespace TestLibrary
 {
-    [DistribPluginDetails(
-        pluginInterfaceType: typeof(IDistribProcess),
-        name: "Test Distrib Process",
-        description: "A test process for Distrib",
-        version: 1.0,
-        author: "Clint Pearson",
-        copyright: "Clint Pearson 2012")]
-    public sealed class TestDistribProcess : IDistribProcess
+    [DistribPlugin(typeof(IDistribProcess),
+    "Test Process",
+    "Simple Test Process",
+    1.0,
+    "Clint Pearson")]
+    class TestProcess : IDistribProcess
     {
-
         public string SayHello()
         {
-            return "Howdy!";
+            return "Hello there!";
         }
     }
 }

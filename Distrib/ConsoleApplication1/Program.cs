@@ -24,31 +24,16 @@ namespace ConsoleApplication1
         {
             var dir = @"C:\Users\Clint\Desktop\distrib plugins\";
 
-            var b = DistribPluginTypes.IsTypeAValidPlugin<TestDistribProcess>();
-
-            foreach (var plugindll in Directory.EnumerateFiles(dir, "*.dll"))
+            foreach (var pluginDll in Directory.EnumerateFiles(dir, "*.dll"))
             {
-                var dp = DistribPluginFactory.PluginFromAssembly(plugindll);
-                dp.Initialise();
-                dp.Uninitialise();
-                File.Delete(plugindll);
+                var pluginAssembly = DistribPluginAssembly.CreateForAssembly(pluginDll);
+
+                pluginAssembly.Initialise();
+                
             }
+            
         }
     }
 
-    [DistribPluginDetails(
-        pluginInterfaceType: typeof(IDistribProcess),
-        name: "Test Distrib Process",
-        description: "A test process for Distrib",
-        version: 1.0,
-        author: "Clint Pearson",
-        copyright: "Clint Pearson 2012")]
-    public sealed class TestDistribProcess : IDistribProcess
-    {
 
-        public string SayHello()
-        {
-            return "Howdy!";
-        }
-    }
 }
