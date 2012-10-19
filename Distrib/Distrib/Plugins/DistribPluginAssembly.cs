@@ -25,6 +25,9 @@ namespace Distrib.Plugins
             m_strAssemblyPath = assemblyPath;
         }
 
+        /// <summary>
+        /// Performs initialisation and loads the assembly
+        /// </summary>
         public void Initialise()
         {
             try
@@ -36,10 +39,12 @@ namespace Distrib.Plugins
                         throw new InvalidOperationException("Cannot initialise plugin assembly; it is already initialised");
                     }
 
+                    // Set up the AppDomain
                     m_adAssemblyAppDomain = AppDomain.CreateDomain(Guid.NewGuid() + "_" + m_strAssemblyPath);
 
                     try
                     {
+                        // Create the assembly manager for the plugin assembly isolated in the AppDomain
                         m_asmManager = (DistribPluginAssemblyManager)m_adAssemblyAppDomain
                                         .CreateInstanceAndUnwrap(
                                         typeof(DistribPluginAssemblyManager).Assembly.FullName,
@@ -64,6 +69,7 @@ namespace Distrib.Plugins
 
                     try
                     {
+                        // Load the assembly into the domain
                         m_asmManager.LoadAssembly();
                     }
                     catch (Exception ex)
@@ -71,7 +77,8 @@ namespace Distrib.Plugins
                         throw new ApplicationException("Manager failed to load assembly into AppDomain", ex);
                     }
 
-                    var t = m_asmManager.GetPluginTypes();
+                    // Retrieve the details for all plugins present in the assembly
+                    var t = m_asmManager.GetPluginDetails();
 
                     if (t == null || t.Count == 0)
                     {
@@ -80,7 +87,14 @@ namespace Distrib.Plugins
 
                     foreach (var pluginType in t)
                     {
-                        
+                        if (m_asmManager.PluginTypeAdheresToStatedInterface(pluginType))
+                        {
+
+                        }
+                        else
+                        {
+
+                        }
                     }
 
                     m_bIsInitialised = true;
@@ -158,6 +172,16 @@ namespace Distrib.Plugins
                 throw new FailedToLoadDistribPluginAssemblyException(assemblyPath,
                     "Failed to load plugin assembly", ex);
             }
+        }
+    }
+
+    public sealed class DistribPluginAssemblyInitialisationResult
+    {
+        private readonly bool m_bInitialisationSuccessful = false;
+
+        internal DistribPluginAssemblyInitialisationResult()
+        {
+
         }
     }
 

@@ -29,7 +29,6 @@ namespace ConsoleApplication1
                 var pluginAssembly = DistribPluginAssembly.CreateForAssembly(pluginDll);
 
                 pluginAssembly.Initialise();
-                
             }
             
         }

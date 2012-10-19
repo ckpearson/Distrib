@@ -46,8 +46,9 @@
   <ItemGroup>
     <Compile Include="Jobs\DistribJob.cs" />
     <Compile Include="Plugins\Discovery\DistribPluginAttribute.cs" />
+    <Compile Include="Plugins\Discovery\DistribPluginMetadata.cs" />
     <Compile Include="Plugins\DistribPluginAssembly.cs" />
-    <Compile Include="Plugins\DistribPluginAssemblyInitialiser.cs" />
+    <Compile Include="Plugins\DistribPluginAssemblyManager.cs" />
     <Compile Include="Processes\IDistribProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
