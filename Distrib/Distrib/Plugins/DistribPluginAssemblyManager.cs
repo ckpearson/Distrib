@@ -123,7 +123,7 @@ namespace Distrib.Plugins
     }
 
     [Serializable()]
-    internal sealed class DistribPluginDetails
+    public sealed class DistribPluginDetails
     {
         private string m_strTypeName = "";
         private DistribPluginMetadata m_metadata = null;

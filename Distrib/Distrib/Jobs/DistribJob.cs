@@ -14,16 +14,3 @@ namespace Distrib.Jobs
 
     }
 }
-
-namespace Distrib
-{
-    public static class Utils
-    {
-        public static bool ParsesAsGuid(this string str)
-        {
-            Guid guid = Guid.Empty;
-
-            return Guid.TryParse(str, out guid);
-        }
-    }
-}

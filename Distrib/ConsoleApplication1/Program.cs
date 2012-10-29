@@ -22,15 +22,17 @@ namespace ConsoleApplication1
 
         public void Run()
         {
-            var dir = @"C:\Users\Clint\Desktop\distrib plugins\";
+            var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "distrib plugins");
 
             foreach (var pluginDll in Directory.EnumerateFiles(dir, "*.dll"))
             {
                 var pluginAssembly = DistribPluginAssembly.CreateForAssembly(pluginDll);
 
-                pluginAssembly.Initialise();
+                var result = pluginAssembly.Initialise();
+
+               
+
             }
-            
         }
     }
 
