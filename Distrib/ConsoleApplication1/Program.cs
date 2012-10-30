@@ -14,6 +14,8 @@ namespace ConsoleApplication1
 {
     class Program
     {
+        private string dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "distrib plugins");
+
         static void Main(string[] args)
         {
             var p = new Program();
@@ -22,17 +24,57 @@ namespace ConsoleApplication1
 
         public void Run()
         {
-            var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "distrib plugins");
+
+        }
+
+        public void RunPluginList()
+        {
+            Console.WriteLine("Distrib Plugin Discovery:");
+            DashedLine();
+
+            Console.WriteLine("Looking for plugins in directory: \"{0}\"", dir);
 
             foreach (var pluginDll in Directory.EnumerateFiles(dir, "*.dll"))
             {
+                Console.WriteLine();
+                Console.WriteLine("\tAssembly: \"{0}\"", Path.GetFileName(pluginDll));
                 var pluginAssembly = DistribPluginAssembly.CreateForAssembly(pluginDll);
 
                 var result = pluginAssembly.Initialise();
 
-               
+                if (result.Plugins.Count > 0)
+                {
+                    foreach (var plugin in result.Plugins)
+                    {
+                        Console.WriteLine("\t\tPlugin: {0}", plugin.PluginTypeName);
+                        Console.WriteLine("\t\t  Name: {0}", plugin.Metadata.Name);
+                        Console.WriteLine("\t\t  Desc: {0}", plugin.Metadata.Description);
+                        Console.WriteLine("\t\t  Auth: {0}", plugin.Metadata.Author);
+                        Console.WriteLine("\t\t   Ver: {0}", plugin.Metadata.Version.ToString("N1"));
+                        
+                        if (plugin.IsUsable)
+                        {
+                            Console.WriteLine("\t\tPlugin is usable");
+                        }
+                        else
+                        {
+                            Console.WriteLine("\t\tPlugin is not usable: \"{0}\"", plugin.ExclusionReason);
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\t\tNo plugins found in assembly");
+                }
 
             }
+
+            Console.ReadLine();
+        }
+
+        private void DashedLine()
+        {
+            Console.WriteLine(new string(Enumerable.Repeat('*', Console.BufferWidth - 5).ToArray()));
         }
     }
 

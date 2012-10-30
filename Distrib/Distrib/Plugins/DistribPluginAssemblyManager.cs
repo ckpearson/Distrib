@@ -7,6 +7,8 @@ using System.Reflection;
 using Distrib.Plugins.Discovery;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
+using Distrib.Utils;
+using Distrib.Plugins.Description;
 
 namespace Distrib.Plugins
 {
@@ -122,19 +124,5 @@ namespace Distrib.Plugins
         }
     }
 
-    [Serializable()]
-    public sealed class DistribPluginDetails
-    {
-        private string m_strTypeName = "";
-        private DistribPluginMetadata m_metadata = null;
 
-        public DistribPluginDetails(string pluginTypeName, DistribPluginMetadata metadata)
-        {
-            m_strTypeName = pluginTypeName;
-            m_metadata = metadata;
-        }
-
-        public string PluginTypeName { get { return m_strTypeName; } }
-        public DistribPluginMetadata Metadata { get { return m_metadata; } }
-    }
 }

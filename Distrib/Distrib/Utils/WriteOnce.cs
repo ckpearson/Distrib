@@ -12,6 +12,7 @@ namespace Distrib.Utils
     /// </summary>
     /// <typeparam name="T">The type of the value</typeparam>
     [DebuggerDisplay("Written: {IsWritten}, Value: {Value}")]
+    [Serializable()]
     public sealed class WriteOnce<T>
     {
         private T m_value = default(T);

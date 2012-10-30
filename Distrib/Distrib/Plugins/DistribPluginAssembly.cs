@@ -1,4 +1,5 @@
-﻿using Distrib.Utils;
+﻿using Distrib.Plugins.Description;
+using Distrib.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +19,8 @@ namespace Distrib.Plugins
         private object m_objLock = new object();
 
         private bool m_bIsInitialised = false;
+
+        private IReadOnlyList<DistribPluginDetails> m_lstPluginDetails = null;
 
         private DistribPluginAssembly(string assemblyPath)
         {
@@ -81,25 +84,25 @@ namespace Distrib.Plugins
                     }
 
                     // Retrieve the details for all plugins present in the assembly
-                    var t = m_asmManager.GetPluginDetails();
+                    // At this point these are the details that should be utilised by the developer and the system
+                    // for *actual* work as they are serialised through the AppDomain and as a result
+                    // any modifications here are not represented in the manager (usability etc)
+                    // When pushing down to the manager to perform low-level work, the type-name is used as the key
+                    // and the plugin details data will simply be used from the version given to the manager.
+                    m_lstPluginDetails = m_asmManager.GetPluginDetails();
 
-                    if (t == null || t.Count == 0)
+                    if (m_lstPluginDetails == null || m_lstPluginDetails.Count == 0)
                     {
                         throw new InvalidOperationException("The plugin assembly contains no Distrib Plugins");
                     }
 
                     // Go through all the plugins in the assembly
-                    foreach (var pluginType in t)
+                    foreach (var pluginType in m_lstPluginDetails)
                     {
-                        // Check that the plugin type actually implements the interface the export attribute says it does
-                        if (m_asmManager.PluginTypeAdheresToStatedInterface(pluginType))
-                        {
-                            result.AddOkPlugin(pluginType);
-                        }
-                        else
-                        {
-                            result.AddBadPlugin(new BadDistribPluginDetails(pluginType, DistribPluginExlusionReason.NonAdherenceToInterface));
-                        }
+                        // Check over the usability of the plugin and mark it accordingly
+                        _CheckUsabilityOfPlugin(pluginType);
+
+                        result.AddPlugin(pluginType);
                     }
 
                     m_bIsInitialised = true;
@@ -112,6 +115,29 @@ namespace Distrib.Plugins
             catch (Exception ex)
             {
                 throw new ApplicationException("Failed to initialise plugin assembly", ex);
+            }
+        }
+
+        private void _CheckUsabilityOfPlugin(DistribPluginDetails pluginType)
+        {
+            if (pluginType == null) throw new ArgumentNullException("Plugin Details must be supplied");
+
+            try
+            {
+                // Check the plugin class implements the interface it claims to
+
+                if (!m_asmManager.PluginTypeAdheresToStatedInterface(pluginType))
+                {
+                    pluginType.MarkAsUnusable(DistribPluginExlusionReason.NonAdherenceToInterface);
+                    return;
+                }
+
+                // Got this far, so the plugin is classed as usable
+                pluginType.MarkAsUsable();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to check usability of plugin", ex);
             }
         }
 
@@ -182,152 +208,6 @@ namespace Distrib.Plugins
                     "Failed to load plugin assembly", ex);
             }
         }
-    }
-
-
-
-    public sealed class DistribPluginAssemblyInitialisationResult
-    {
-        private readonly WriteOnce<bool> m_bLocked = new WriteOnce<bool>(initialValue: false);
-        private readonly object m_lock = new object();
-
-        private List<DistribPluginDetails> m_lstOkPlugins = new List<DistribPluginDetails>();
-        private List<BadDistribPluginDetails> m_lstBadPlugins = new List<BadDistribPluginDetails>();
-
-        internal void AddOkPlugin(DistribPluginDetails pluginDetails)
-        {
-            lock (m_lock)
-            {
-                if (!m_bLocked)
-                {
-                    lock (m_lstOkPlugins)
-                    {
-                        m_lstOkPlugins.Add(pluginDetails);
-                    }
-                }
-                else
-                {
-                    throw new InvalidOperationException("Cannot add OK plugin, result is locked");
-                }
-            }
-        }
-
-        internal void AddBadPlugin(BadDistribPluginDetails badPluginDetails)
-        {
-            lock (m_lock)
-            {
-                if (!m_bLocked)
-                {
-                    lock (m_lstBadPlugins)
-                    {
-                        m_lstBadPlugins.Add(badPluginDetails);
-                    }
-                }
-                else
-                {
-                    throw new InvalidOperationException("Cannot add bad plugin, result is locked");
-                }
-            }
-        }
-
-        internal void LockResult()
-        {
-            lock (m_lock)
-            {
-                if (!m_bLocked)
-                {
-                    m_bLocked.Value = true;
-                }
-                else
-                {
-                    throw new InvalidOperationException("Cannot lock result; it is already locked");
-                }
-            }
-        }
-
-        private WriteOnce<IReadOnlyList<DistribPluginDetails>> m_okPluginsReadOnly = new WriteOnce<IReadOnlyList<DistribPluginDetails>>(null);
-        public IReadOnlyList<DistribPluginDetails> OkPlugins
-        {
-            get
-            {
-                lock (m_lock)
-                {
-                    if (!m_bLocked)
-                    {
-                        lock (m_lstOkPlugins)
-                        {
-                            return m_lstOkPlugins.AsReadOnly();
-                        }
-                    }
-                    else
-                    {
-                        if (!m_okPluginsReadOnly.IsWritten)
-                        {
-                            m_okPluginsReadOnly.Value = m_lstOkPlugins.AsReadOnly();
-                            m_lstOkPlugins = null;  // Destroy the original list
-                        }
-
-                        return m_okPluginsReadOnly.Value;
-                    }
-                }
-            }
-        }
-
-        private WriteOnce<IReadOnlyList<BadDistribPluginDetails>> m_badPluginsReadOnly = new WriteOnce<IReadOnlyList<BadDistribPluginDetails>>(null);
-        public IReadOnlyList<BadDistribPluginDetails> BadPlugins
-        {
-            get
-            {
-                lock (m_lock)
-                {
-                    if (!m_bLocked)
-                    {
-                        lock (m_lstBadPlugins)
-                        {
-                            return m_lstBadPlugins.AsReadOnly();
-                        }
-                    }
-                    else
-                    {
-                        if (!m_badPluginsReadOnly.IsWritten)
-                        {
-                            m_badPluginsReadOnly.Value = m_lstBadPlugins.AsReadOnly();
-                            m_lstBadPlugins = null; // Destroy the original list.
-                        }
-
-                        return m_badPluginsReadOnly.Value;
-                    }
-                }
-            }
-        }
-    }
-
-    public sealed class BadDistribPluginDetails
-    {
-        private readonly DistribPluginDetails m_pluginDetails = null;
-        private readonly DistribPluginExlusionReason m_reason = DistribPluginExlusionReason.Unknown;
-
-        public BadDistribPluginDetails(DistribPluginDetails pluginDetails, DistribPluginExlusionReason exlusionReason)
-        {
-            m_pluginDetails = pluginDetails;
-            m_reason = ExclusionReason;
-        }
-
-        public DistribPluginDetails PluginDetails
-        {
-            get { return m_pluginDetails; }
-        }
-
-        public DistribPluginExlusionReason ExclusionReason
-        {
-            get { return m_reason; }
-        }
-    }
-
-    public enum DistribPluginExlusionReason
-    {
-        Unknown = 0,
-        NonAdherenceToInterface,
     }
 
     [Serializable]
