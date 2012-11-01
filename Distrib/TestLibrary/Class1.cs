@@ -13,7 +13,7 @@ namespace TestLibrary
     "Simple Test Process",
     1.0,
     "Clint Pearson")]
-    class TestProcess : IDistribProcess
+    class TestProcess : MarshalByRefObject, IDistribProcess
     {
         public string SayHello()
         {

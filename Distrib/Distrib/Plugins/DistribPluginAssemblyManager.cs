@@ -9,6 +9,8 @@ using System.Diagnostics;
 using System.Collections.ObjectModel;
 using Distrib.Utils;
 using Distrib.Plugins.Description;
+using Distrib.Processes;
+using System.Runtime.Remoting;
 
 namespace Distrib.Plugins
 {
@@ -35,6 +37,32 @@ namespace Distrib.Plugins
                 throw new ApplicationException("Failed to load assembly", ex);
             }
         }
+
+        public string AssemblyFullName
+        {
+            get
+            {
+                if (m_asmPluginAssembly != null)
+                {
+                    return m_asmPluginAssembly.FullName;
+                }
+
+                return null;
+            }
+        }
+
+        public object CreateInstance(string typeName)
+        {
+            return Activator.CreateInstance(m_asmPluginAssembly.GetType(typeName));
+        }
+
+        //public IDistribProcess CreateProcessPlugin(string typeName)
+        //{
+        //    var t = m_asmPluginAssembly.GetType(typeName);
+        //    var o = (IDistribProcess)Activator.CreateInstance(t);
+
+        //    return ((MarshalByRefObject)o);
+        //}
 
         /// <summary>
         /// Retrieves the details of all Distrib plugins within the assembly

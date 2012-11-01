@@ -1,9 +1,11 @@
 ﻿using Distrib.Plugins.Description;
+using Distrib.Processes;
 using Distrib.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -115,6 +117,30 @@ namespace Distrib.Plugins
             catch (Exception ex)
             {
                 throw new ApplicationException("Failed to initialise plugin assembly", ex);
+            }
+        }
+
+        public T CreatePluginInstance<T>(DistribPluginDetails details) where T : class
+        {
+            if (details == null) throw new ArgumentNullException("Plugin details must be supplied");
+            if (!typeof(T).IsInterface) throw new InvalidOperationException("T must be an interface type");
+            if (!details.Metadata.InterfaceType.Equals(typeof(T))) throw new InvalidOperationException("T must be of the plugin interface type");
+
+            try
+            {
+                if (!details.IsUsable)
+                {
+                    throw new InvalidOperationException(string.Format("Plugin is marked as excluded because: {0}",
+                        details.ExclusionReason.ToString()));
+                }
+
+                T o = (T)m_asmManager.CreateInstance(details.PluginTypeName);
+                
+                return o;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to create plugin instance", ex);
             }
         }
 

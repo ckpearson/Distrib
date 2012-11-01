@@ -28,7 +28,7 @@ namespace Distrib.Plugins.Description
         /// </summary>
         /// <param name="pluginTypeName">The full name of the type within the assembly this plugin is for</param>
         /// <param name="metadata">The metadata of the plugin</param>
-        public DistribPluginDetails(string pluginTypeName, DistribPluginMetadata metadata)
+        internal DistribPluginDetails(string pluginTypeName, DistribPluginMetadata metadata)
         {
             m_strTypeName = pluginTypeName;
             m_metadata = metadata;

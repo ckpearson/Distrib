@@ -1,4 +1,5 @@
 ﻿using Distrib.Plugins;
+using Distrib.Plugins.Description;
 using Distrib.Plugins.Discovery;
 using Distrib.Processes;
 using System;
@@ -24,7 +25,21 @@ namespace ConsoleApplication1
 
         public void Run()
         {
+            foreach (var pluginDll in Directory.EnumerateFiles(dir, "*.dll"))
+            {
+                var pluginAssembly = DistribPluginAssembly.CreateForAssembly(pluginDll);
+                var result = pluginAssembly.Initialise();
 
+                IDistribProcess proc = pluginAssembly.CreatePluginInstance<IDistribProcess>(result.UsablePlugins[0]);
+
+                var msg = proc.SayHello();
+
+               // File.Delete(pluginDll);
+
+                pluginAssembly.Uninitialise();
+
+                File.Delete(pluginDll);
+            }
         }
 
         public void RunPluginList()
