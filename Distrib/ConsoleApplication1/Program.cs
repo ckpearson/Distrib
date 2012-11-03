@@ -31,7 +31,7 @@ namespace ConsoleApplication1
                 var result = pluginAssembly.Initialise();
 
                 var instance = pluginAssembly.CreatePluginInstance(result.UsablePlugins[0]);
-
+                
 
                 var proc = instance.GetInstance<IDistribProcess>();
 

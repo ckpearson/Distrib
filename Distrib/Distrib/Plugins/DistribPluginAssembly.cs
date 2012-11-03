@@ -193,8 +193,14 @@ namespace Distrib.Plugins
 
             try
             {
-                // Check the plugin class implements the interface it claims to
+                // Check the plugin class can be marshaled (for appdomain separation)
+                if (!m_asmManager.PluginTypeIsMarshalable(pluginType))
+                {
+                    pluginType.MarkAsUnusable(DistribPluginExlusionReason.TypeNotMarshalable);
+                    return;
+                }
 
+                // Check the plugin class implements the interface it claims to
                 if (!m_asmManager.PluginTypeAdheresToStatedInterface(pluginType))
                 {
                     pluginType.MarkAsUnusable(DistribPluginExlusionReason.NonAdherenceToInterface);

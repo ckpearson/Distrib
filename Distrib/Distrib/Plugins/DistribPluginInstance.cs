@@ -11,6 +11,8 @@ namespace Distrib.Plugins
 {
     public sealed class DistribPluginInstance
     {
+        private readonly WriteOnce<bool> m_bInitialisedOnce = new WriteOnce<bool>(false);
+
         private readonly DistribPluginDetails m_pluginDetails = null;
         private readonly DistribPluginAssembly m_parentAssembly = null;
 
@@ -22,12 +24,54 @@ namespace Distrib.Plugins
 
         private WriteOnce<object> m_instance = new WriteOnce<object>(null);
 
+        private readonly string m_strGuid = null;
+        private readonly WriteOnce<DateTime> m_dtInstanceCreationStamp = new WriteOnce<DateTime>();
+
         internal DistribPluginInstance(DistribPluginDetails pluginDetails, DistribPluginAssembly parentAssembly)
         {
             m_pluginDetails = pluginDetails;
             m_parentAssembly = parentAssembly;
+            m_strGuid = Guid.NewGuid().ToString();
         }
 
+        /// <summary>
+        /// Gets the unique instance ID
+        /// </summary>
+        public string InstanceID
+        {
+            get
+            {
+                return m_strGuid;
+            }
+        }
+
+        /// <summary>
+        /// Gets the date-time when the actual instance was created, returns <see cref="DateTime.MinValue"/> if the instance
+        /// hasn't been created yet.
+        /// </summary>
+        public DateTime InstanceCreationStamp
+        {
+            get
+            {
+                lock (m_lock)
+                {
+                    if (!IsInitialised() || !m_instance.IsWritten)
+                    {
+                        return DateTime.MinValue;
+                    }
+                    else
+                    {
+                        return m_dtInstanceCreationStamp.Value;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the actual instance object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public T GetInstance<T>() where T : class
         {
             try
@@ -54,6 +98,8 @@ namespace Distrib.Plugins
                         m_instance.Value = m_appDomainBridge.CreateInstance(
                             m_pluginDetails.PluginTypeName,
                             m_parentAssembly.AssemblyFilePath);
+
+                        m_dtInstanceCreationStamp.Value = DateTime.Now;
                     }
 
                     return (T)m_instance.Value;
@@ -65,12 +111,26 @@ namespace Distrib.Plugins
             }
         }
 
+        #region AppDomain Initialisation Logic
+
+        /// <summary>
+        /// Initialises the plugin instance (creates AppDomain etc)
+        /// </summary>
         internal void Initialise()
         {
             try
             {
                 lock (m_lock)
                 {
+                    // Only support initialisation once
+                    if (m_bInitialisedOnce.IsWritten)
+                    {
+                        if (m_bInitialisedOnce.Value)
+                        {
+                            throw new InvalidOperationException("Cannot initialise; been initialised once before, re-create instance");
+                        }
+                    }
+
                     if (IsInitialised())
                     {
                         throw new InvalidOperationException("Cannot initialise; already initialised");
@@ -91,6 +151,7 @@ namespace Distrib.Plugins
                     m_instance = new WriteOnce<object>(null);
 
                     m_bIsInitialised = true;
+                    m_bInitialisedOnce.Value = true;
                 }
             }
             catch (Exception ex)
@@ -99,6 +160,10 @@ namespace Distrib.Plugins
             }
         }
 
+        /// <summary>
+        /// Determines whether the plugin instance has been initialised
+        /// </summary>
+        /// <returns><c>True</c> if so, <c>False</c> otherwise</returns>
         internal bool IsInitialised()
         {
             try
@@ -114,6 +179,9 @@ namespace Distrib.Plugins
             }
         }
 
+        /// <summary>
+        /// Unitialises the plugin instance
+        /// </summary>
         internal void Unitialise()
         {
             try
@@ -142,5 +210,7 @@ namespace Distrib.Plugins
                 throw new ApplicationException("Failed to unitialise", ex);
             }
         }
+
+        #endregion
     }
 }

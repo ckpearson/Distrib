@@ -16,5 +16,10 @@
         /// the metadata attribute stated it did.
         /// </summary>
         NonAdherenceToInterface,
+
+        /// <summary>
+        /// The plugin has been excluded because the type isn't MarshalByRef making the separation not possible
+        /// </summary>
+        TypeNotMarshalable,
     } 
 }

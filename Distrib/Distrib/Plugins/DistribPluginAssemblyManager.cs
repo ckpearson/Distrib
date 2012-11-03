@@ -137,6 +137,34 @@ namespace Distrib.Plugins
                 throw new ApplicationException("Failed to determine if plugin implements stated interface", ex);
             }
         }
+
+        /// <summary>
+        /// Determines whether a given plugin can be marshaled
+        /// </summary>
+        /// <param name="pluginDetails">The plugin details</param>
+        /// <returns><c>True</c> if it can, <c>False</c> otherwise</returns>
+        public bool PluginTypeIsMarshalable(DistribPluginDetails pluginDetails)
+        {
+            if (pluginDetails == null) throw new ArgumentNullException("Plugin details must be supplied");
+
+            try
+            {
+                if (GetPluginDetails()
+                    .DefaultIfEmpty(null)
+                    .SingleOrDefault(d => d.PluginTypeName == pluginDetails.PluginTypeName) == null)
+                {
+                    throw new InvalidOperationException("A plugin type with the supplied details does not exist in the plugin assembly");
+                }
+
+                var t = m_asmPluginAssembly.GetType(pluginDetails.PluginTypeName);
+
+                return (t.BaseType != null && t.BaseType.Equals(typeof(MarshalByRefObject)));
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to determine if plugin type is marshalable", ex);
+            }
+        }
     }
 
 
