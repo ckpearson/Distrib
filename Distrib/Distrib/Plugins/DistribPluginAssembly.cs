@@ -2,6 +2,7 @@
 using Distrib.Processes;
 using Distrib.Utils;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -120,7 +121,49 @@ namespace Distrib.Plugins
             }
         }
 
-        public T CreatePluginInstance<T>(DistribPluginDetails details) where T : class
+        private readonly Dictionary<DistribPluginDetails, List<DistribPluginInstance>>
+            m_dictInstances = new Dictionary<DistribPluginDetails, List<DistribPluginInstance>>();
+
+        public DistribPluginInstance CreatePluginInstance(DistribPluginDetails details)
+        {
+            if (details == null) throw new ArgumentNullException("Plugin details must be supplied");
+
+            DistribPluginInstance instance = null;
+
+            try
+            {
+                if (!details.IsUsable)
+                {
+                    throw new InvalidOperationException("Plugin is marked as excluded because: {0}".fmt(
+                        details.ExclusionReason.ToString()));
+                }
+
+                lock (m_objLock)
+                {
+                    lock (m_dictInstances)
+                    {
+                        List<DistribPluginInstance> lstInstances = null;
+                        if (m_dictInstances.TryGetValue(details, out lstInstances) == false)
+                        {
+                            lstInstances = new List<DistribPluginInstance>();
+                        }
+
+                        instance = new DistribPluginInstance(details, this);
+                        lstInstances.Add(instance);
+
+                        m_dictInstances[details] = lstInstances;
+                    }
+                }
+
+                return instance;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to create plugin instance", ex);
+            }
+        }
+
+        public T CreatePluginInstanceDirect<T>(DistribPluginDetails details) where T : class
         {
             if (details == null) throw new ArgumentNullException("Plugin details must be supplied");
             if (!typeof(T).IsInterface) throw new InvalidOperationException("T must be an interface type");
@@ -178,6 +221,15 @@ namespace Distrib.Plugins
                         throw new InvalidOperationException("Cannot unitialise plugin assembly; it isn't initialised");
                     }
 
+                    // If there are any plugin instances they need tearing down
+                    if (m_dictInstances != null && m_dictInstances.Count > 0)
+                    {
+                        foreach (var instance in m_dictInstances.Values.SelectMany(l => l).Where(l => l.IsInitialised()))
+                        {
+                            instance.Unitialise();
+                        }
+                    }
+
                     m_asmManager = null;
 
                     try
@@ -212,6 +264,14 @@ namespace Distrib.Plugins
             catch (Exception ex)
             {
                 throw new ApplicationException("Failed to determine if assembly is already initialised", ex);
+            }
+        }
+
+        public string AssemblyFilePath
+        {
+            get
+            {
+                return m_strAssemblyPath;
             }
         }
 

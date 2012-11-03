@@ -30,15 +30,14 @@ namespace ConsoleApplication1
                 var pluginAssembly = DistribPluginAssembly.CreateForAssembly(pluginDll);
                 var result = pluginAssembly.Initialise();
 
-                IDistribProcess proc = pluginAssembly.CreatePluginInstance<IDistribProcess>(result.UsablePlugins[0]);
+                var instance = pluginAssembly.CreatePluginInstance(result.UsablePlugins[0]);
 
-                var msg = proc.SayHello();
+
+                var proc = instance.GetInstance<IDistribProcess>();
 
                // File.Delete(pluginDll);
 
                 pluginAssembly.Uninitialise();
-
-                File.Delete(pluginDll);
             }
         }
 

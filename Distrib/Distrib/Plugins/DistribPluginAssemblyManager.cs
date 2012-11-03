@@ -38,19 +38,6 @@ namespace Distrib.Plugins
             }
         }
 
-        public string AssemblyFullName
-        {
-            get
-            {
-                if (m_asmPluginAssembly != null)
-                {
-                    return m_asmPluginAssembly.FullName;
-                }
-
-                return null;
-            }
-        }
-
         public object CreateInstance(string typeName)
         {
             return Activator.CreateInstance(m_asmPluginAssembly.GetType(typeName));
