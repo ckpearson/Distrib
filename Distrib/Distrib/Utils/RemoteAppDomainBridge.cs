@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Distrib.Utils
 {
+    /// <summary>
+    /// Simple bridge object for use within an AppDomain
+    /// </summary>
     internal sealed class RemoteAppDomainBridge : MarshalByRefObject
     {
         private readonly Dictionary<string, Assembly> m_dictAssemblies =
@@ -69,6 +72,22 @@ namespace Distrib.Utils
             catch (Exception ex)
             {
                 throw new ApplicationException("Failed to create instance", ex);
+            }
+        }
+
+        public static RemoteAppDomainBridge FromAppDomain(AppDomain domain)
+        {
+            if (domain == null) throw new ArgumentNullException("App domain must be supplied");
+
+            try
+            {
+                return (RemoteAppDomainBridge)domain.CreateInstanceAndUnwrap(
+                    typeof(RemoteAppDomainBridge).Assembly.FullName,
+                    typeof(RemoteAppDomainBridge).FullName);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to create app domain bridge in domain", ex);
             }
         }
     }

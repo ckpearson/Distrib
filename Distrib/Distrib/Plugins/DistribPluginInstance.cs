@@ -141,9 +141,8 @@ namespace Distrib.Plugins
                         m_pluginDetails.PluginTypeName);
 
                     // Create remote bridge
-                    m_appDomainBridge = (RemoteAppDomainBridge)m_adAppDomain.CreateInstanceAndUnwrap(
-                        typeof(RemoteAppDomainBridge).Assembly.FullName,
-                        typeof(RemoteAppDomainBridge).FullName);
+
+                    m_appDomainBridge = RemoteAppDomainBridge.FromAppDomain(m_adAppDomain);
 
                     // Load the plugin assembly into the AppDomain
                     m_appDomainBridge.LoadAssembly(m_parentAssembly.AssemblyFilePath);

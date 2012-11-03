@@ -43,14 +43,6 @@ namespace Distrib.Plugins
             return Activator.CreateInstance(m_asmPluginAssembly.GetType(typeName));
         }
 
-        //public IDistribProcess CreateProcessPlugin(string typeName)
-        //{
-        //    var t = m_asmPluginAssembly.GetType(typeName);
-        //    var o = (IDistribProcess)Activator.CreateInstance(t);
-
-        //    return ((MarshalByRefObject)o);
-        //}
-
         /// <summary>
         /// Retrieves the details of all Distrib plugins within the assembly
         /// </summary>

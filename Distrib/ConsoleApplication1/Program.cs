@@ -32,8 +32,9 @@ namespace ConsoleApplication1
 
                 var instance = pluginAssembly.CreatePluginInstance(result.UsablePlugins[0]);
                 
-
                 var proc = instance.GetInstance<IDistribProcess>();
+
+                var msg = proc.SayHello();
 
                // File.Delete(pluginDll);
 
