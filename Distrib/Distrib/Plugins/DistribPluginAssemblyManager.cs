@@ -86,6 +86,9 @@ namespace Distrib.Plugins
                 {
                     // Add entry to the list
                     lstDetails.Add(new DistribPluginDetails(type.type.FullName, DistribPluginMetadata.FromPluginAttribute(type.attr)));
+
+                    var addit = type.type.GetCustomAttributes<DistribPluginAdditionalMetadataAttribute>();
+                    var kvp = addit.First().ProvideMetadataKVPs();
                 }
 
                 if (m_lstPluginDetails == null)

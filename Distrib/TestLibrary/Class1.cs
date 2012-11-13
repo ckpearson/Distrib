@@ -13,7 +13,9 @@ namespace TestLibrary
     "Simple Test Process",
     1.0,
     "Clint Pearson")]
-    [DistribProcessDetails()]
+
+    [DistribProcessDetails(
+        name: "Test Process")]
     class TestProcess : MarshalByRefObject, IDistribProcess
     {
         public string SayHello()
