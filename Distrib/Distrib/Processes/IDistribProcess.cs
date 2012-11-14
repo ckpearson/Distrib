@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Distrib.Plugins.Discovery.Metadata;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics.Contracts;
@@ -14,5 +15,36 @@ namespace Distrib.Processes
     public interface IDistribProcess
     {
         string SayHello();
+    }
+
+
+
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public sealed class DistribProcessDetailsAttribute : DistribPluginAdditionalMetadataAttribute
+    {
+        private readonly _DistribProcessDetailsMetadataConcrete m_details = null;
+
+        public DistribProcessDetailsAttribute(string name)
+            : base(typeof(IDistribProcessDetailsMetadata))
+        {
+            m_details = new _DistribProcessDetailsMetadataConcrete();
+            m_details.Name = name;
+        }
+
+        [Serializable()]
+        private class _DistribProcessDetailsMetadataConcrete : IDistribProcessDetailsMetadata
+        {
+            public string Name { get; set; }
+        }
+
+        protected override object _provideMetadata()
+        {
+            return m_details;
+        }
+    }
+
+    public interface IDistribProcessDetailsMetadata
+    {
+        string Name { get; set; }
     }
 }

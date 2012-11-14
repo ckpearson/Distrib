@@ -11,6 +11,7 @@ using Distrib.Utils;
 using Distrib.Plugins.Description;
 using Distrib.Processes;
 using System.Runtime.Remoting;
+using Distrib.Plugins.Discovery.Metadata;
 
 namespace Distrib.Plugins
 {

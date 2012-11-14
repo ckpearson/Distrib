@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Plugins.Discovery
+namespace Distrib.Plugins.Discovery.Metadata
 {
     /// <summary>
     /// Provides a means by which plugins can carry additional subsystem specific metadata along with it
@@ -72,7 +72,7 @@ namespace Distrib.Plugins.Discovery
         /// Gets the pure object holding the metadata
         /// </summary>
         /// <returns>The metadata object</returns>
-        internal object ProvideMetadataVessel()
+        internal object ProvideMetadataObject()
         {
             return _doMetadataReturn();
         }
@@ -82,7 +82,7 @@ namespace Distrib.Plugins.Discovery
         /// </summary>
         /// <typeparam name="T">The metadata interface type</typeparam>
         /// <returns>The metadata interface instance</returns>
-        internal T ProvideMetadataVessel<T>()
+        internal T ProvideMetadataObject<T>()
         {
             return (T)_doMetadataReturn();
         }
@@ -129,84 +129,8 @@ namespace Distrib.Plugins.Discovery
 
         internal IDistribPluginAdditionalMetadataBundle ToMetadataBundle()
         {
-            return new Concrete_DistribPluginAdditionalMetadataBundle(
+            return new ConcreteDistribPluginAdditionalMetadataBundle(
                 m_typMetadataInterface, _doMetadataReturn(), this.GetType(), ProvideMetadataKVPs());
         }
-    }
-
-    public interface IDistribPluginAdditionalMetadataBundle
-    {
-        Type AdditionalMetadataAttributeType { get; }
-        T GetMetadataObject<T>();
-        object GetMetadataObject();
-        Dictionary<string, object> MetadataKVPs { get; }
-    }
-
-    [Serializable()]
-    internal sealed class Concrete_DistribPluginAdditionalMetadataBundle
-        : IDistribPluginAdditionalMetadataBundle
-    {
-        private readonly Type m_type = null;
-        private readonly object m_metadataObject = null;
-        private readonly Type m_attrType = null;
-        private readonly Dictionary<string, object> m_dictKVP = new Dictionary<string, object>();
-
-        internal Concrete_DistribPluginAdditionalMetadataBundle(Type type, 
-            object metadataObject, Type attributeType, Dictionary<string, object> kvps)
-        {
-            m_type = type;
-            m_metadataObject = metadataObject;
-            m_attrType = attributeType;
-            m_dictKVP = kvps;
-        }
-
-        public T GetMetadataObject<T>()
-        {
-            return (T)m_metadataObject;
-        }
-
-        public object GetMetadataObject()
-        {
-            return m_metadataObject;
-        }
-
-        public Type AdditionalMetadataAttributeType
-        {
-            get { return m_attrType; }
-        }
-
-        public Dictionary<string, object> MetadataKVPs
-        {
-            get { return m_dictKVP; }
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public sealed class DistribProcessDetailsAttribute : DistribPluginAdditionalMetadataAttribute
-    {
-        private readonly _DistribProcessDetailsMetadataConcrete m_details = null;
-
-        public DistribProcessDetailsAttribute(string name)
-            : base(typeof(IDistribProcessDetailsMetadata))
-        {
-            m_details = new _DistribProcessDetailsMetadataConcrete();
-            m_details.Name = name;
-        }
-
-        [Serializable()]
-        private class _DistribProcessDetailsMetadataConcrete : IDistribProcessDetailsMetadata
-        {
-            public string Name { get; set; }
-        }
-
-        protected override object _provideMetadata()
-        {
-            return m_details;
-        }
-    }
-
-    public interface IDistribProcessDetailsMetadata
-    {
-        string Name { get; set; }
     }
 }
