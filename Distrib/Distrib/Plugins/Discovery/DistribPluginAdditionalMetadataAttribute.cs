@@ -42,6 +42,12 @@ namespace Distrib.Plugins.Discovery
             {
                 var metadataObject = _provideMetadata();
 
+                // Make sure the metadata object is serializable
+                if (metadataObject.GetType().GetCustomAttribute<SerializableAttribute>() == null)
+                {
+                    throw new InvalidOperationException("Metadata concrete class must be serializable");
+                }
+
                 // Make sure that the metadata object can actually cast across to the interface type
                 if (!m_typMetadataInterface.IsAssignableFrom(metadataObject.GetType()))
                 {
@@ -87,11 +93,12 @@ namespace Distrib.Plugins.Discovery
         /// <returns>A dictionary containing the metadata key-value pairs</returns>
         internal Dictionary<string, object> ProvideMetadataKVPs()
         {
+            var dict = new Dictionary<string, object>();
+
             try
             {
                 var metadataObject = _doMetadataReturn();
-                var dict = new Dictionary<string, object>();
-
+                
                 // Grab all the properties with public getters and setters
                 m_readOnlyListMetadataProperties.Value =
                     m_typMetadataInterface.GetProperties()
@@ -119,6 +126,59 @@ namespace Distrib.Plugins.Discovery
                 throw new ApplicationException("Failed to get metadata key-values", ex);
             }
         }
+
+        internal IDistribPluginAdditionalMetadataBundle ToMetadataBundle()
+        {
+            return new Concrete_DistribPluginAdditionalMetadataBundle(
+                m_typMetadataInterface, _doMetadataReturn(), this.GetType(), ProvideMetadataKVPs());
+        }
+    }
+
+    public interface IDistribPluginAdditionalMetadataBundle
+    {
+        Type AdditionalMetadataAttributeType { get; }
+        T GetMetadataObject<T>();
+        object GetMetadataObject();
+        Dictionary<string, object> MetadataKVPs { get; }
+    }
+
+    [Serializable()]
+    internal sealed class Concrete_DistribPluginAdditionalMetadataBundle
+        : IDistribPluginAdditionalMetadataBundle
+    {
+        private readonly Type m_type = null;
+        private readonly object m_metadataObject = null;
+        private readonly Type m_attrType = null;
+        private readonly Dictionary<string, object> m_dictKVP = new Dictionary<string, object>();
+
+        internal Concrete_DistribPluginAdditionalMetadataBundle(Type type, 
+            object metadataObject, Type attributeType, Dictionary<string, object> kvps)
+        {
+            m_type = type;
+            m_metadataObject = metadataObject;
+            m_attrType = attributeType;
+            m_dictKVP = kvps;
+        }
+
+        public T GetMetadataObject<T>()
+        {
+            return (T)m_metadataObject;
+        }
+
+        public object GetMetadataObject()
+        {
+            return m_metadataObject;
+        }
+
+        public Type AdditionalMetadataAttributeType
+        {
+            get { return m_attrType; }
+        }
+
+        public Dictionary<string, object> MetadataKVPs
+        {
+            get { return m_dictKVP; }
+        }
     }
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
@@ -133,6 +193,7 @@ namespace Distrib.Plugins.Discovery
             m_details.Name = name;
         }
 
+        [Serializable()]
         private class _DistribProcessDetailsMetadataConcrete : IDistribProcessDetailsMetadata
         {
             public string Name { get; set; }

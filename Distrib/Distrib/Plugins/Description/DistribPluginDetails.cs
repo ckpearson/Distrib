@@ -21,6 +21,9 @@ namespace Distrib.Plugins.Description
         private readonly WriteOnce<DistribPluginExlusionReason> m_pluginExclusionReason =
             new WriteOnce<DistribPluginExlusionReason>(DistribPluginExlusionReason.Unknown);
 
+        private readonly WriteOnce<List<IDistribPluginAdditionalMetadataBundle>>
+            m_lstAdditionalMetadata = new WriteOnce<List<IDistribPluginAdditionalMetadataBundle>>(null);
+
         private readonly object m_lock = new object();
 
         /// <summary>
@@ -48,6 +51,33 @@ namespace Distrib.Plugins.Description
         public DistribPluginMetadata Metadata
         {
             get { return m_metadata; }
+        }
+
+        public List<IDistribPluginAdditionalMetadataBundle> AdditionalMetadataBundles
+        {
+            get
+            {
+                lock (m_lstAdditionalMetadata)
+                {
+                    return (!m_lstAdditionalMetadata.IsWritten) ? null :
+                                m_lstAdditionalMetadata.Value;
+                }
+            }
+
+            internal set
+            {
+                lock (m_lstAdditionalMetadata)
+                {
+                    if (!m_lstAdditionalMetadata.IsWritten)
+                    {
+                        m_lstAdditionalMetadata.Value = value;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Additional metadata already set");
+                    }
+                }
+            }
         }
 
         /// <summary>

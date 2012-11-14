@@ -84,11 +84,20 @@ namespace Distrib.Plugins
                 // Build up the details list
                 foreach (var type in types.Select(t => new { type = t, attr = t.GetCustomAttribute<DistribPluginAttribute>() }))
                 {
-                    // Add entry to the list
-                    lstDetails.Add(new DistribPluginDetails(type.type.FullName, DistribPluginMetadata.FromPluginAttribute(type.attr)));
+                    // Create the plugin details
+                    var pluginDetails = new DistribPluginDetails(type.type.FullName, DistribPluginMetadata.FromPluginAttribute(type.attr));
 
-                    var addit = type.type.GetCustomAttributes<DistribPluginAdditionalMetadataAttribute>();
-                    var kvp = addit.First().ProvideMetadataKVPs();
+                    // See if the plugin class has any additional plugin-specific metadata to carry across
+                    var additMetadata = type.type.GetCustomAttributes<DistribPluginAdditionalMetadataAttribute>().ToList();
+
+                    if (additMetadata != null && additMetadata.Count > 0)
+                    {
+                        pluginDetails.AdditionalMetadataBundles =
+                            additMetadata.Select(adm => adm.ToMetadataBundle()).ToList();
+                    }
+
+                    // Add details to the list
+                    lstDetails.Add(pluginDetails);
                 }
 
                 if (m_lstPluginDetails == null)
