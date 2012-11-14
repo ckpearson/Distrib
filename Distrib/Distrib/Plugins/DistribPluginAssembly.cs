@@ -1,4 +1,5 @@
-﻿using Distrib.Plugins.Description;
+﻿using Distrib.Plugins.Controllers;
+using Distrib.Plugins.Description;
 using Distrib.Processes;
 using Distrib.Utils;
 using System;
@@ -102,9 +103,15 @@ namespace Distrib.Plugins
                     // Go through all the plugins in the assembly
                     foreach (var pluginType in m_lstPluginDetails)
                     {
+                        // Do any bootstrapping that's required to fill in defaults etc
+                        // This has to be done before checking the usability as it could
+                        // affect things.
+                        _PerformPluginBootstrapping(pluginType);
+
                         // Check over the usability of the plugin and mark it accordingly
                         _CheckUsabilityOfPlugin(pluginType);
 
+                        
                         result.AddPlugin(pluginType);
                     }
 
@@ -184,6 +191,32 @@ namespace Distrib.Plugins
             catch (Exception ex)
             {
                 throw new ApplicationException("Failed to create plugin instance", ex);
+            }
+        }
+
+        private void _PerformPluginBootstrapping(DistribPluginDetails pluginType)
+        {
+            if (pluginType == null) throw new ArgumentNullException("Plugin details must be supplied");
+
+            try
+            {
+                // If the plugin hasn't specified a controller then that needs to be the
+                // default controller
+                if (pluginType.Metadata.ControllerType == null)
+                {
+                    pluginType.Metadata.ControllerType =
+                        DistribPluginControllerSystem.ValidateAndReturnControllerType<DistribDefaultPluginController>();
+                }
+                else
+                {
+                    // Not the default, validate and set
+                    pluginType.Metadata.ControllerType =
+                        DistribPluginControllerSystem.ValidateAndReturnControllerType(pluginType.Metadata.ControllerType);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to perform bootstrapping for plugin", ex);
             }
         }
 

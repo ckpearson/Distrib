@@ -32,12 +32,18 @@ namespace Distrib.Processes
         {
             m_details = new _DistribProcessDetailsMetadataConcrete();
             m_details.Name = name;
+            m_details.Description = description;
+            m_details.Version = version;
+            m_details.Author = author;
         }
 
         [Serializable()]
         private class _DistribProcessDetailsMetadataConcrete : IDistribProcessDetailsMetadata
         {
             public string Name { get; set; }
+            public string Description { get; set; }
+            public double Version { get; set; }
+            public string Author { get; set; }
         }
 
         protected override object _provideMetadata()
@@ -49,5 +55,8 @@ namespace Distrib.Processes
     public interface IDistribProcessDetailsMetadata
     {
         string Name { get; set; }
+        string Description { get; set; }
+        double Version { get; set; }
+        string Author { get; set; }
     }
 }

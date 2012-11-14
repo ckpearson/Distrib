@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Distrib.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,7 @@ namespace Distrib.Plugins.Discovery.Metadata
         private readonly string m_strAuthor = "";
 
         private readonly Type m_typInterfaceType = null;
+        private readonly WriteOnce<Type> m_typControllerType = new WriteOnce<Type>(null);
 
         /// <summary>
         /// Instantiates a new instance of <see cref="DistribPluginMetadata"/>
@@ -27,17 +29,20 @@ namespace Distrib.Plugins.Discovery.Metadata
         /// <param name="description">The description of the plugin</param>
         /// <param name="version">The version of the plugin</param>
         /// <param name="author">The author of the plugin</param>
+        /// <param name="controllerType">The type for the plugin controller</param>
         public DistribPluginMetadata(Type interfaceType,
             string name,
             string description,
             double version,
-            string author)
+            string author,
+            Type controllerType)
         {
             m_typInterfaceType = interfaceType;
             m_strName = name;
             m_strDescription = description;
             m_dVersion = version;
             m_strAuthor = author;
+            if (controllerType != null) m_typControllerType.Value = controllerType;
         }
 
         /// <summary>
@@ -46,6 +51,29 @@ namespace Distrib.Plugins.Discovery.Metadata
         public Type InterfaceType
         {
             get { return m_typInterfaceType; }
+        }
+
+        /// <summary>
+        /// Gets the plugin controller type
+        /// </summary>
+        public Type ControllerType
+        {
+            get
+            {
+                return (!m_typControllerType.IsWritten) ? null : m_typControllerType.Value;
+            }
+
+            internal set
+            {
+                if (!m_typControllerType.IsWritten)
+                {
+                    m_typControllerType.Value = value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Cannot set controller type, already set");
+                }
+            }
         }
 
         /// <summary>
@@ -93,7 +121,8 @@ namespace Distrib.Plugins.Discovery.Metadata
                 attribute.Name,
                 attribute.Description,
                 attribute.Version,
-                attribute.Author);
+                attribute.Author,
+                attribute.ControllerType);
         }
     }
 }

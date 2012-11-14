@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Jobs\DistribJob.cs" />
+    <Compile Include="Plugins\Controllers\DefaultPluginController.cs" />
     <Compile Include="Plugins\Description\DistribPluginDetails.cs" />
     <Compile Include="Plugins\Discovery\Metadata\ConcreteDistribPluginAdditionalMetadataBundle.cs" />
     <Compile Include="Plugins\Discovery\Metadata\DistribPluginAdditionalMetadataAttribute.cs" />
