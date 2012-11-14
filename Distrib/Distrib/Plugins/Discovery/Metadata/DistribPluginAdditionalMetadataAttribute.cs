@@ -72,7 +72,7 @@ namespace Distrib.Plugins.Discovery.Metadata
         /// Gets the pure object holding the metadata
         /// </summary>
         /// <returns>The metadata object</returns>
-        internal object ProvideMetadataObject()
+        internal object ProvideMetadataInstance()
         {
             return _doMetadataReturn();
         }
@@ -82,7 +82,7 @@ namespace Distrib.Plugins.Discovery.Metadata
         /// </summary>
         /// <typeparam name="T">The metadata interface type</typeparam>
         /// <returns>The metadata interface instance</returns>
-        internal T ProvideMetadataObject<T>()
+        internal T ProvideMetadataInstance<T>()
         {
             return (T)_doMetadataReturn();
         }
@@ -127,10 +127,22 @@ namespace Distrib.Plugins.Discovery.Metadata
             }
         }
 
+        /// <summary>
+        /// Generates a metadata bundle for the metadata presented by this attribute
+        /// </summary>
+        /// <returns>The <see cref="IDistribPluginAdditionalMetadataBundle"/> holding the metadata details</returns>
         internal IDistribPluginAdditionalMetadataBundle ToMetadataBundle()
         {
-            return new ConcreteDistribPluginAdditionalMetadataBundle(
-                m_typMetadataInterface, _doMetadataReturn(), this.GetType(), ProvideMetadataKVPs());
+            try
+            {
+
+                return new ConcreteDistribPluginAdditionalMetadataBundle(m_typMetadataInterface,
+                    this.GetType(), _doMetadataReturn(), ProvideMetadataKVPs());
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to get metadata bundle", ex);
+            }
         }
     }
 }

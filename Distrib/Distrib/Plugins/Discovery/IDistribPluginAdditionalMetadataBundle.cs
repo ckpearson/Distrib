@@ -21,13 +21,13 @@ namespace Distrib.Plugins.Discovery
         /// </summary>
         /// <typeparam name="T">The interface type for the metadata</typeparam>
         /// <returns></returns>
-        T GetMetadataObject<T>();
+        T GetMetadataInstance<T>();
 
         /// <summary>
         /// Gets the concrete underlying metadata object
         /// </summary>
         /// <returns>The metadata object</returns>
-        object GetMetadataObject();
+        object GetMetadataInstance();
 
         /// <summary>
         /// Gets a dictionary containing the metadata keys and their respective values.

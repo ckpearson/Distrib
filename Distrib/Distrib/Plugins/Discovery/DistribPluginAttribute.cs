@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Distrib.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,17 +17,21 @@ namespace Distrib.Plugins.Discovery
 
         private readonly Type m_typInterfaceType = null;
 
+        private readonly WriteOnce<Type> m_typControllerType = new WriteOnce<Type>(null);
+
         public DistribPluginAttribute(Type interfaceType,
             string name,
             string description,
             double version,
-            string author)
+            string author,
+            Type controllerType = null)
         {
             m_typInterfaceType = interfaceType;
             m_strName = name;
             m_strDescription = description;
             m_dVersion = version;
             m_strAuthor = author;
+            m_typControllerType.Value = controllerType;
         }
 
         public Type InterfaceType
@@ -52,6 +57,32 @@ namespace Distrib.Plugins.Discovery
         public string Author
         {
             get { return m_strAuthor; }
+        }
+
+        public Type ControllerType
+        {
+            get
+            {
+                lock (m_typControllerType)
+                {
+                    return (!m_typControllerType.IsWritten) ? null : m_typControllerType.Value;
+                }
+            }
+
+            set
+            {
+                lock (m_typControllerType)
+                {
+                    if (!m_typControllerType.IsWritten)
+                    {
+                        m_typControllerType.Value = value;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Controller type already specified");
+                    }
+                }
+            }
         }
     }
 }

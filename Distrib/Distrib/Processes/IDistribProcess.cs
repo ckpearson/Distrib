@@ -18,13 +18,16 @@ namespace Distrib.Processes
     }
 
 
-
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public sealed class DistribProcessDetailsAttribute : DistribPluginAdditionalMetadataAttribute
     {
         private readonly _DistribProcessDetailsMetadataConcrete m_details = null;
 
-        public DistribProcessDetailsAttribute(string name)
+        public DistribProcessDetailsAttribute(
+            string name,
+            string description,
+            double version,
+            string author)
             : base(typeof(IDistribProcessDetailsMetadata))
         {
             m_details = new _DistribProcessDetailsMetadataConcrete();

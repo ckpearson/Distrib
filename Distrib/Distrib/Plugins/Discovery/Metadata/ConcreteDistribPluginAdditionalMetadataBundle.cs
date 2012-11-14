@@ -6,39 +6,65 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins.Discovery.Metadata
 {
+    /// <summary>
+    /// Concrete implementation for plugin additional metadata provided through
+    /// abstraction of <see cref="IDistribPluginAdditionalMetadataBundle"/>
+    /// </summary>
     [Serializable()]
     internal sealed class ConcreteDistribPluginAdditionalMetadataBundle
         : IDistribPluginAdditionalMetadataBundle
     {
-        private readonly Type m_type = null;
-        private readonly object m_metadataObject = null;
-        private readonly Type m_attrType = null;
+        private readonly Type m_typMetadataInterface = null;
+        private readonly object m_objMetadataInstance = null;
+        private readonly Type m_typAttributeType = null;
         private readonly Dictionary<string, object> m_dictKVP = new Dictionary<string, object>();
 
-        internal ConcreteDistribPluginAdditionalMetadataBundle(Type type,
-            object metadataObject, Type attributeType, Dictionary<string, object> kvps)
+        /// <summary>
+        /// Instantiates a new instance
+        /// </summary>
+        /// <param name="interfaceType">The type of the interface used for metadata access</param>
+        /// <param name="attributeType">The type of the attribute that provided the metadata</param>
+        /// <param name="metadataObject">The underlying object holding the metadata</param>
+        /// <param name="kvps">The key-value pairs for the metadata</param>
+        internal ConcreteDistribPluginAdditionalMetadataBundle(Type interfaceType, 
+            Type attributeType, object metadataObject, Dictionary<string, object> kvps)
         {
-            m_type = type;
-            m_metadataObject = metadataObject;
-            m_attrType = attributeType;
+            m_typMetadataInterface = interfaceType;
+            m_objMetadataInstance = metadataObject;
+            m_typAttributeType = attributeType;
             m_dictKVP = kvps;
         }
 
-        public T GetMetadataObject<T>()
+        /// <summary>
+        /// Gets the instance holding the metadata cast to a provided type.
+        /// </summary>
+        /// <typeparam name="T">The type to cast the metadata instance to</typeparam>
+        /// <returns>The cast result</returns>
+        public T GetMetadataInstance<T>()
         {
-            return (T)m_metadataObject;
+            return (T)m_objMetadataInstance;
         }
 
-        public object GetMetadataObject()
+        /// <summary>
+        /// Gets the instance holding the metadata
+        /// </summary>
+        /// <returns>The metadata instance</returns>
+        public object GetMetadataInstance()
         {
-            return m_metadataObject;
+            return m_objMetadataInstance;
         }
 
+        /// <summary>
+        /// Gets the type for the attribute that provided the metadata
+        /// </summary>
         public Type AdditionalMetadataAttributeType
         {
-            get { return m_attrType; }
+            get { return m_typAttributeType; }
         }
 
+        /// <summary>
+        /// Gets the metadata key-value pairs
+        /// </summary>
         public Dictionary<string, object> MetadataKVPs
         {
             get { return m_dictKVP; }

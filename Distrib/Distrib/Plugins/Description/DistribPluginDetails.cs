@@ -54,6 +54,9 @@ namespace Distrib.Plugins.Description
             get { return m_metadata; }
         }
 
+        /// <summary>
+        /// Gets the additional metadata bundles that were present with the plugin
+        /// </summary>
         public List<IDistribPluginAdditionalMetadataBundle> AdditionalMetadataBundles
         {
             get
