@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Distrib.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,16 +11,37 @@ namespace Distrib.Plugins.Controllers
     {
     }
 
+    internal enum DistribPluginControllerValidationResult
+    {
+        Success = 0,
+        UnknownFailure,
+        ControllerTypeNotAClass,
+        ControllerInterfaceNotImplemented,
+    }
+
     internal static class DistribPluginControllerSystem
     {
-        public static Type ValidateAndReturnControllerType(Type controllerType)
+
+        public static Res<Type, DistribPluginControllerValidationResult> ValidateAndReturnControllerType(Type controllerType)
         {
-            if (controllerType == null) throw new ArgumentNullException("controller type must be supplied");
+            var res = DistribPluginControllerValidationResult.Success;
+
+            if (controllerType == null) throw new ArgumentNullException("Controller type must be supplied");
 
             try
             {
+                if (!controllerType.IsClass)
+                {
+                    res = DistribPluginControllerValidationResult.ControllerTypeNotAClass;
+                }
 
-                return controllerType;
+                if (controllerType.GetInterface(typeof(IDistribPluginController).FullName) == null)
+                {
+                    res = DistribPluginControllerValidationResult.ControllerInterfaceNotImplemented;
+                }
+
+                return new Res<Type, DistribPluginControllerValidationResult>(res == DistribPluginControllerValidationResult.Success,
+                    controllerType, res);
             }
             catch (Exception ex)
             {
@@ -27,7 +49,7 @@ namespace Distrib.Plugins.Controllers
             }
         }
 
-        public static Type ValidateAndReturnControllerType<T>()
+        public static Res<Type, DistribPluginControllerValidationResult> ValidateAndReturnControllerType<T>()
         {
             return ValidateAndReturnControllerType(typeof(T));
         }

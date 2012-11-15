@@ -5,6 +5,7 @@ using Distrib.Utils;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting;
@@ -128,6 +129,34 @@ namespace Distrib.Plugins
             }
         }
 
+        private Res<DistribPluginBootstrapResult> _PerformPluginBootstrapping(DistribPluginDetails pluginType)
+        {
+            Res<Type, DistribPluginControllerValidationResult> validationRes = null;
+
+            if (pluginType == null) throw new ArgumentNullException("Plugin details must be supplied");
+
+            try
+            {
+                // If the plugin hasn't specified a controller then that needs to be the
+                // default controller
+                if (pluginType.Metadata.ControllerType == null)
+                {
+                    validationRes = DistribPluginControllerSystem.ValidateAndReturnControllerType<DistribDefaultPluginController>();
+                }
+                else
+                {
+                    // Not the default, validate and set
+                    validationRes = DistribPluginControllerSystem.ValidateAndReturnControllerType(pluginType.Metadata.ControllerType);
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to perform bootstrapping for plugin", ex);
+            }
+        }
+
         private readonly Dictionary<DistribPluginDetails, List<DistribPluginInstance>>
             m_dictInstances = new Dictionary<DistribPluginDetails, List<DistribPluginInstance>>();
 
@@ -194,31 +223,7 @@ namespace Distrib.Plugins
             }
         }
 
-        private void _PerformPluginBootstrapping(DistribPluginDetails pluginType)
-        {
-            if (pluginType == null) throw new ArgumentNullException("Plugin details must be supplied");
 
-            try
-            {
-                // If the plugin hasn't specified a controller then that needs to be the
-                // default controller
-                if (pluginType.Metadata.ControllerType == null)
-                {
-                    pluginType.Metadata.ControllerType =
-                        DistribPluginControllerSystem.ValidateAndReturnControllerType<DistribDefaultPluginController>();
-                }
-                else
-                {
-                    // Not the default, validate and set
-                    pluginType.Metadata.ControllerType =
-                        DistribPluginControllerSystem.ValidateAndReturnControllerType(pluginType.Metadata.ControllerType);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Failed to perform bootstrapping for plugin", ex);
-            }
-        }
 
         private void _CheckUsabilityOfPlugin(DistribPluginDetails pluginType)
         {

@@ -51,6 +51,7 @@
     <Compile Include="Plugins\Discovery\Metadata\DistribPluginAdditionalMetadataAttribute.cs" />
     <Compile Include="Plugins\Discovery\DistribPluginAttribute.cs" />
     <Compile Include="Plugins\Discovery\IDistribPluginAdditionalMetadataBundle.cs" />
+    <Compile Include="Plugins\DistribPluginBootstrapResult.cs" />
     <Compile Include="Plugins\DistribPluginExclusionReason.cs" />
     <Compile Include="Plugins\Discovery\Metadata\DistribPluginMetadata.cs" />
     <Compile Include="Plugins\DistribPluginAssembly.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Processes\IDistribProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\RemoteAppDomainBridge.cs" />
+    <Compile Include="Utils\Res.cs" />
     <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Utils\WriteOnce.cs" />
   </ItemGroup>
