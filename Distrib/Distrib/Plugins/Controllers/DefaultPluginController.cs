@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace Distrib.Plugins.Controllers
 {
     internal sealed class DistribDefaultPluginController : IDistribPluginController
     {
+        public DistribDefaultPluginController() { }
     }
 
     internal enum DistribPluginControllerValidationResult
@@ -17,6 +19,7 @@ namespace Distrib.Plugins.Controllers
         UnknownFailure,
         ControllerTypeNotAClass,
         ControllerInterfaceNotImplemented,
+        ControllerTypeMissingPublicParameterlessConstructor,
     }
 
     internal static class DistribPluginControllerSystem
@@ -38,6 +41,11 @@ namespace Distrib.Plugins.Controllers
                 if (controllerType.GetInterface(typeof(IDistribPluginController).FullName) == null)
                 {
                     res = DistribPluginControllerValidationResult.ControllerInterfaceNotImplemented;
+                }
+
+                if (controllerType.GetConstructor(Type.EmptyTypes) == null)
+                {
+                    res = DistribPluginControllerValidationResult.ControllerTypeMissingPublicParameterlessConstructor;
                 }
 
                 return new Res<Type, DistribPluginControllerValidationResult>(res == DistribPluginControllerValidationResult.Success,
