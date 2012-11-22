@@ -1,5 +1,6 @@
 ﻿using Distrib.Plugins.Controllers;
 using Distrib.Plugins.Description;
+using Distrib.Plugins.Discovery;
 using Distrib.Processes;
 using Distrib.Utils;
 using System;
@@ -109,6 +110,9 @@ namespace Distrib.Plugins
                         // affect things.
                         _PerformPluginBootstrapping(pluginType);
 
+                        // Make sure that the additional metadata meets any constraints placed upon it
+                        var r = _CheckAdditionalMetadataConstraints(pluginType);
+
                         // Check over the usability of the plugin and mark it accordingly
                         _CheckUsabilityOfPlugin(pluginType);
 
@@ -127,6 +131,90 @@ namespace Distrib.Plugins
             {
                 throw new ApplicationException("Failed to initialise plugin assembly", ex);
             }
+        }
+
+        enum AdditionalMetadataCheckResult
+        {
+            Success = 0,
+            FailedExistencePolicy,
+            ExistencePolicyMismatch,
+        }
+
+        private Res<List<Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataCheckResult, string>>> _CheckAdditionalMetadataConstraints(DistribPluginDetails pluginType)
+        {
+            var resultList = new List<Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataCheckResult, string>>();
+            bool success = true;
+
+            Action<IEnumerable<IDistribPluginAdditionalMetadataBundle>,
+                AdditionalMetadataCheckResult, string> addRange = (bundles, res, msg) =>
+                    {
+                        lock(resultList)
+                        {
+                            resultList.AddRange(bundles.Select(b => 
+                                new Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataCheckResult, string>(
+                                     b, res, msg)));
+                        }
+                    };
+
+            if (pluginType.AdditionalMetadataBundles != null && pluginType.AdditionalMetadataBundles.Count > 0)
+            {
+                // Group by the identities
+                var grps = pluginType.AdditionalMetadataBundles.GroupBy(b => b.MetadataInstanceIdentity);
+
+                foreach (var group in grps)
+                {
+                    // The whole identity group have to agree on their existence policy
+                    if (group.GroupBy(b => b.MetadataInstanceExistencePolicy).Count() != 1)
+                    {
+                        addRange(group, AdditionalMetadataCheckResult.ExistencePolicyMismatch, "Existence policy not agreed upon across identity");
+                        success = success &= false;
+                    }
+                    else
+                    {
+                        switch (group.First().MetadataInstanceExistencePolicy)
+                        {
+                            // The group should only have a single instance present
+                            case Discovery.Metadata.AdditionalMetadataIdentityExistencePolicy.SingleInstance:
+
+                                if (group.Count() == 1)
+                                {
+                                    addRange(group, AdditionalMetadataCheckResult.Success, "Succeeded as policy called for single instance");
+                                    success &= true;
+                                }
+                                else
+                                {
+                                    addRange(group, AdditionalMetadataCheckResult.FailedExistencePolicy, "Failed as policy called for single instance");
+                                    success &= false;
+                                }
+                                break;
+
+                            case Discovery.Metadata.AdditionalMetadataIdentityExistencePolicy.MultipleInstances:
+
+                                if (group.Count() > 1)
+                                {
+                                    addRange(group, AdditionalMetadataCheckResult.Success, "Succeeded as policy called for multiple instances");
+                                    success &= true;
+                                }
+                                else
+                                {
+                                    addRange(group, AdditionalMetadataCheckResult.FailedExistencePolicy, "Failed as policy called for multiple instances");
+                                    success &= false;
+                                }
+                                break;
+
+                            // It's simply not important, so just throw all of them in as OK
+                            default:
+                            case Discovery.Metadata.AdditionalMetadataIdentityExistencePolicy.NotImportant:
+
+                                addRange(group, AdditionalMetadataCheckResult.Success, "Succeeded as policy not important");
+                                success &= success = true;
+                                break;
+                        }
+                    }
+                }
+            }
+            return new Res<List<Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataCheckResult, string>>>((success &= true),
+                resultList);
         }
 
         private Res<DistribPluginBootstrapResult> _PerformPluginBootstrapping(DistribPluginDetails pluginType)

@@ -89,13 +89,18 @@ namespace Distrib.Plugins
                     var pluginDetails = new DistribPluginDetails(type.type.FullName, DistribPluginMetadata.FromPluginAttribute(type.attr));
 
                     // See if the plugin class has any additional plugin-specific metadata to carry across
-                    var additMetadata = type.type.GetCustomAttributes<DistribPluginAdditionalMetadataAttribute>().ToList();
+                    var additMetadataDecorated = type.type.GetCustomAttributes<DistribPluginAdditionalMetadataAttribute>().ToList();
+                    var additMetadataSupplied = type.attr.SuppliedAdditionalMetadata;
 
-                    if (additMetadata != null && additMetadata.Count > 0)
-                    {
-                        pluginDetails.AdditionalMetadataBundles =
-                            additMetadata.Select(adm => adm.ToMetadataBundle()).ToList();
-                    }
+                    // The bundles need to comprise both of those provided by decoration and by explicit supply
+                    // concatenate the bundles provided c
+                    pluginDetails.AdditionalMetadataBundles =
+                        ((additMetadataDecorated == null) ? new List<IDistribPluginAdditionalMetadataBundle>()
+                            : additMetadataDecorated.Select(m => m.ToMetadataBundle()))
+                        .Concat(
+                            (additMetadataSupplied == null) ? new List<IDistribPluginAdditionalMetadataBundle>()
+                                : additMetadataSupplied)
+                        .ToList();
 
                     // Add details to the list
                     lstDetails.Add(pluginDetails);

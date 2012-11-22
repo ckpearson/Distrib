@@ -24,7 +24,7 @@ namespace Distrib.Utils
             get { return m_bSuccess; }
         }
 
-        public object Result
+        public T Result
         {
             get { return m_objResult; }
         }

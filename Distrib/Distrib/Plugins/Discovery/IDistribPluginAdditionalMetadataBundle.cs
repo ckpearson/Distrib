@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Distrib.Plugins.Discovery.Metadata;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,5 +34,9 @@ namespace Distrib.Plugins.Discovery
         /// Gets a dictionary containing the metadata keys and their respective values.
         /// </summary>
         Dictionary<string, object> MetadataKVPs { get; }
+
+        string MetadataInstanceIdentity { get; }
+
+        AdditionalMetadataIdentityExistencePolicy MetadataInstanceExistencePolicy { get; }
     }
 }

@@ -28,7 +28,9 @@ namespace Distrib.Processes
             string description,
             double version,
             string author)
-            : base(typeof(IDistribProcessDetailsMetadata))
+            : base(typeof(IDistribProcessDetailsMetadata), 
+                "{959D436B-FBDF-4210-A80A-F3DACC357FD6}", 
+                AdditionalMetadataIdentityExistencePolicy.SingleInstance)
         {
             m_details = new _DistribProcessDetailsMetadataConcrete();
             m_details.Name = name;
