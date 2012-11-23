@@ -1,4 +1,5 @@
 ﻿using Distrib.Plugins.Discovery;
+using Distrib.Processes.Discovery.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;

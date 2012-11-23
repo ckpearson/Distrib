@@ -16,49 +16,4 @@ namespace Distrib.Processes
     {
         string SayHello();
     }
-
-
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public sealed class DistribProcessDetailsAttribute : DistribPluginAdditionalMetadataAttribute
-    {
-        private readonly _DistribProcessDetailsMetadataConcrete m_details = null;
-
-        public DistribProcessDetailsAttribute(
-            string name,
-            string description,
-            double version,
-            string author)
-            : base(typeof(IDistribProcessDetailsMetadata), 
-                "{959D436B-FBDF-4210-A80A-F3DACC357FD6}", 
-                AdditionalMetadataIdentityExistencePolicy.SingleInstance)
-        {
-            m_details = new _DistribProcessDetailsMetadataConcrete();
-            m_details.Name = name;
-            m_details.Description = description;
-            m_details.Version = version;
-            m_details.Author = author;
-        }
-
-        [Serializable()]
-        private class _DistribProcessDetailsMetadataConcrete : IDistribProcessDetailsMetadata
-        {
-            public string Name { get; set; }
-            public string Description { get; set; }
-            public double Version { get; set; }
-            public string Author { get; set; }
-        }
-
-        protected override object _provideMetadata()
-        {
-            return m_details;
-        }
-    }
-
-    public interface IDistribProcessDetailsMetadata
-    {
-        string Name { get; set; }
-        string Description { get; set; }
-        double Version { get; set; }
-        string Author { get; set; }
-    }
 }

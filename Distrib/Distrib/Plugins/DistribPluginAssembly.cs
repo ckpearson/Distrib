@@ -28,6 +28,10 @@ namespace Distrib.Plugins
 
         private IReadOnlyList<DistribPluginDetails> m_lstPluginDetails = null;
 
+        /// <summary>
+        /// Instantiates a new instance
+        /// </summary>
+        /// <param name="assemblyPath">The path to the assembly</param>
         private DistribPluginAssembly(string assemblyPath)
         {
             if (string.IsNullOrEmpty(assemblyPath)) throw new ArgumentNullException("AssemblyPath must not be null or empty");
@@ -110,12 +114,14 @@ namespace Distrib.Plugins
                         // affect things.
                         _PerformPluginBootstrapping(pluginType);
 
-                        // Make sure that the additional metadata meets any constraints placed upon it
-                        var r = _CheckAdditionalMetadataConstraints(pluginType);
+                        // Make sure that the additional metadata meets the existence / instancing requirements specified
+                        var r = _CheckAdditionalMetadataExistenceRequirements(pluginType);
 
                         // Check over the usability of the plugin and mark it accordingly
-                        _CheckUsabilityOfPlugin(pluginType);
+                        var usabilityCheckResult = _CheckUsabilityOfPlugin(pluginType);
 
+                        // Process the usability result
+                        _ProcessUsabilityResult(pluginType, usabilityCheckResult);
                         
                         result.AddPlugin(pluginType);
                     }
@@ -133,29 +139,43 @@ namespace Distrib.Plugins
             }
         }
 
-        enum AdditionalMetadataCheckResult
+        private void _ProcessUsabilityResult(DistribPluginDetails pluginType, 
+            Res<DistribPluginExlusionReason, object> usabilityCheckResult)
         {
-            Success = 0,
-            FailedExistencePolicy,
-            ExistencePolicyMismatch,
+            if (usabilityCheckResult.Success)
+            {
+                pluginType.MarkAsUsable();
+            }
+            else
+            {
+                pluginType.MarkAsUnusable(usabilityCheckResult.Result);
+            }
         }
 
-        private Res<List<Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataCheckResult, string>>> _CheckAdditionalMetadataConstraints(DistribPluginDetails pluginType)
+        /// <summary>
+        /// Checks that a given plugin's additional metadata existence policies are met
+        /// </summary>
+        /// <param name="pluginType">The plugin details</param>
+        /// <returns>The result of the check</returns>
+        private Res<List<Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataExistenceCheckResult, string>>> 
+            _CheckAdditionalMetadataExistenceRequirements(DistribPluginDetails pluginType)
         {
-            var resultList = new List<Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataCheckResult, string>>();
+            var resultList = new List<Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataExistenceCheckResult, string>>();
             bool success = true;
 
+            // Simple action to add a bunch of bundles with the result and reason
             Action<IEnumerable<IDistribPluginAdditionalMetadataBundle>,
-                AdditionalMetadataCheckResult, string> addRange = (bundles, res, msg) =>
+                AdditionalMetadataExistenceCheckResult, string> addRange = (bundles, res, msg) =>
                     {
                         lock(resultList)
                         {
                             resultList.AddRange(bundles.Select(b => 
-                                new Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataCheckResult, string>(
+                                new Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataExistenceCheckResult, string>(
                                      b, res, msg)));
                         }
                     };
 
+            // Check there are some metadata bundles
             if (pluginType.AdditionalMetadataBundles != null && pluginType.AdditionalMetadataBundles.Count > 0)
             {
                 // Group by the identities
@@ -166,78 +186,98 @@ namespace Distrib.Plugins
                     // The whole identity group have to agree on their existence policy
                     if (group.GroupBy(b => b.MetadataInstanceExistencePolicy).Count() != 1)
                     {
-                        addRange(group, AdditionalMetadataCheckResult.ExistencePolicyMismatch, "Existence policy not agreed upon across identity");
-                        success = success &= false;
+                        addRange(group, AdditionalMetadataExistenceCheckResult.ExistencePolicyMismatch, "Existence policy not agreed upon across identity");
+                        success &= false;
                     }
                     else
                     {
+                        // Perform checks on policy
                         switch (group.First().MetadataInstanceExistencePolicy)
                         {
                             // The group should only have a single instance present
-                            case Discovery.Metadata.AdditionalMetadataIdentityExistencePolicy.SingleInstance:
+                            case Discovery.Metadata.AdditionalPluginMetadataIdentityExistencePolicy.SingleInstance:
 
                                 if (group.Count() == 1)
                                 {
-                                    addRange(group, AdditionalMetadataCheckResult.Success, "Succeeded as policy called for single instance");
+                                    addRange(group, AdditionalMetadataExistenceCheckResult.Success, "Succeeded as policy called for single instance");
                                     success &= true;
                                 }
                                 else
                                 {
-                                    addRange(group, AdditionalMetadataCheckResult.FailedExistencePolicy, "Failed as policy called for single instance");
+                                    addRange(group, AdditionalMetadataExistenceCheckResult.FailedExistencePolicy, "Failed as policy called for single instance");
                                     success &= false;
                                 }
                                 break;
 
-                            case Discovery.Metadata.AdditionalMetadataIdentityExistencePolicy.MultipleInstances:
+                            // The group should have at least a single instance
+                            case Discovery.Metadata.AdditionalPluginMetadataIdentityExistencePolicy.AtLeastOne:
 
-                                if (group.Count() > 1)
+                                if (group.Count() >= 1)
                                 {
-                                    addRange(group, AdditionalMetadataCheckResult.Success, "Succeeded as policy called for multiple instances");
+                                    addRange(group, AdditionalMetadataExistenceCheckResult.Success,
+                                        "Succeeded as policy called for at least one instance and '{0}' {1}"
+                                        .fmt(group.Count(), group.Count() == 1 ? "was" : "were"));
                                     success &= true;
                                 }
                                 else
                                 {
-                                    addRange(group, AdditionalMetadataCheckResult.FailedExistencePolicy, "Failed as policy called for multiple instances");
+                                    addRange(group, AdditionalMetadataExistenceCheckResult.FailedExistencePolicy,
+                                        "Failed as policy called for at least one instance");
+                                    success &= false;
+                                }
+
+                                break;
+
+                            // The group must have multiple instances
+                            case Discovery.Metadata.AdditionalPluginMetadataIdentityExistencePolicy.MultipleInstances:
+
+                                if (group.Count() > 1)
+                                {
+                                    addRange(group, AdditionalMetadataExistenceCheckResult.Success, "Succeeded as policy called for multiple instances");
+                                    success &= true;
+                                }
+                                else
+                                {
+                                    addRange(group, AdditionalMetadataExistenceCheckResult.FailedExistencePolicy, "Failed as policy called for multiple instances");
                                     success &= false;
                                 }
                                 break;
 
                             // It's simply not important, so just throw all of them in as OK
                             default:
-                            case Discovery.Metadata.AdditionalMetadataIdentityExistencePolicy.NotImportant:
+                            case Discovery.Metadata.AdditionalPluginMetadataIdentityExistencePolicy.NotImportant:
 
-                                addRange(group, AdditionalMetadataCheckResult.Success, "Succeeded as policy not important");
+                                addRange(group, AdditionalMetadataExistenceCheckResult.Success, "Succeeded as policy not important");
                                 success &= success = true;
                                 break;
                         }
                     }
                 }
             }
-            return new Res<List<Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataCheckResult, string>>>((success &= true),
+            return new Res<List<Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataExistenceCheckResult, string>>>((success &= true),
                 resultList);
         }
 
+        /// <summary>
+        /// Performs the bootstrapping for a given plugin's details so any defaults can be set if needed
+        /// </summary>
+        /// <param name="pluginType">The plugin details</param>
+        /// <returns>The result</returns>
         private Res<DistribPluginBootstrapResult> _PerformPluginBootstrapping(DistribPluginDetails pluginType)
         {
-            Res<Type, DistribPluginControllerValidationResult> validationRes = null;
+            DistribPluginBootstrapResult res = DistribPluginBootstrapResult.Success;
 
             if (pluginType == null) throw new ArgumentNullException("Plugin details must be supplied");
 
             try
             {
-                // If the plugin hasn't specified a controller then that needs to be the
-                // default controller
+                // If the plugin hasn't specified a controller then that needs to be the default controller
                 if (pluginType.Metadata.ControllerType == null)
                 {
-                    validationRes = DistribPluginControllerSystem.ValidateAndReturnControllerType<DistribDefaultPluginController>();
-                }
-                else
-                {
-                    // Not the default, validate and set
-                    validationRes = DistribPluginControllerSystem.ValidateAndReturnControllerType(pluginType.Metadata.ControllerType);
+                    pluginType.Metadata.ControllerType = typeof(DistribDefaultPluginController);
                 }
 
-                return null;
+                return new Res<DistribPluginBootstrapResult>(res == DistribPluginBootstrapResult.Success, res);
             }
             catch (Exception ex)
             {
@@ -313,28 +353,45 @@ namespace Distrib.Plugins
 
 
 
-        private void _CheckUsabilityOfPlugin(DistribPluginDetails pluginType)
+        private Res<DistribPluginExlusionReason, object> _CheckUsabilityOfPlugin(DistribPluginDetails pluginType)
         {
+            var res = DistribPluginExlusionReason.Unknown;
+            object resultAddit = null;
+            bool success = true;
+
             if (pluginType == null) throw new ArgumentNullException("Plugin Details must be supplied");
 
             try
             {
-                // Check the plugin class can be marshaled (for appdomain separation)
-                if (!m_asmManager.PluginTypeIsMarshalable(pluginType))
+                var _result = CChain<Tuple<DistribPluginExlusionReason, object>>
+                    // Check it's marshalable
+                    .If(() => !m_asmManager.PluginTypeIsMarshalable(pluginType),
+                        new Tuple<DistribPluginExlusionReason, object>(DistribPluginExlusionReason.TypeNotMarshalable, null))
+                    // Check it adheres to the plugin interface as stated
+                    .ThenIf(() => !m_asmManager.PluginTypeAdheresToStatedInterface(pluginType),
+                        new Tuple<DistribPluginExlusionReason, object>(DistribPluginExlusionReason.NonAdherenceToInterface, null))
+                    // Check that the specified plugin controller is valid
+                    .ThenIf(() => !DistribPluginControllerSystem.ValidateControllerType(pluginType.Metadata.ControllerType).Success,
+                        new Tuple<DistribPluginExlusionReason, object>(DistribPluginExlusionReason.PluginControllerInvalid,
+                            DistribPluginControllerSystem.ValidateControllerType(pluginType.Metadata.ControllerType)))
+                    .Result;
+
+                if (_result == null)
                 {
-                    pluginType.MarkAsUnusable(DistribPluginExlusionReason.TypeNotMarshalable);
-                    return;
+                    // No result above means that the checks all came out fine
+                    success = true;
+                    res = DistribPluginExlusionReason.Unknown;
+                    resultAddit = null;
+                }
+                else
+                {
+                    // Something did go wrong
+                    success = false;
+                    res = _result.Item1;
+                    resultAddit = _result.Item2;
                 }
 
-                // Check the plugin class implements the interface it claims to
-                if (!m_asmManager.PluginTypeAdheresToStatedInterface(pluginType))
-                {
-                    pluginType.MarkAsUnusable(DistribPluginExlusionReason.NonAdherenceToInterface);
-                    return;
-                }
-
-                // Got this far, so the plugin is classed as usable
-                pluginType.MarkAsUsable();
+                return new Res<DistribPluginExlusionReason, object>((success &= true), res, resultAddit);
             }
             catch (Exception ex)
             {

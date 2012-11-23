@@ -8,13 +8,6 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins.Discovery.Metadata
 {
-    public enum AdditionalMetadataIdentityExistencePolicy
-    {
-        NotImportant = 0,
-        SingleInstance,
-        MultipleInstances,
-    }
-
     /// <summary>
     /// Provides a means by which plugins can carry additional subsystem specific metadata along with it
     /// </summary>
@@ -23,7 +16,7 @@ namespace Distrib.Plugins.Discovery.Metadata
     {
         private readonly Type m_typMetadataInterface = null;
         private readonly string m_strMetadataIdentity = Guid.NewGuid().ToString();
-        private readonly AdditionalMetadataIdentityExistencePolicy m_enumIdentityPolicy = AdditionalMetadataIdentityExistencePolicy.NotImportant;
+        private readonly AdditionalPluginMetadataIdentityExistencePolicy m_enumIdentityPolicy = AdditionalPluginMetadataIdentityExistencePolicy.NotImportant;
 
         private WriteOnce<IReadOnlyList<PropertyInfo>> m_readOnlyListMetadataProperties =
             new WriteOnce<IReadOnlyList<PropertyInfo>>(null);
@@ -36,7 +29,7 @@ namespace Distrib.Plugins.Discovery.Metadata
         /// <param name="metadataInterfaceType">The interface type that the metadata takes the form of</param>
         /// <param name="identity">The identifier used to represent this type of additional metadata</param>
         protected DistribPluginAdditionalMetadataAttribute(Type metadataInterfaceType, string identity,
-            AdditionalMetadataIdentityExistencePolicy identityPolicy)
+            AdditionalPluginMetadataIdentityExistencePolicy identityPolicy)
         {
             m_typMetadataInterface = metadataInterfaceType;
             m_strMetadataIdentity = identity;

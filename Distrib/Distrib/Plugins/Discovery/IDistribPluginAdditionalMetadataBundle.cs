@@ -37,6 +37,6 @@ namespace Distrib.Plugins.Discovery
 
         string MetadataInstanceIdentity { get; }
 
-        AdditionalMetadataIdentityExistencePolicy MetadataInstanceExistencePolicy { get; }
+        AdditionalPluginMetadataIdentityExistencePolicy MetadataInstanceExistencePolicy { get; }
     }
 }
