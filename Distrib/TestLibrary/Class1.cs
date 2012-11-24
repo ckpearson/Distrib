@@ -16,14 +16,14 @@ namespace TestLibrary
     //1.0,
     //"Clint Pearson")]
 
-    [DistribProcessDetails(
-        "Test Process",
-        "Simple Test Process",
-        1.0,
-        "Clint Pearson")]
+    //[DistribProcessDetails(
+    //    "Test Process",
+    //    "Simple Test Process",
+    //    1.0,
+    //    "Clint Pearson")]
 
     [DistribProcessPlugin("Test process", "simple test process", 1.0, "Clint Pearson")]
-    class TestProcess : MarshalByRefObject, IDistribProcess
+    class TestProcess : MarshalByRefObject , IDistribProcess
     {
         public string SayHello()
         {

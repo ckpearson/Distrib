@@ -26,5 +26,15 @@
         /// The plugin has been excluded because the controller for the plugin failed validation
         /// </summary>
         PluginControllerInvalid,
+
+        /// <summary>
+        /// The plugin has been excluded because the bootstrap process failed
+        /// </summary>
+        PluginBootstrapFailure,
+
+        /// <summary>
+        /// The plugin has been excluded because the additional metadata constraints weren't met
+        /// </summary>
+        PluginAdditionalMetadataConstraintsNotMet,
     } 
 }

@@ -112,17 +112,44 @@ namespace Distrib.Plugins
                         // Do any bootstrapping that's required to fill in defaults etc
                         // This has to be done before checking the usability as it could
                         // affect things.
-                        _PerformPluginBootstrapping(pluginType);
+                        var bootstrapResult = _PerformPluginBootstrapping(pluginType);
 
-                        // Make sure that the additional metadata meets the existence / instancing requirements specified
-                        var r = _CheckAdditionalMetadataExistenceRequirements(pluginType);
+                        if (!bootstrapResult.Success)
+                        {
+                            pluginType.MarkAsUnusable(DistribPluginExlusionReason.PluginBootstrapFailure,
+                                bootstrapResult.Result);
+
+                            result.AddPlugin(pluginType);
+
+                            continue;
+                        }
 
                         // Check over the usability of the plugin and mark it accordingly
                         var usabilityCheckResult = _CheckUsabilityOfPlugin(pluginType);
 
-                        // Process the usability result
-                        _ProcessUsabilityResult(pluginType, usabilityCheckResult);
-                        
+                        if (!usabilityCheckResult.Success)
+                        {
+                            pluginType.MarkAsUnusable(usabilityCheckResult.Result, usabilityCheckResult.ResultTwo);
+
+                            result.AddPlugin(pluginType);
+
+                            continue;
+                        }
+
+                        // Make sure that the additional metadata meets the existence / instancing requirements specified
+                        var metadataConstraintsResult = _CheckAdditionalMetadataExistenceRequirements(pluginType);
+
+                        if (!metadataConstraintsResult.Success)
+                        {
+                            pluginType.MarkAsUnusable(DistribPluginExlusionReason.PluginAdditionalMetadataConstraintsNotMet,
+                                metadataConstraintsResult.Result);
+
+                            result.AddPlugin(pluginType);
+
+                            continue;
+                        }
+
+                        pluginType.MarkAsUsable();
                         result.AddPlugin(pluginType);
                     }
 

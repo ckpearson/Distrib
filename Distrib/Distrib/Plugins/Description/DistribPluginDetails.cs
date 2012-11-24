@@ -19,8 +19,11 @@ namespace Distrib.Plugins.Description
         private readonly DistribPluginMetadata m_metadata = null;
 
         private readonly WriteOnce<bool> m_bPluginFoundToBeUsable = new WriteOnce<bool>(false);
+
         private readonly WriteOnce<DistribPluginExlusionReason> m_pluginExclusionReason =
             new WriteOnce<DistribPluginExlusionReason>(DistribPluginExlusionReason.Unknown);
+        private readonly WriteOnce<object> m_objPluginExclusionTag =
+            new WriteOnce<object>(null);
 
         private readonly WriteOnce<List<IDistribPluginAdditionalMetadataBundle>>
             m_lstAdditionalMetadata = new WriteOnce<List<IDistribPluginAdditionalMetadataBundle>>(null);
@@ -127,6 +130,27 @@ namespace Distrib.Plugins.Description
         }
 
         /// <summary>
+        /// Gets the exclusion tag providing additional details accompanying the exclusion
+        /// </summary>
+        public object ExclusionTag
+        {
+            get
+            {
+                lock (m_lock)
+                {
+                    if (!UsabilitySet)
+                    {
+                        throw new InvalidOperationException("Usability not set yet");
+                    }
+                    else
+                    {
+                        return m_objPluginExclusionTag.Value;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Marks the plugin as being usable by the system as it passed discovery-time validation
         /// </summary>
         internal void MarkAsUsable()
@@ -142,12 +166,15 @@ namespace Distrib.Plugins.Description
         /// Marks the plugin as being unusable by the system as it failed discovery-time validation
         /// </summary>
         /// <param name="exclusionReason">The reason why the plugin is being excluded from the system</param>
-        internal void MarkAsUnusable(DistribPluginExlusionReason exclusionReason)
+        /// <param name="tag">The object tag for additional detail on the exclusion</param>
+        internal void MarkAsUnusable(DistribPluginExlusionReason exclusionReason,
+            object tag = null)
         {
             lock (m_lock)
             {
                 m_bPluginFoundToBeUsable.Value = false;
                 m_pluginExclusionReason.Value = exclusionReason;
+                m_objPluginExclusionTag.Value = tag;
             }
         }
 
