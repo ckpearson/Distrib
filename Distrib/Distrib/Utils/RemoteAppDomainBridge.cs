@@ -11,7 +11,7 @@ namespace Distrib.Utils
     /// <summary>
     /// Simple bridge object for use within an AppDomain
     /// </summary>
-    internal sealed class RemoteAppDomainBridge : MarshalByRefObject
+    public sealed class RemoteAppDomainBridge : MarshalByRefObject
     {
         private readonly Dictionary<string, Assembly> m_dictAssemblies =
             new Dictionary<string, Assembly>();

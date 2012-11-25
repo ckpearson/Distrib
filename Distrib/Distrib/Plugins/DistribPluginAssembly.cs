@@ -369,7 +369,7 @@ namespace Distrib.Plugins
                 }
 
                 T o = (T)m_asmManager.CreateInstance(details.PluginTypeName);
-                
+
                 return o;
             }
             catch (Exception ex)
@@ -400,7 +400,7 @@ namespace Distrib.Plugins
                     // Check that the specified plugin controller is valid
                     .ThenIf(() => !DistribPluginControllerSystem.ValidateControllerType(pluginType.Metadata.ControllerType).Success,
                         new Tuple<DistribPluginExlusionReason, object>(DistribPluginExlusionReason.PluginControllerInvalid,
-                            DistribPluginControllerSystem.ValidateControllerType(pluginType.Metadata.ControllerType)))
+                            DistribPluginControllerSystem.ValidateControllerType(pluginType.Metadata.ControllerType).ResultTwo))
                     .Result;
 
                 if (_result == null)

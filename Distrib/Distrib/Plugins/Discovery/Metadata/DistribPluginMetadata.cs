@@ -17,6 +17,7 @@ namespace Distrib.Plugins.Discovery.Metadata
         private readonly string m_strDescription = "";
         private readonly double m_dVersion = 0.0;
         private readonly string m_strAuthor = "";
+        private readonly string m_strIdentifier = "";
 
         private readonly Type m_typInterfaceType = null;
         private readonly WriteOnce<Type> m_typControllerType = new WriteOnce<Type>(null);
@@ -29,12 +30,14 @@ namespace Distrib.Plugins.Discovery.Metadata
         /// <param name="description">The description of the plugin</param>
         /// <param name="version">The version of the plugin</param>
         /// <param name="author">The author of the plugin</param>
+        /// <param name="identifier">The plugin identifier</param>
         /// <param name="controllerType">The type for the plugin controller</param>
         public DistribPluginMetadata(Type interfaceType,
             string name,
             string description,
             double version,
             string author,
+            string identifier,
             Type controllerType)
         {
             m_typInterfaceType = interfaceType;
@@ -42,6 +45,7 @@ namespace Distrib.Plugins.Discovery.Metadata
             m_strDescription = description;
             m_dVersion = version;
             m_strAuthor = author;
+            m_strIdentifier = identifier;
             if (controllerType != null) m_typControllerType.Value = controllerType;
         }
 
@@ -109,6 +113,14 @@ namespace Distrib.Plugins.Discovery.Metadata
         }
 
         /// <summary>
+        /// The identifier for the plugin
+        /// </summary>
+        public string Identifier
+        {
+            get { return m_strIdentifier; }
+        }
+
+        /// <summary>
         /// Creates a new <see cref="DistribPluginMetadata"/> from the details of a <see cref="DistribPluginAttribute"/> decorating
         /// a plugin class.
         /// </summary>
@@ -122,6 +134,7 @@ namespace Distrib.Plugins.Discovery.Metadata
                 attribute.Description,
                 attribute.Version,
                 attribute.Author,
+                attribute.Identifier,
                 attribute.ControllerType);
         }
     }

@@ -29,7 +29,7 @@ namespace ConsoleApplication1
             {
                 var pluginAssembly = DistribPluginAssembly.CreateForAssembly(pluginDll);
                 var result = pluginAssembly.Initialise();
-
+                
                 var instance = pluginAssembly.CreatePluginInstance(result.UsablePlugins[0]);
                 
                 var proc = instance.GetInstance<IDistribProcess>();

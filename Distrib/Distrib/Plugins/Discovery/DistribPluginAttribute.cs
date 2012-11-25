@@ -18,6 +18,7 @@ namespace Distrib.Plugins.Discovery
         private readonly string m_strDescription = "";
         private readonly double m_dVersion = 0.0;
         private readonly string m_strAuthor = "";
+        private readonly string m_strIdentifier = "";
 
         private readonly Type m_typInterfaceType = null;
 
@@ -34,12 +35,14 @@ namespace Distrib.Plugins.Discovery
         /// <param name="description">The description of the plugin</param>
         /// <param name="version">The version of the plugin</param>
         /// <param name="author">The author of the plugin</param>
+        /// <param name="identifier">The GUID identifier for the plugin</param>
         /// <param name="controllerType">The type of the controller for this plugin</param>
         public DistribPluginAttribute(Type interfaceType,
             string name,
             string description,
             double version,
             string author,
+            string identifier,
             Type controllerType = null)
         {
             m_typInterfaceType = interfaceType;
@@ -47,6 +50,7 @@ namespace Distrib.Plugins.Discovery
             m_strDescription = description;
             m_dVersion = version;
             m_strAuthor = author;
+            m_strIdentifier = identifier;
             m_typControllerType.Value = controllerType;
         }
 
@@ -88,6 +92,14 @@ namespace Distrib.Plugins.Discovery
         public string Author
         {
             get { return m_strAuthor; }
+        }
+
+        /// <summary>
+        /// Gets the plugin identifier
+        /// </summary>
+        public string Identifier
+        {
+            get { return m_strIdentifier; }
         }
 
         /// <summary>

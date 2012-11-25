@@ -22,7 +22,7 @@ namespace TestLibrary
     //    1.0,
     //    "Clint Pearson")]
 
-    [DistribProcessPlugin("Test process", "simple test process", 1.0, "Clint Pearson")]
+    [DistribProcessPlugin("Test process", "simple test process", 1.0, "Clint Pearson", "{C068F971-7722-4CE1-81F5-E0A548F383DD}")]
     class TestProcess : MarshalByRefObject , IDistribProcess
     {
         public string SayHello()

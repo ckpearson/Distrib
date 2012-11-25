@@ -28,6 +28,8 @@ namespace Distrib.Plugins.Controllers
                 res = CChain<DistribPluginControllerValidationResult>
                     // Must be a class
                     .If(() => !controllerType.IsClass, DistribPluginControllerValidationResult.ControllerTypeNotAClass)
+                    .ThenIf(() => controllerType.BaseType == null || controllerType.BaseType != typeof(MarshalByRefObject),
+                        DistribPluginControllerValidationResult.ControllerTypeNotMarshalable)
                     // Must implement the interface
                     .ThenIf(() => controllerType.GetInterface(typeof(IDistribPluginController).FullName) == null, 
                         DistribPluginControllerValidationResult.ControllerInterfaceNotImplemented)

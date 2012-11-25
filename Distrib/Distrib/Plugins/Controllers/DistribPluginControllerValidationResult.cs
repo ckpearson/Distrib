@@ -22,6 +22,11 @@ namespace Distrib.Plugins.Controllers
         UnknownFailure,
 
         /// <summary>
+        /// The controller type isn't marshalable
+        /// </summary>
+        ControllerTypeNotMarshalable,
+
+        /// <summary>
         /// The controller type isn't a class
         /// </summary>
         ControllerTypeNotAClass,

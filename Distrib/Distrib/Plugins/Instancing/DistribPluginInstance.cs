@@ -1,4 +1,5 @@
-﻿using Distrib.Plugins.Description;
+﻿using Distrib.Plugins.Controllers;
+using Distrib.Plugins.Description;
 using Distrib.Utils;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,8 @@ namespace Distrib.Plugins
         private bool m_bIsInitialised = false;
 
         private WriteOnce<object> m_instance = new WriteOnce<object>(null);
+
+        private WriteOnce<IDistribPluginController> m_pluginController = new WriteOnce<IDistribPluginController>(null);
 
         private readonly string m_strGuid = null;
         private readonly WriteOnce<DateTime> m_dtInstanceCreationStamp = new WriteOnce<DateTime>();
@@ -93,14 +96,42 @@ namespace Distrib.Plugins
                         Initialise();
                     }
 
+                    // Now create the controller
+
+                    if ((m_pluginDetails.Metadata.ControllerType.Assembly.Location !=
+                        Assembly.GetExecutingAssembly().Location) &&
+                        (m_pluginDetails.Metadata.ControllerType.Assembly.Location !=
+                            m_parentAssembly.AssemblyFilePath))
+                    {
+                        // The controller type is in a different assembly than the Distrib assembly
+                        // and the assembly the plugin is in, the assembly needs loading into the appdomain
+
+                        m_appDomainBridge.LoadAssembly(m_pluginDetails.Metadata.ControllerType.Assembly.Location);
+                    }
+
+                    // Now create the actual controller instance
+
+                    m_pluginController.Value = (IDistribPluginController)m_appDomainBridge.CreateInstance(
+                        m_pluginDetails.Metadata.ControllerType.FullName,
+                        m_pluginDetails.Metadata.ControllerType.Assembly.Location);
+
+                    // Send over the app domain bridge so the controller can create instance
+                    m_pluginController.Value.StoreAppDomainBridge(m_appDomainBridge);
+
                     if (!m_instance.IsWritten)
                     {
-                        m_instance.Value = m_appDomainBridge.CreateInstance(
-                            m_pluginDetails.PluginTypeName,
+                        m_instance.Value = m_pluginController.Value.CreatePluginInstance(m_pluginDetails,
                             m_parentAssembly.AssemblyFilePath);
-
-                        m_dtInstanceCreationStamp.Value = DateTime.Now;
                     }
+
+                    //if (!m_instance.IsWritten)
+                    //{
+                    //    m_instance.Value = m_appDomainBridge.CreateInstance(
+                    //        m_pluginDetails.PluginTypeName,
+                    //        m_parentAssembly.AssemblyFilePath);
+
+                    //    m_dtInstanceCreationStamp.Value = DateTime.Now;
+                    //}
 
                     return (T)m_instance.Value;
                 }
@@ -143,6 +174,9 @@ namespace Distrib.Plugins
                     // Create remote bridge
 
                     m_appDomainBridge = RemoteAppDomainBridge.FromAppDomain(m_adAppDomain);
+
+                    // Load the distrib assembly into the AppDomain
+                    m_appDomainBridge.LoadAssembly(Assembly.GetExecutingAssembly().Location);
 
                     // Load the plugin assembly into the AppDomain
                     m_appDomainBridge.LoadAssembly(m_parentAssembly.AssemblyFilePath);

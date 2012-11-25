@@ -45,7 +45,7 @@ namespace Distrib.Utils
             m_objResult = resultTwo;
         }
 
-        public object ResultTwo
+        public T2 ResultTwo
         {
             get { return m_objResult; }
         }

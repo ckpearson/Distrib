@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Distrib.Plugins.Description;
+using Distrib.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +13,7 @@ namespace Distrib.Plugins.Controllers
     /// </summary>
     public interface IDistribPluginController
     {
+        void StoreAppDomainBridge(RemoteAppDomainBridge bridge);
+        object CreatePluginInstance(DistribPluginDetails pluginDetails, string parentAssemblyPath);
     }
 }
