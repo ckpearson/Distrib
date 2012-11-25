@@ -12,11 +12,11 @@ namespace Distrib.Plugins.Controllers
     /// <summary>
     /// The default system-provided plugin controller
     /// </summary>
-    internal sealed class DistribDefaultPluginController : MarshalByRefObject, IDistribPluginController
+    internal sealed class DistribDefaultPluginController : MarshalByRefObject, IDistribPluginController,
+        IDistribControllerInterface
     {
         private RemoteAppDomainBridge m_remBridge = null;
-        private object m_objInstance = null;
-        private string m_strParentAssemblyPath = "";
+        private IDistribPlugin m_objInstance = null;
         private DistribPluginDetails m_pluginDetails = null;
 
         private object m_lock = new object();
@@ -55,10 +55,21 @@ namespace Distrib.Plugins.Controllers
         {
             _updatePluginDetails(pluginDetails);
 
-            m_objInstance = m_remBridge.CreateInstance(pluginDetails.PluginTypeName,
+            m_objInstance = (IDistribPlugin)m_remBridge.CreateInstance(pluginDetails.PluginTypeName,
                 parentAssemblyPath);
 
             return m_objInstance;
+        }
+
+        void IDistribPluginController.InitialiseInstance()
+        {
+            m_objInstance.InitPlugin(this);
+        }
+
+
+        void IDistribPluginController.UnitialiseInstance()
+        {
+            m_objInstance.UninitPlugin(this);
         }
     }
 }

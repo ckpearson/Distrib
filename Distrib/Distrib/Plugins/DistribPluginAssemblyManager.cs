@@ -149,6 +149,35 @@ namespace Distrib.Plugins
         }
 
         /// <summary>
+        /// Determines whether a given plugin implements the core IDistribPlugin interface
+        /// </summary>
+        /// <param name="pluginDetails">The details of the plugin to check</param>
+        /// <returns><c>True</c> if the plugin type implements the interface, <c>False</c> otherwise</returns>
+        public bool PluginTypeImplementsDistribPluginInterface(DistribPluginDetails pluginDetails)
+        {
+            if (pluginDetails == null) throw new ArgumentNullException("Plugin details must be supplied");
+
+            try
+            {
+                // Check to make sure a plugin with the same type name actually exists
+                if (GetPluginDetails()
+                        .DefaultIfEmpty(null)
+                        .SingleOrDefault(d => d.PluginTypeName == pluginDetails.PluginTypeName) == null)
+                {
+                    throw new InvalidOperationException("A plugin type with the supplied details does not exist in the plugin assembly");
+                }
+
+                // Return whether the plugin type implements the IDistribPlugin interface
+                return m_asmPluginAssembly.GetType(pluginDetails.PluginTypeName)
+                    .GetInterface(typeof(IDistribPlugin).FullName) != null;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to determine if plugin implements distrib plugin interface", ex);
+            }
+        }
+
+        /// <summary>
         /// Determines whether a given plugin can be marshaled
         /// </summary>
         /// <param name="pluginDetails">The plugin details</param>

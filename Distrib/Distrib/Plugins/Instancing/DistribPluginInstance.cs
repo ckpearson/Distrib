@@ -124,14 +124,9 @@ namespace Distrib.Plugins
                             m_parentAssembly.AssemblyFilePath);
                     }
 
-                    //if (!m_instance.IsWritten)
-                    //{
-                    //    m_instance.Value = m_appDomainBridge.CreateInstance(
-                    //        m_pluginDetails.PluginTypeName,
-                    //        m_parentAssembly.AssemblyFilePath);
+                    // Now get the controller to initialise the plugin
 
-                    //    m_dtInstanceCreationStamp.Value = DateTime.Now;
-                    //}
+                    m_pluginController.Value.InitialiseInstance();
 
                     return (T)m_instance.Value;
                 }
@@ -225,6 +220,10 @@ namespace Distrib.Plugins
                     {
                         throw new InvalidOperationException("Cannot unitialise; not initialised");
                     }
+
+                    // Get the controller to unitialise the instance
+
+                    m_pluginController.Value.UnitialiseInstance();
 
                     // Destroy bridge
                     m_appDomainBridge = null;

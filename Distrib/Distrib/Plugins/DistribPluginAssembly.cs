@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Remoting;
 using System.Text;
 using System.Threading.Tasks;
@@ -159,6 +160,23 @@ namespace Distrib.Plugins
                 // Lock the result to ensure no modifications
                 result.LockResult();
                 return result;
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                // Something has gone wrong when trying to load the types in the plugin
+                // Mostly owing to missing references / plugins not adhering to interfaces
+
+                var loaderExceptions = ex.LoaderExceptions;
+
+                var sb = new StringBuilder();
+                sb.AppendLine("Failed to initialise plugin assembly, type loading errors:");
+
+                foreach (var te in loaderExceptions)
+                {
+                    sb.AppendLine(te.Message);
+                }
+
+                throw new ApplicationException(sb.ToString(), ex);
             }
             catch (Exception ex)
             {
@@ -394,6 +412,9 @@ namespace Distrib.Plugins
                     // Check it's marshalable
                     .If(() => !m_asmManager.PluginTypeIsMarshalable(pluginType),
                         new Tuple<DistribPluginExlusionReason, object>(DistribPluginExlusionReason.TypeNotMarshalable, null))
+                    // Check it implements the IDistribPlugin interface
+                    .ThenIf(() => !m_asmManager.PluginTypeImplementsDistribPluginInterface(pluginType),
+                        new Tuple<DistribPluginExlusionReason,object>(DistribPluginExlusionReason.DistribPluginInterfaceNotImplemented, null))
                     // Check it adheres to the plugin interface as stated
                     .ThenIf(() => !m_asmManager.PluginTypeAdheresToStatedInterface(pluginType),
                         new Tuple<DistribPluginExlusionReason, object>(DistribPluginExlusionReason.NonAdherenceToInterface, null))

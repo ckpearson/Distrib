@@ -49,6 +49,7 @@
     <Compile Include="Plugins\Controllers\DefaultPluginController.cs" />
     <Compile Include="Plugins\Controllers\DistribPluginControllerSystem.cs" />
     <Compile Include="Plugins\Controllers\DistribPluginControllerValidationResult.cs" />
+    <Compile Include="Plugins\Controllers\IDistribControllerInterface.cs" />
     <Compile Include="Plugins\Controllers\IDistribPluginController.cs" />
     <Compile Include="Plugins\Description\DistribPluginDetails.cs" />
     <Compile Include="Plugins\Discovery\Metadata\AdditionalMetadataIdentityExistencePolicy.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Plugins\DistribPluginAssembly.cs" />
     <Compile Include="Plugins\DistribPluginAssemblyInitialisationResult.cs" />
     <Compile Include="Plugins\DistribPluginAssemblyManager.cs" />
+    <Compile Include="Plugins\IDistribPlugin.cs" />
     <Compile Include="Plugins\Instancing\DistribPluginInstance.cs" />
     <Compile Include="Processes\Discovery\DistribProcessPluginAttribute.cs" />
     <Compile Include="Processes\Discovery\Metadata\DistribProcessDetailsAttribute.cs" />

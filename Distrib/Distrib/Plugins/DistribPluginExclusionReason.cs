@@ -18,6 +18,11 @@
         NonAdherenceToInterface,
 
         /// <summary>
+        /// The plugin has been excluded because the plugin doesn't implement the core distrib plugin interface.
+        /// </summary>
+        DistribPluginInterfaceNotImplemented,
+
+        /// <summary>
         /// The plugin has been excluded because the type isn't MarshalByRef making the separation not possible
         /// </summary>
         TypeNotMarshalable,

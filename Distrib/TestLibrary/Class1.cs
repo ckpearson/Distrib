@@ -1,4 +1,5 @@
-﻿using Distrib.Plugins.Discovery;
+﻿using Distrib.Plugins;
+using Distrib.Plugins.Discovery;
 using Distrib.Processes;
 using Distrib.Processes.Discovery;
 using Distrib.Processes.Discovery.Metadata;
@@ -23,11 +24,21 @@ namespace TestLibrary
     //    "Clint Pearson")]
 
     [DistribProcessPlugin("Test process", "simple test process", 1.0, "Clint Pearson", "{C068F971-7722-4CE1-81F5-E0A548F383DD}")]
-    class TestProcess : MarshalByRefObject , IDistribProcess
+    class TestProcess : MarshalByRefObject, IDistribPlugin, IDistribProcess
     {
-        public string SayHello()
+        void IDistribPlugin.InitPlugin(Distrib.Plugins.Controllers.IDistribControllerInterface cont)
         {
-            return "Hello there!";
+            // Do some plugin initialisation here
+        }
+
+        void IDistribPlugin.UninitPlugin(Distrib.Plugins.Controllers.IDistribControllerInterface cont)
+        {
+            // Do some plugin unitialisation here
+        }
+
+        string IDistribProcess.SayHello()
+        {
+            return "HELLO";
         }
     }
 }
