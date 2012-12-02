@@ -164,7 +164,5 @@ namespace Distrib.Plugins.Description
                 }
             }
         }
-
-        
     }
 }
