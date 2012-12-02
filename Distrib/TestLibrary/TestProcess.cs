@@ -26,12 +26,14 @@ namespace TestLibrary
     [DistribProcessPlugin("Test process", "simple test process", 1.0, "Clint Pearson", "{C068F971-7722-4CE1-81F5-E0A548F383DD}")]
     class TestProcess : MarshalByRefObject, IDistribPlugin, IDistribProcess
     {
-        void IDistribPlugin.InitPlugin(Distrib.Plugins.Controllers.IDistribControllerInterface cont)
+        void IDistribPlugin.InitPlugin(Distrib.Plugins.Controllers.IDistribPluginControllerInterface cont)
         {
             // Do some plugin initialisation here
+
+            var mb = cont.AdditionalMetadata;
         }
 
-        void IDistribPlugin.UninitPlugin(Distrib.Plugins.Controllers.IDistribControllerInterface cont)
+        void IDistribPlugin.UninitPlugin(Distrib.Plugins.Controllers.IDistribPluginControllerInterface cont)
         {
             // Do some plugin unitialisation here
         }

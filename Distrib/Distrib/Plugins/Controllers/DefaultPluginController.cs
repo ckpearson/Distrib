@@ -1,4 +1,5 @@
 ﻿using Distrib.Plugins.Description;
+using Distrib.Plugins.Discovery;
 using Distrib.Utils;
 using System;
 using System.Collections.Generic;
@@ -12,14 +13,16 @@ namespace Distrib.Plugins.Controllers
     /// <summary>
     /// The default system-provided plugin controller
     /// </summary>
-    internal sealed class DistribDefaultPluginController : MarshalByRefObject, IDistribPluginController,
-        IDistribControllerInterface
+    internal sealed class DistribDefaultPluginController : MarshalByRefObject, 
+        IDistribPluginController,
+        IDistribPluginControllerInterface
     {
         private RemoteAppDomainBridge m_remBridge = null;
         private IDistribPlugin m_objInstance = null;
         private DistribPluginDetails m_pluginDetails = null;
 
         private object m_lock = new object();
+
 
         private void _updatePluginDetails(DistribPluginDetails details)
         {
@@ -46,6 +49,16 @@ namespace Distrib.Plugins.Controllers
         public DistribDefaultPluginController() { }
 
 
+        void IDistribPluginController.InitController()
+        {
+            // Controller initialisation
+        }
+
+        void IDistribPluginController.UnitController()
+        {
+            // Controller unitialisation (not to unitialise instance here)
+        }
+
         void IDistribPluginController.StoreAppDomainBridge(RemoteAppDomainBridge bridge)
         {
             m_remBridge = bridge;
@@ -66,10 +79,54 @@ namespace Distrib.Plugins.Controllers
             m_objInstance.InitPlugin(this);
         }
 
-
         void IDistribPluginController.UnitialiseInstance()
         {
             m_objInstance.UninitPlugin(this);
         }
+
+        Discovery.Metadata.DistribPluginMetadata IDistribPluginControllerInterface.PluginMetadata
+        {
+            get
+            {
+                lock (m_lock)
+                {
+                    return m_pluginDetails.Metadata;
+                }
+            }
+        }
+
+        private WeakReference<IReadOnlyList<IDistribPluginAdditionalMetadataBundle>> m_rOnlyBundles
+            = null;
+        IReadOnlyList<IDistribPluginAdditionalMetadataBundle> IDistribPluginControllerInterface.AdditionalMetadata
+        {
+            get
+            {
+                lock (m_lock)
+                {
+                    IReadOnlyList<IDistribPluginAdditionalMetadataBundle> lst = null;
+
+                    if (m_rOnlyBundles == null)
+                    {
+                        lst = m_pluginDetails.AdditionalMetadataBundles.AsReadOnly();
+                        m_rOnlyBundles = new WeakReference<IReadOnlyList<IDistribPluginAdditionalMetadataBundle>>(lst);
+                    }
+                    else
+                    {
+                        if (!m_rOnlyBundles.TryGetTarget(out lst))
+                        {
+                            lst = m_pluginDetails.AdditionalMetadataBundles.AsReadOnly();
+                            m_rOnlyBundles.SetTarget(lst);
+                        }
+                    }
+
+                    return lst;
+                }
+            }
+        }
+
+
+
+
+       
     }
 }

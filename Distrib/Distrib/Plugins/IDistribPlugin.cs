@@ -9,7 +9,7 @@ namespace Distrib.Plugins
 {
     public interface IDistribPlugin
     {
-        void InitPlugin(IDistribControllerInterface cont);
-        void UninitPlugin(IDistribControllerInterface cont);
+        void InitPlugin(IDistribPluginControllerInterface cont);
+        void UninitPlugin(IDistribPluginControllerInterface cont);
     }
 }

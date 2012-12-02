@@ -115,6 +115,9 @@ namespace Distrib.Plugins
                         m_pluginDetails.Metadata.ControllerType.FullName,
                         m_pluginDetails.Metadata.ControllerType.Assembly.Location);
 
+                    // Initialise the controller
+                    m_pluginController.Value.InitController();
+
                     // Send over the app domain bridge so the controller can create instance
                     m_pluginController.Value.StoreAppDomainBridge(m_appDomainBridge);
 
@@ -167,7 +170,6 @@ namespace Distrib.Plugins
                         m_pluginDetails.PluginTypeName);
 
                     // Create remote bridge
-
                     m_appDomainBridge = RemoteAppDomainBridge.FromAppDomain(m_adAppDomain);
 
                     // Load the distrib assembly into the AppDomain
@@ -222,8 +224,10 @@ namespace Distrib.Plugins
                     }
 
                     // Get the controller to unitialise the instance
-
                     m_pluginController.Value.UnitialiseInstance();
+
+                    // Unitialise the controller
+                    m_pluginController.Value.UnitController();
 
                     // Destroy bridge
                     m_appDomainBridge = null;

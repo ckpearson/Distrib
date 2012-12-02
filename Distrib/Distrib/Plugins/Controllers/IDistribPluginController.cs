@@ -16,6 +16,9 @@ namespace Distrib.Plugins.Controllers
         void StoreAppDomainBridge(RemoteAppDomainBridge bridge);
         object CreatePluginInstance(DistribPluginDetails pluginDetails, string parentAssemblyPath);
 
+        void InitController();
+        void UnitController();
+
         void InitialiseInstance();
         void UnitialiseInstance();
     }
