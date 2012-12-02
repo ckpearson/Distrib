@@ -11,7 +11,7 @@ namespace Distrib.Plugins.Discovery.Metadata
     /// Holds the metadata attached to a plugin within the Distrib system.
     /// </summary>
     [Serializable()]
-    public sealed class DistribPluginMetadata
+    public sealed class DistribPluginMetadata : IPluginMetadata
     {
         private readonly string m_strName = "";
         private readonly string m_strDescription = "";
@@ -67,7 +67,7 @@ namespace Distrib.Plugins.Discovery.Metadata
                 return (!m_typControllerType.IsWritten) ? null : m_typControllerType.Value;
             }
 
-            internal set
+            set
             {
                 if (!m_typControllerType.IsWritten)
                 {

@@ -27,7 +27,7 @@ namespace Distrib.Plugins
 
         private bool m_bIsInitialised = false;
 
-        private IReadOnlyList<DistribPluginDetails> m_lstPluginDetails = null;
+        private IReadOnlyList<PluginDetails> m_lstPluginDetails = null;
 
         /// <summary>
         /// Instantiates a new instance
@@ -117,7 +117,7 @@ namespace Distrib.Plugins
 
                         if (!bootstrapResult.Success)
                         {
-                            pluginType.MarkAsUnusable(DistribPluginExlusionReason.PluginBootstrapFailure,
+                            pluginType.MarkAsUnusable(PluginExclusionReason.PluginBootstrapFailure,
                                 bootstrapResult.Result);
 
                             result.AddPlugin(pluginType);
@@ -142,7 +142,7 @@ namespace Distrib.Plugins
 
                         if (!metadataConstraintsResult.Success)
                         {
-                            pluginType.MarkAsUnusable(DistribPluginExlusionReason.PluginAdditionalMetadataConstraintsNotMet,
+                            pluginType.MarkAsUnusable(PluginExclusionReason.PluginAdditionalMetadataConstraintsNotMet,
                                 metadataConstraintsResult.Result);
 
                             result.AddPlugin(pluginType);
@@ -184,8 +184,8 @@ namespace Distrib.Plugins
             }
         }
 
-        private void _ProcessUsabilityResult(DistribPluginDetails pluginType, 
-            Res<DistribPluginExlusionReason, object> usabilityCheckResult)
+        private void _ProcessUsabilityResult(PluginDetails pluginType, 
+            Res<PluginExclusionReason, object> usabilityCheckResult)
         {
             if (usabilityCheckResult.Success)
             {
@@ -202,20 +202,20 @@ namespace Distrib.Plugins
         /// </summary>
         /// <param name="pluginType">The plugin details</param>
         /// <returns>The result of the check</returns>
-        private Res<List<Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataExistenceCheckResult, string>>> 
-            _CheckAdditionalMetadataExistenceRequirements(DistribPluginDetails pluginType)
+        private Res<List<Tuple<IPluginAdditionalMetadataBundle, AdditionalMetadataExistenceCheckResult, string>>> 
+            _CheckAdditionalMetadataExistenceRequirements(PluginDetails pluginType)
         {
-            var resultList = new List<Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataExistenceCheckResult, string>>();
+            var resultList = new List<Tuple<IPluginAdditionalMetadataBundle, AdditionalMetadataExistenceCheckResult, string>>();
             bool success = true;
 
             // Simple action to add a bunch of bundles with the result and reason
-            Action<IEnumerable<IDistribPluginAdditionalMetadataBundle>,
+            Action<IEnumerable<IPluginAdditionalMetadataBundle>,
                 AdditionalMetadataExistenceCheckResult, string> addRange = (bundles, res, msg) =>
                     {
                         lock(resultList)
                         {
                             resultList.AddRange(bundles.Select(b => 
-                                new Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataExistenceCheckResult, string>(
+                                new Tuple<IPluginAdditionalMetadataBundle, AdditionalMetadataExistenceCheckResult, string>(
                                      b, res, msg)));
                         }
                     };
@@ -299,7 +299,7 @@ namespace Distrib.Plugins
                     }
                 }
             }
-            return new Res<List<Tuple<IDistribPluginAdditionalMetadataBundle, AdditionalMetadataExistenceCheckResult, string>>>((success &= true),
+            return new Res<List<Tuple<IPluginAdditionalMetadataBundle, AdditionalMetadataExistenceCheckResult, string>>>((success &= true),
                 resultList);
         }
 
@@ -308,7 +308,7 @@ namespace Distrib.Plugins
         /// </summary>
         /// <param name="pluginType">The plugin details</param>
         /// <returns>The result</returns>
-        private Res<DistribPluginBootstrapResult> _PerformPluginBootstrapping(DistribPluginDetails pluginType)
+        private Res<DistribPluginBootstrapResult> _PerformPluginBootstrapping(PluginDetails pluginType)
         {
             DistribPluginBootstrapResult res = DistribPluginBootstrapResult.Success;
 
@@ -330,10 +330,10 @@ namespace Distrib.Plugins
             }
         }
 
-        private readonly Dictionary<DistribPluginDetails, List<DistribPluginInstance>>
-            m_dictInstances = new Dictionary<DistribPluginDetails, List<DistribPluginInstance>>();
+        private readonly Dictionary<PluginDetails, List<DistribPluginInstance>>
+            m_dictInstances = new Dictionary<PluginDetails, List<DistribPluginInstance>>();
 
-        public DistribPluginInstance CreatePluginInstance(DistribPluginDetails details)
+        public DistribPluginInstance CreatePluginInstance(PluginDetails details)
         {
             if (details == null) throw new ArgumentNullException("Plugin details must be supplied");
 
@@ -372,35 +372,9 @@ namespace Distrib.Plugins
             }
         }
 
-        public T CreatePluginInstanceDirect<T>(DistribPluginDetails details) where T : class
+        private Res<PluginExclusionReason, object> _CheckUsabilityOfPlugin(PluginDetails pluginType)
         {
-            if (details == null) throw new ArgumentNullException("Plugin details must be supplied");
-            if (!typeof(T).IsInterface) throw new InvalidOperationException("T must be an interface type");
-            if (!details.Metadata.InterfaceType.Equals(typeof(T))) throw new InvalidOperationException("T must be of the plugin interface type");
-
-            try
-            {
-                if (!details.IsUsable)
-                {
-                    throw new InvalidOperationException(string.Format("Plugin is marked as excluded because: {0}",
-                        details.ExclusionReason.ToString()));
-                }
-
-                T o = (T)m_asmManager.CreateInstance(details.PluginTypeName);
-
-                return o;
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Failed to create plugin instance", ex);
-            }
-        }
-
-
-
-        private Res<DistribPluginExlusionReason, object> _CheckUsabilityOfPlugin(DistribPluginDetails pluginType)
-        {
-            var res = DistribPluginExlusionReason.Unknown;
+            var res = PluginExclusionReason.Unknown;
             object resultAddit = null;
             bool success = true;
 
@@ -408,19 +382,19 @@ namespace Distrib.Plugins
 
             try
             {
-                var _result = CChain<Tuple<DistribPluginExlusionReason, object>>
+                var _result = CChain<Tuple<PluginExclusionReason, object>>
                     // Check it's marshalable
                     .If(() => !m_asmManager.PluginTypeIsMarshalable(pluginType),
-                        new Tuple<DistribPluginExlusionReason, object>(DistribPluginExlusionReason.TypeNotMarshalable, null))
+                        new Tuple<PluginExclusionReason, object>(PluginExclusionReason.TypeNotMarshalable, null))
                     // Check it implements the IDistribPlugin interface
                     .ThenIf(() => !m_asmManager.PluginTypeImplementsDistribPluginInterface(pluginType),
-                        new Tuple<DistribPluginExlusionReason,object>(DistribPluginExlusionReason.DistribPluginInterfaceNotImplemented, null))
+                        new Tuple<PluginExclusionReason,object>(PluginExclusionReason.DistribPluginInterfaceNotImplemented, null))
                     // Check it adheres to the plugin interface as stated
                     .ThenIf(() => !m_asmManager.PluginTypeAdheresToStatedInterface(pluginType),
-                        new Tuple<DistribPluginExlusionReason, object>(DistribPluginExlusionReason.NonAdherenceToInterface, null))
+                        new Tuple<PluginExclusionReason, object>(PluginExclusionReason.NonAdherenceToInterface, null))
                     // Check that the specified plugin controller is valid
                     .ThenIf(() => !DistribPluginControllerSystem.ValidateControllerType(pluginType.Metadata.ControllerType).Success,
-                        new Tuple<DistribPluginExlusionReason, object>(DistribPluginExlusionReason.PluginControllerInvalid,
+                        new Tuple<PluginExclusionReason, object>(PluginExclusionReason.PluginControllerInvalid,
                             DistribPluginControllerSystem.ValidateControllerType(pluginType.Metadata.ControllerType).ResultTwo))
                     .Result;
 
@@ -428,7 +402,7 @@ namespace Distrib.Plugins
                 {
                     // No result above means that the checks all came out fine
                     success = true;
-                    res = DistribPluginExlusionReason.Unknown;
+                    res = PluginExclusionReason.Unknown;
                     resultAddit = null;
                 }
                 else
@@ -439,7 +413,7 @@ namespace Distrib.Plugins
                     resultAddit = _result.Item2;
                 }
 
-                return new Res<DistribPluginExlusionReason, object>((success &= true), res, resultAddit);
+                return new Res<PluginExclusionReason, object>((success &= true), res, resultAddit);
             }
             catch (Exception ex)
             {

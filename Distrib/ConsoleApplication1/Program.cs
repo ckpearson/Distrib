@@ -25,16 +25,28 @@ namespace ConsoleApplication1
 
         public void Run()
         {
+            var pd = new PluginDetails(null, null);
+
             foreach (var pluginDll in Directory.EnumerateFiles(dir, "*.dll"))
             {
                 var pluginAssembly = DistribPluginAssembly.CreateForAssembly(pluginDll);
                 var result = pluginAssembly.Initialise();
-                
-                var instance = pluginAssembly.CreatePluginInstance(result.UsablePlugins[0]);
-                
-                var proc = instance.GetInstance<IDistribProcess>();
 
-                var msg = proc.SayHello();
+                if (result.HasUsablePlugins)
+                {
+                    var firstProcPlugin = result.UsablePlugins.DefaultIfEmpty(null)
+                        .FirstOrDefault(p => p.Metadata.InterfaceType.Equals(typeof(IDistribProcess)));
+
+                    if (firstProcPlugin == null)
+                    {
+                        throw new InvalidOperationException("No usable process plugin exists");
+                    }
+
+                    var inst = pluginAssembly.CreatePluginInstance(firstProcPlugin);
+
+                    var proc = inst.GetInstance<IDistribProcess>();
+
+                }
 
                // File.Delete(pluginDll);
 

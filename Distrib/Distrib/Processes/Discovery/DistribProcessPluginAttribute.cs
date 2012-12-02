@@ -27,7 +27,7 @@ namespace Distrib.Processes.Discovery
             string author,
             string identifier) : base(typeof(IDistribProcess), name, description, version, author, identifier)
         {
-            base.SuppliedAdditionalMetadata = new List<IDistribPluginAdditionalMetadataBundle>()
+            base.SuppliedAdditionalMetadata = new List<IPluginAdditionalMetadataBundle>()
             {
                 new DistribProcessDetailsAttribute(name, description, version, author).ToMetadataBundle(),
             }.AsReadOnly();

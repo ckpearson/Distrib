@@ -24,8 +24,8 @@ namespace Distrib.Plugins.Discovery
 
         private readonly WriteOnce<Type> m_typControllerType = new WriteOnce<Type>(null);
 
-        private readonly WriteOnce<IReadOnlyList<IDistribPluginAdditionalMetadataBundle>> m_lstSuppliedAdditionalMetadata =
-            new WriteOnce<IReadOnlyList<IDistribPluginAdditionalMetadataBundle>>(null);
+        private readonly WriteOnce<IReadOnlyList<IPluginAdditionalMetadataBundle>> m_lstSuppliedAdditionalMetadata =
+            new WriteOnce<IReadOnlyList<IPluginAdditionalMetadataBundle>>(null);
 
         /// <summary>
         /// Instantiates a new instance
@@ -134,7 +134,7 @@ namespace Distrib.Plugins.Discovery
         /// <summary>
         /// Gets the readonly list of the additional metadata supplied by the derived attribute, null if not set
         /// </summary>
-        public IReadOnlyList<IDistribPluginAdditionalMetadataBundle> SuppliedAdditionalMetadata
+        public IReadOnlyList<IPluginAdditionalMetadataBundle> SuppliedAdditionalMetadata
         {
             get
             {

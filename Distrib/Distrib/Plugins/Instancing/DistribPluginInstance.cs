@@ -14,7 +14,7 @@ namespace Distrib.Plugins
     {
         private readonly WriteOnce<bool> m_bInitialisedOnce = new WriteOnce<bool>(false);
 
-        private readonly DistribPluginDetails m_pluginDetails = null;
+        private readonly PluginDetails m_pluginDetails = null;
         private readonly DistribPluginAssembly m_parentAssembly = null;
 
         private AppDomain m_adAppDomain = null;
@@ -30,7 +30,7 @@ namespace Distrib.Plugins
         private readonly string m_strGuid = null;
         private readonly WriteOnce<DateTime> m_dtInstanceCreationStamp = new WriteOnce<DateTime>();
 
-        internal DistribPluginInstance(DistribPluginDetails pluginDetails, DistribPluginAssembly parentAssembly)
+        internal DistribPluginInstance(PluginDetails pluginDetails, DistribPluginAssembly parentAssembly)
         {
             m_pluginDetails = pluginDetails;
             m_parentAssembly = parentAssembly;

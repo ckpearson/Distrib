@@ -20,7 +20,7 @@ namespace Distrib.Plugins
         private readonly string m_strPluginAssemblyPath = "";
         private Assembly m_asmPluginAssembly = null;
 
-        private WeakReference<List<DistribPluginDetails>> m_lstPluginDetails = null;
+        private WeakReference<List<PluginDetails>> m_lstPluginDetails = null;
 
         public DistribPluginAssemblyManager(string assemblyPath)
         {
@@ -57,10 +57,10 @@ namespace Distrib.Plugins
         /// re-constructed but calling this method should be considered safe enough to use for all queries for the plugin details.
         /// </para>
         /// </remarks>
-        public ReadOnlyCollection<DistribPluginDetails> GetPluginDetails()
+        public ReadOnlyCollection<PluginDetails> GetPluginDetails()
         {
             bool needToCreate = false;
-            List<DistribPluginDetails> lstDetails = null;
+            List<PluginDetails> lstDetails = null;
 
             if (m_lstPluginDetails == null)
             {
@@ -80,13 +80,13 @@ namespace Distrib.Plugins
                             .Where(t => t.GetCustomAttribute<DistribPluginAttribute>() != null)
                             .ToArray();
 
-                lstDetails = new List<DistribPluginDetails>();
+                lstDetails = new List<PluginDetails>();
 
                 // Build up the details list
                 foreach (var type in types.Select(t => new { type = t, attr = t.GetCustomAttribute<DistribPluginAttribute>() }))
                 {
                     // Create the plugin details
-                    var pluginDetails = new DistribPluginDetails(type.type.FullName, DistribPluginMetadata.FromPluginAttribute(type.attr));
+                    var pluginDetails = new PluginDetails(type.type.FullName, DistribPluginMetadata.FromPluginAttribute(type.attr));
 
                     // See if the plugin class has any additional plugin-specific metadata to carry across
                     var additMetadataDecorated = type.type.GetCustomAttributes<DistribPluginAdditionalMetadataAttribute>().ToList();
@@ -94,13 +94,12 @@ namespace Distrib.Plugins
 
                     // The bundles need to comprise both of those provided by decoration and by explicit supply
                     // concatenate the bundles provided c
-                    pluginDetails.AdditionalMetadataBundles =
-                        ((additMetadataDecorated == null) ? new List<IDistribPluginAdditionalMetadataBundle>()
+                    pluginDetails.SetAdditionalMetadata(
+                        ((additMetadataDecorated == null) ? new List<IPluginAdditionalMetadataBundle>()
                             : additMetadataDecorated.Select(m => m.ToMetadataBundle()))
                         .Concat(
-                            (additMetadataSupplied == null) ? new List<IDistribPluginAdditionalMetadataBundle>()
-                                : additMetadataSupplied)
-                        .ToList();
+                            (additMetadataSupplied == null) ? new List<IPluginAdditionalMetadataBundle>()
+                                : additMetadataSupplied));
 
                     // Add details to the list
                     lstDetails.Add(pluginDetails);
@@ -108,7 +107,7 @@ namespace Distrib.Plugins
 
                 if (m_lstPluginDetails == null)
                 {
-                    m_lstPluginDetails = new WeakReference<List<DistribPluginDetails>>(lstDetails);
+                    m_lstPluginDetails = new WeakReference<List<PluginDetails>>(lstDetails);
                 }
                 else
                 {
@@ -124,7 +123,7 @@ namespace Distrib.Plugins
         /// </summary>
         /// <param name="pluginDetails">The details for the plugin to check</param>
         /// <returns><c>True</c> if the plugin type implements the interface, <c>False</c> otherwise</returns>
-        public bool PluginTypeAdheresToStatedInterface(DistribPluginDetails pluginDetails)
+        public bool PluginTypeAdheresToStatedInterface(PluginDetails pluginDetails)
         {
             if (pluginDetails == null) throw new ArgumentNullException("Plugin details must be supplied");
 
@@ -153,7 +152,7 @@ namespace Distrib.Plugins
         /// </summary>
         /// <param name="pluginDetails">The details of the plugin to check</param>
         /// <returns><c>True</c> if the plugin type implements the interface, <c>False</c> otherwise</returns>
-        public bool PluginTypeImplementsDistribPluginInterface(DistribPluginDetails pluginDetails)
+        public bool PluginTypeImplementsDistribPluginInterface(PluginDetails pluginDetails)
         {
             if (pluginDetails == null) throw new ArgumentNullException("Plugin details must be supplied");
 
@@ -182,7 +181,7 @@ namespace Distrib.Plugins
         /// </summary>
         /// <param name="pluginDetails">The plugin details</param>
         /// <returns><c>True</c> if it can, <c>False</c> otherwise</returns>
-        public bool PluginTypeIsMarshalable(DistribPluginDetails pluginDetails)
+        public bool PluginTypeIsMarshalable(PluginDetails pluginDetails)
         {
             if (pluginDetails == null) throw new ArgumentNullException("Plugin details must be supplied");
 

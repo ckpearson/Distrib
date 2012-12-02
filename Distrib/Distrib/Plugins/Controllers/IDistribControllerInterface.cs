@@ -15,6 +15,6 @@ namespace Distrib.Plugins.Controllers
         /// </summary>
         DistribPluginMetadata PluginMetadata { get; }
 
-        IReadOnlyList<IDistribPluginAdditionalMetadataBundle> AdditionalMetadata { get; }
+        IReadOnlyList<IPluginAdditionalMetadataBundle> AdditionalMetadata { get; }
     }
 }

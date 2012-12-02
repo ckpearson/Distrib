@@ -30,7 +30,6 @@ namespace TestLibrary
         {
             // Do some plugin initialisation here
 
-            var mb = cont.AdditionalMetadata;
         }
 
         void IDistribPlugin.UninitPlugin(Distrib.Plugins.Controllers.IDistribPluginControllerInterface cont)

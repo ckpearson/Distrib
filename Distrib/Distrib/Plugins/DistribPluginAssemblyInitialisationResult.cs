@@ -26,14 +26,14 @@ namespace Distrib.Plugins
         private readonly WriteOnce<bool> m_bLocked = new WriteOnce<bool>(initialValue: false);
         private readonly object m_lock = new object();
 
-        private List<DistribPluginDetails> m_lstPlugins = new List<DistribPluginDetails>();
-        private readonly WriteOnce<IReadOnlyList<DistribPluginDetails>> m_lstReadonlyPlugins = 
-            new WriteOnce<IReadOnlyList<DistribPluginDetails>>();
+        private List<PluginDetails> m_lstPlugins = new List<PluginDetails>();
+        private readonly WriteOnce<IReadOnlyList<PluginDetails>> m_lstReadonlyPlugins = 
+            new WriteOnce<IReadOnlyList<PluginDetails>>();
 
         /// <summary>
         /// Gets the list of plugins discovered during initialisation (good and bad)
         /// </summary>
-        public IReadOnlyList<DistribPluginDetails> Plugins
+        public IReadOnlyList<PluginDetails> Plugins
         {
             get
             {
@@ -57,17 +57,17 @@ namespace Distrib.Plugins
             }
         }
 
-        private readonly WriteOnce<IReadOnlyList<DistribPluginDetails>> m_lstReadonlyGoodPlugins =
-            new WriteOnce<IReadOnlyList<DistribPluginDetails>>(null);
+        private readonly WriteOnce<IReadOnlyList<PluginDetails>> m_lstReadonlyGoodPlugins =
+            new WriteOnce<IReadOnlyList<PluginDetails>>(null);
 
         /// <summary>
         /// Gets those plugins that were found during initialisation to be usable.
         /// </summary>
-        public IReadOnlyList<DistribPluginDetails> UsablePlugins
+        public IReadOnlyList<PluginDetails> UsablePlugins
         {
             get
             {
-                Func<IReadOnlyList<DistribPluginDetails>> retr = 
+                Func<IReadOnlyList<PluginDetails>> retr = 
                     () => Plugins.Where(p => p.IsUsable).ToList().AsReadOnly();
 
                 lock (m_lock)
@@ -89,17 +89,17 @@ namespace Distrib.Plugins
             }
         }
 
-        private readonly WriteOnce<IReadOnlyList<DistribPluginDetails>> m_lstReadonlyBadPlugins =
-            new WriteOnce<IReadOnlyList<DistribPluginDetails>>(null);
+        private readonly WriteOnce<IReadOnlyList<PluginDetails>> m_lstReadonlyBadPlugins =
+            new WriteOnce<IReadOnlyList<PluginDetails>>(null);
 
         /// <summary>
         /// Gets those plugins that were found during initialisation to be unusable and are excluded from use.
         /// </summary>
-        public IReadOnlyList<DistribPluginDetails> ExcludedPlugins
+        public IReadOnlyList<PluginDetails> ExcludedPlugins
         {
             get
             {
-                Func<IReadOnlyList<DistribPluginDetails>> retr =
+                Func<IReadOnlyList<PluginDetails>> retr =
                     () => Plugins.Where(p => !p.IsUsable).ToList().AsReadOnly();
 
                 lock (m_lock)
@@ -153,7 +153,7 @@ namespace Distrib.Plugins
         /// Adds a plugin to the list of plugins
         /// </summary>
         /// <param name="pluginDetails">The details of the plugin</param>
-        internal void AddPlugin(DistribPluginDetails pluginDetails)
+        internal void AddPlugin(PluginDetails pluginDetails)
         {
             try
             {

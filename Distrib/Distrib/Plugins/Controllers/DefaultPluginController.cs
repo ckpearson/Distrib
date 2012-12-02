@@ -1,5 +1,6 @@
 ﻿using Distrib.Plugins.Description;
 using Distrib.Plugins.Discovery;
+using Distrib.Plugins.Discovery.Metadata;
 using Distrib.Utils;
 using System;
 using System.Collections.Generic;
@@ -19,12 +20,12 @@ namespace Distrib.Plugins.Controllers
     {
         private RemoteAppDomainBridge m_remBridge = null;
         private IDistribPlugin m_objInstance = null;
-        private DistribPluginDetails m_pluginDetails = null;
+        private PluginDetails m_pluginDetails = null;
 
         private object m_lock = new object();
 
 
-        private void _updatePluginDetails(DistribPluginDetails details)
+        private void _updatePluginDetails(PluginDetails details)
         {
             lock (m_lock)
             {
@@ -64,7 +65,7 @@ namespace Distrib.Plugins.Controllers
             m_remBridge = bridge;
         }
 
-        object IDistribPluginController.CreatePluginInstance(DistribPluginDetails pluginDetails, string parentAssemblyPath)
+        object IDistribPluginController.CreatePluginInstance(PluginDetails pluginDetails, string parentAssemblyPath)
         {
             _updatePluginDetails(pluginDetails);
 
@@ -90,31 +91,31 @@ namespace Distrib.Plugins.Controllers
             {
                 lock (m_lock)
                 {
-                    return m_pluginDetails.Metadata;
+                    return m_pluginDetails.Metadata as DistribPluginMetadata;
                 }
             }
         }
 
-        private WeakReference<IReadOnlyList<IDistribPluginAdditionalMetadataBundle>> m_rOnlyBundles
+        private WeakReference<IReadOnlyList<IPluginAdditionalMetadataBundle>> m_rOnlyBundles
             = null;
-        IReadOnlyList<IDistribPluginAdditionalMetadataBundle> IDistribPluginControllerInterface.AdditionalMetadata
+        IReadOnlyList<IPluginAdditionalMetadataBundle> IDistribPluginControllerInterface.AdditionalMetadata
         {
             get
             {
                 lock (m_lock)
                 {
-                    IReadOnlyList<IDistribPluginAdditionalMetadataBundle> lst = null;
+                    IReadOnlyList<IPluginAdditionalMetadataBundle> lst = null;
 
                     if (m_rOnlyBundles == null)
                     {
-                        lst = m_pluginDetails.AdditionalMetadataBundles.AsReadOnly();
-                        m_rOnlyBundles = new WeakReference<IReadOnlyList<IDistribPluginAdditionalMetadataBundle>>(lst);
+                        lst = m_pluginDetails.AdditionalMetadataBundles;
+                        m_rOnlyBundles = new WeakReference<IReadOnlyList<IPluginAdditionalMetadataBundle>>(lst);
                     }
                     else
                     {
                         if (!m_rOnlyBundles.TryGetTarget(out lst))
                         {
-                            lst = m_pluginDetails.AdditionalMetadataBundles.AsReadOnly();
+                            lst = m_pluginDetails.AdditionalMetadataBundles;
                             m_rOnlyBundles.SetTarget(lst);
                         }
                     }

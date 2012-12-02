@@ -8,11 +8,11 @@ namespace Distrib.Plugins.Discovery.Metadata
 {
     /// <summary>
     /// Concrete implementation for plugin additional metadata provided through
-    /// abstraction of <see cref="IDistribPluginAdditionalMetadataBundle"/>
+    /// abstraction of <see cref="IPluginAdditionalMetadataBundle"/>
     /// </summary>
     [Serializable()]
     internal sealed class ConcreteDistribPluginAdditionalMetadataBundle
-        : IDistribPluginAdditionalMetadataBundle
+        : IPluginAdditionalMetadataBundle
     {
         private readonly Type m_typMetadataInterface = null;
         private readonly object m_objMetadataInstance = null;

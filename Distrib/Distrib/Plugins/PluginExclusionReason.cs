@@ -3,7 +3,7 @@
     /// <summary>
     /// The reason why a plugin was excluded from being used by Distrib
     /// </summary>
-    public enum DistribPluginExlusionReason
+    public enum PluginExclusionReason
     {
         /// <summary>
         /// The system has no known reason for excluding, this generally represents a problem in Distrib

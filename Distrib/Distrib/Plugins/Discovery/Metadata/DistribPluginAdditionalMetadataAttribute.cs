@@ -137,8 +137,8 @@ namespace Distrib.Plugins.Discovery.Metadata
         /// <summary>
         /// Generates a metadata bundle for the metadata presented by this attribute
         /// </summary>
-        /// <returns>The <see cref="IDistribPluginAdditionalMetadataBundle"/> holding the metadata details</returns>
-        internal IDistribPluginAdditionalMetadataBundle ToMetadataBundle()
+        /// <returns>The <see cref="IPluginAdditionalMetadataBundle"/> holding the metadata details</returns>
+        internal IPluginAdditionalMetadataBundle ToMetadataBundle()
         {
             try
             {

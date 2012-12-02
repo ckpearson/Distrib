@@ -10,7 +10,7 @@ namespace Distrib.Plugins.Discovery
     /// <summary>
     /// Holds a bundle of additional metadata present on a plugin
     /// </summary>
-    public interface IDistribPluginAdditionalMetadataBundle
+    public interface IPluginAdditionalMetadataBundle
     {
         /// <summary>
         /// Gets the type of the attribute that provided the additional metadata
