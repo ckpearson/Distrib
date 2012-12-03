@@ -2,6 +2,7 @@
 using Distrib.Plugins_old.Description;
 using Distrib.Plugins_old.Discovery;
 using Distrib.Processes;
+using Ninject;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -20,7 +21,19 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
             var p = new Program();
-            p.Run();
+            p.RunNew();
+        }
+
+        public void RunNew()
+        {
+            var kernel = new StandardKernel();
+
+
+            foreach (var pluginDll in Directory.EnumerateFiles(dir, "*.dll"))
+            {
+
+                var p = kernel.Get<Distrib.Plugins.IPluginAssembly>();
+            }
         }
 
         public void Run()

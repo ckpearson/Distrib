@@ -1,7 +1,6 @@
 ﻿using Distrib.Plugins_old.Discovery;
 using Distrib.Plugins_old.Discovery.Metadata;
 using Distrib.Utils;
-using Ninject.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;

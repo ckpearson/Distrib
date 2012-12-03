@@ -9,4 +9,9 @@ namespace Distrib.Plugins
     public interface IPluginAssembly
     {
     }
+
+    public sealed class PluginAssembly : IPluginAssembly
+    {
+
+    }
 }
