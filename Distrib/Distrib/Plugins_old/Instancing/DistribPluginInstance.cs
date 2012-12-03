@@ -1,5 +1,5 @@
-﻿using Distrib.Plugins.Controllers;
-using Distrib.Plugins.Description;
+﻿using Distrib.Plugins_old.Controllers;
+using Distrib.Plugins_old.Description;
 using Distrib.Utils;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Plugins
+namespace Distrib.Plugins_old
 {
     public sealed class DistribPluginInstance
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Plugins.Discovery.Metadata
+namespace Distrib.Plugins_old.Discovery.Metadata
 {
     public interface IPluginMetadata
     {

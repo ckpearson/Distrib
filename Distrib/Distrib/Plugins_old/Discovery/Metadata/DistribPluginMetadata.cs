@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Plugins.Discovery.Metadata
+namespace Distrib.Plugins_old.Discovery.Metadata
 {
     /// <summary>
     /// Holds the metadata attached to a plugin within the Distrib system.

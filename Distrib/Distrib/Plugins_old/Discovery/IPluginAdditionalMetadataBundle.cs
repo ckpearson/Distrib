@@ -1,11 +1,11 @@
-﻿using Distrib.Plugins.Discovery.Metadata;
+﻿using Distrib.Plugins_old.Discovery.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Plugins.Discovery
+namespace Distrib.Plugins_old.Discovery
 {
     /// <summary>
     /// Holds a bundle of additional metadata present on a plugin

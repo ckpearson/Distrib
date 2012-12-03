@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Plugins.Discovery
+namespace Distrib.Plugins_old.Discovery
 {
     /// <summary>
     /// Provides a base attribute for denoting a plugin export

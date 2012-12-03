@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Plugins.Discovery.Metadata
+namespace Distrib.Plugins_old.Discovery.Metadata
 {
     /// <summary>
     /// Provides a means by which plugins can carry additional subsystem specific metadata along with it

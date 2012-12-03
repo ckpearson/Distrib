@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Plugins.Controllers
+namespace Distrib.Plugins_old.Controllers
 {
     /// <summary>
     /// The result of validating a controller type

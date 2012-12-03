@@ -1,4 +1,4 @@
-﻿using Distrib.Plugins.Discovery.Metadata;
+﻿using Distrib.Plugins_old.Discovery.Metadata;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;

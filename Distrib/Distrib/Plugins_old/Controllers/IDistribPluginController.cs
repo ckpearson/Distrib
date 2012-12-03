@@ -1,4 +1,4 @@
-﻿using Distrib.Plugins.Description;
+﻿using Distrib.Plugins_old.Description;
 using Distrib.Utils;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Plugins.Controllers
+namespace Distrib.Plugins_old.Controllers
 {
     /// <summary>
     /// Interface for a plugin controller

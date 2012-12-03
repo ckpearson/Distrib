@@ -1,12 +1,12 @@
-﻿using Distrib.Plugins.Discovery;
-using Distrib.Plugins.Discovery.Metadata;
+﻿using Distrib.Plugins_old.Discovery;
+using Distrib.Plugins_old.Discovery.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Plugins.Controllers
+namespace Distrib.Plugins_old.Controllers
 {
     public interface IDistribPluginControllerInterface
     {

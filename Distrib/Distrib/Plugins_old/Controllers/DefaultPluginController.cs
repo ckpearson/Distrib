@@ -1,6 +1,6 @@
-﻿using Distrib.Plugins.Description;
-using Distrib.Plugins.Discovery;
-using Distrib.Plugins.Discovery.Metadata;
+﻿using Distrib.Plugins_old.Description;
+using Distrib.Plugins_old.Discovery;
+using Distrib.Plugins_old.Discovery.Metadata;
 using Distrib.Utils;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Plugins.Controllers
+namespace Distrib.Plugins_old.Controllers
 {
     /// <summary>
     /// The default system-provided plugin controller

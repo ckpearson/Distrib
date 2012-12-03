@@ -1,5 +1,5 @@
-﻿using Distrib.Plugins.Discovery;
-using Distrib.Plugins.Discovery.Metadata;
+﻿using Distrib.Plugins_old.Discovery;
+using Distrib.Plugins_old.Discovery.Metadata;
 using Distrib.Utils;
 using Ninject.Parameters;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Plugins.Description
+namespace Distrib.Plugins_old.Description
 {
     [Serializable()]
     public sealed class PluginDetails : IPluginDetails

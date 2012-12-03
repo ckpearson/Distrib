@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Distrib
 {
+    /// <summary>
+    /// IOC service (Ninject) used by Distrib
+    /// </summary>
     internal static class IOC
     {
         public static readonly IKernel Kernel;
@@ -42,27 +45,21 @@ namespace Distrib
             return Kernel.Get<T>(parameters);
         }
 
-        //public T Get<T>(string name, string value)
-        //{
-        //    var result = Kernel.TryGet<T>(m => m.Has(name) &&
-        //        (string.Equals(m.Get<string>(name), value,
-        //            StringComparison.InvariantCultureIgnoreCase)));
-
-        //    if (Equals(result, default(T))) throw new ApplicationException("Type not resolved");
-
-        //    return result;
-        //}
-
         public static void Inject(object item)
         {
             Kernel.Inject(item);
         }
     }
 
+    /// <summary>
+    /// Ninject module for providing bindings for Util classes
+    /// </summary>
     internal sealed class UtilsModule : Ninject.Modules.NinjectModule
     {
         public override void Load()
         {
+            Bind<IWriteOnce<bool>>().ToConstructor<WriteOnce<bool>>((a) => new WriteOnce<bool>(false));
+
             Bind(typeof(IWriteOnce<>)).To(typeof(WriteOnce<>));
         }
     }

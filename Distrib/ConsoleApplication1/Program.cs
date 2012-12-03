@@ -1,6 +1,6 @@
-﻿using Distrib.Plugins;
-using Distrib.Plugins.Description;
-using Distrib.Plugins.Discovery;
+﻿using Distrib.Plugins_old;
+using Distrib.Plugins_old.Description;
+using Distrib.Plugins_old.Discovery;
 using Distrib.Processes;
 using System;
 using System.Collections.Concurrent;
@@ -25,8 +25,6 @@ namespace ConsoleApplication1
 
         public void Run()
         {
-            var pd = new PluginDetails(null, null);
-
             foreach (var pluginDll in Directory.EnumerateFiles(dir, "*.dll"))
             {
                 var pluginAssembly = DistribPluginAssembly.CreateForAssembly(pluginDll);
