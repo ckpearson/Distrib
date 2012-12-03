@@ -15,13 +15,13 @@ namespace Distrib
     /// </summary>
     internal static class IOC
     {
-        public static readonly IKernel Kernel;
+        internal static readonly IKernel Kernel;
 
         static IOC()
         {
             Kernel = new StandardKernel(new INinjectModule[]
                 {
-                    
+                    new IPluginModule(),
                 });
         }
 
@@ -48,6 +48,13 @@ namespace Distrib
         public static void Inject(object item)
         {
             Kernel.Inject(item);
+        }
+    }
+
+    internal sealed class IPluginModule : NinjectModule
+    {
+        public override void Load()
+        {
         }
     }
 }

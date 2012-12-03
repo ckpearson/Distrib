@@ -49,6 +49,10 @@
   <ItemGroup>
     <Compile Include="IOC.cs" />
     <Compile Include="Jobs\DistribJob.cs" />
+    <Compile Include="Plugins\IPluginAssembly.cs" />
+    <Compile Include="Plugins\IPlugin.cs" />
+    <Compile Include="Plugins\IPluginInstance.cs" />
+    <Compile Include="Plugins\IPluginMetadata.cs" />
     <Compile Include="Plugins_old\AdditionalMetadataExistenceCheckResult.cs" />
     <Compile Include="Plugins_old\Controllers\DefaultPluginController.cs" />
     <Compile Include="Plugins_old\Controllers\DistribPluginControllerSystem.cs" />
