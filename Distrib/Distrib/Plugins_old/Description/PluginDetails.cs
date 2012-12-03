@@ -16,12 +16,12 @@ namespace Distrib.Plugins_old.Description
         private readonly string _pluginTypeName;
         private readonly IPluginMetadata _pluginMetadata;
 
-        private readonly IWriteOnce<bool> _pluginFoundUsable = IOC.Get<IWriteOnce<bool>>();
-        private readonly IWriteOnce<PluginExclusionReason> _pluginExclusionReason = IOC.Get<IWriteOnce<PluginExclusionReason>>();
-        private readonly IWriteOnce<object> _pluginExclusionTag = IOC.Get<IWriteOnce<object>>();
+        private readonly WriteOnce<bool> _pluginFoundUsable = new WriteOnce<bool>(false);
+        private readonly WriteOnce<PluginExclusionReason> _pluginExclusionReason = new WriteOnce<PluginExclusionReason>(PluginExclusionReason.Unknown);
+        private readonly WriteOnce<object> _pluginExclusionTag = new WriteOnce<object>(null);
 
-        private readonly IWriteOnce<IReadOnlyList<IPluginAdditionalMetadataBundle>> _additionalMetadata =
-            IOC.Get<IWriteOnce<IReadOnlyList<IPluginAdditionalMetadataBundle>>>();
+        private readonly WriteOnce<IReadOnlyList<IPluginAdditionalMetadataBundle>> _additionalMetadata =
+            new WriteOnce<IReadOnlyList<IPluginAdditionalMetadataBundle>>(null);
 
         private readonly object m_lock = new object();
 
