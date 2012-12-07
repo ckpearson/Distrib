@@ -26,13 +26,14 @@ namespace ConsoleApplication1
 
         public void RunNew()
         {
-            var kernel = new StandardKernel();
-
+            var kernel = new StandardKernel(new[]
+                {
+                    new Distrib.IOC.PluginsNinjectModule(),
+                });
 
             foreach (var pluginDll in Directory.EnumerateFiles(dir, "*.dll"))
             {
-
-                var p = kernel.Get<Distrib.Plugins.IPluginAssembly>();
+                var asm = kernel.Get<Distrib.Plugins.IPluginAssemblyFactory>().CreatePluginAssembly(pluginDll);
             }
         }
 
