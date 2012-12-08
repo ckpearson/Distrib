@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins
 {
+    [Serializable()]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public abstract class PluginAttribute : Attribute
     {

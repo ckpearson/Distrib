@@ -1,4 +1,5 @@
-﻿using Distrib.Plugins_old.Discovery;
+﻿using Distrib.Plugins;
+using Distrib.Plugins_old.Discovery;
 using Distrib.Processes.Discovery.Metadata;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,9 @@ namespace Distrib.Processes.Discovery
     /// <summary>
     /// Indicates that a given class is to be treated as a Distrib Process Plugin
     /// </summary>
+    [Serializable()]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public sealed class DistribProcessPluginAttribute : DistribPluginAttribute
+    public sealed class DistribProcessPluginAttribute : PluginAttribute
     {
         /// <summary>
         /// Instantiates a new instance.
@@ -27,9 +29,9 @@ namespace Distrib.Processes.Discovery
             string author,
             string identifier) : base(typeof(IDistribProcess), name, description, version, author, identifier)
         {
-            base.SuppliedAdditionalMetadata = new List<IPluginAdditionalMetadataBundle>()
+            base.SuppliedMetadataBundles = new List<IPluginMetadataBundle>()
             {
-                new DistribProcessDetailsAttribute(name, description, version, author).ToMetadataBundle(),
+                new DistribProcessDetailsAttribute(name, description, version, author).ToMetadataBundle_new(),
             }.AsReadOnly();
         }
     }

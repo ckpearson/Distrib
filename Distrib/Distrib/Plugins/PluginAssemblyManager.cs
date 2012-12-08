@@ -63,6 +63,19 @@ namespace Distrib.Plugins
                         .GetTypes()
                         .Where(t => t.GetCustomAttribute<PluginAttribute>() != null)
                         .ToArray();
+
+                    var lstTempDescriptors = new List<IPluginDescriptor>();
+
+                    // Build up descriptor list
+
+                    foreach (var type in types.Select(t => new { type = t, attr = t.GetCustomAttribute<PluginAttribute>() }))
+                    {
+                        // Create descriptor
+                        var descriptor = _kernel.Get<IPluginDescriptorFactory>()
+                            .GetDescriptor(type.type.FullName, 
+                                _kernel.Get<IPluginMetadataFactory>()
+                                    .CreateMetadataFromPluginAttribute(type.attr));
+                    }
                 }
 
                 return readonlyDescriptorList;

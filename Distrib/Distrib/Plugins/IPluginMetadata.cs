@@ -8,5 +8,12 @@ namespace Distrib.Plugins
 {
     public interface IPluginMetadata
     {
+        Type InterfaceType { get; }
+        Type ControllerType { get; set; }
+        string Name { get; }
+        string Description { get; }
+        double Version { get; }
+        string Author { get; }
+        string Identifier { get; }
     }
 }

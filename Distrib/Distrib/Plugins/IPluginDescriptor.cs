@@ -18,13 +18,13 @@ namespace Distrib.Plugins
 
         bool IsUsable { get; }
 
-        object ExlusionReason { get; }
+        PluginExclusionReason ExlusionReason { get; }
 
         object ExclusionTag { get; }
 
         void MarkAsUsable();
 
-        void MarkAsUnusable();
+        void MarkAsUnusable(PluginExclusionReason exclusionReason, object tag = null);
 
         bool UsabilitySet { get; }
     }

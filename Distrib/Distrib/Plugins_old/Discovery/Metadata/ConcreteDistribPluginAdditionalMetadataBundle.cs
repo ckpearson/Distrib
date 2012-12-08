@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Distrib.Plugins;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Distrib.Plugins_old.Discovery.Metadata
     /// </summary>
     [Serializable()]
     internal sealed class ConcreteDistribPluginAdditionalMetadataBundle
-        : IPluginAdditionalMetadataBundle
+        : IPluginAdditionalMetadataBundle, IPluginMetadataBundle
     {
         private readonly Type m_typMetadataInterface = null;
         private readonly object m_objMetadataInstance = null;

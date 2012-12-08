@@ -1,4 +1,5 @@
-﻿using Distrib.Utils;
+﻿using Distrib.Plugins;
+using Distrib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -143,6 +144,20 @@ namespace Distrib.Plugins_old.Discovery.Metadata
             try
             {
 
+                return new ConcreteDistribPluginAdditionalMetadataBundle(m_typMetadataInterface,
+                    this.GetType(), _doMetadataReturn(), ProvideMetadataKVPs(), m_strMetadataIdentity, m_enumIdentityPolicy);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to get metadata bundle", ex);
+            }
+        }
+
+#warning Metadata bundle mechanism needs upgrading
+        internal IPluginMetadataBundle ToMetadataBundle_new()
+        {
+            try
+            {
                 return new ConcreteDistribPluginAdditionalMetadataBundle(m_typMetadataInterface,
                     this.GetType(), _doMetadataReturn(), ProvideMetadataKVPs(), m_strMetadataIdentity, m_enumIdentityPolicy);
             }
