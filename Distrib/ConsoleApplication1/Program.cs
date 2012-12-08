@@ -26,14 +26,23 @@ namespace ConsoleApplication1
 
         public void RunNew()
         {
-            var kernel = new StandardKernel(new[]
-                {
-                    new Distrib.IOC.PluginsNinjectModule(),
-                });
+            //var kernel = new StandardKernel(new[]
+            //    {
+                    
+            //    });
+
+            // Hacky way of just loading every single Ninject Module present in Distrib assembly
+            var kernel = new StandardKernel(
+                    typeof(Distrib.IOC.PluginsNinjectModule).Assembly.GetTypes()
+                    .Where(t => t.BaseType != null && t.BaseType.Equals(typeof(Ninject.Modules.NinjectModule)))
+                    .Select(t => Activator.CreateInstance(t) as Ninject.Modules.INinjectModule)
+                    .ToArray());
 
             foreach (var pluginDll in Directory.EnumerateFiles(dir, "*.dll"))
             {
-                var asm = kernel.Get<Distrib.Plugins.IPluginAssemblyFactory>().CreatePluginAssembly(pluginDll);
+                var asm = kernel.Get<Distrib.Plugins.IPluginAssemblyFactory>().CreatePluginAssemblyFromPath(pluginDll);
+
+                asm.Initialise();
             }
         }
 

@@ -13,6 +13,9 @@ namespace Distrib.IOC
         {
             Bind<Plugins.IPluginAssemblyFactory>().To<Plugins.PluginAssemblyFactory>();
             Bind<Plugins.IPluginAssembly>().To<Plugins.PluginAssembly>();
+
+            Bind<Plugins.IPluginAssemblyManagerFactory>().To<Plugins.PluginAssemblyManagerFactory>();
+            Bind<Plugins.IPluginAssemblyManager>().To<Plugins.PluginAssemblyManager>();
         }
     }
 }

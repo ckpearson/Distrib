@@ -47,12 +47,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IOC\IRemoteKernel.cs" />
+    <Compile Include="IOC\IRemoteKernelFactory.cs" />
     <Compile Include="IOC\PluginsNinjectModule.cs" />
+    <Compile Include="IOC\RemoteKernel.cs" />
+    <Compile Include="IOC\RemoteKernelFactory.cs" />
+    <Compile Include="IOC\SeparationNinjectModule.cs" />
     <Compile Include="Jobs\DistribJob.cs" />
     <Compile Include="Plugins\IPluginAssembly.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
+    <Compile Include="Plugins\IPluginAssemblyFactory.cs" />
+    <Compile Include="Plugins\IPluginAssemblyManager.cs" />
+    <Compile Include="Plugins\IPluginAssemblyManagerFactory.cs" />
+    <Compile Include="Plugins\IPluginDescriptor.cs" />
     <Compile Include="Plugins\IPluginInstance.cs" />
     <Compile Include="Plugins\IPluginMetadata.cs" />
+    <Compile Include="Plugins\IPluginMetadataBundle.cs" />
+    <Compile Include="Plugins\IPluginUsabilityChecker.cs" />
+    <Compile Include="Plugins\PluginAssembly.cs" />
+    <Compile Include="Plugins\PluginAssemblyFactory.cs" />
+    <Compile Include="Plugins\PluginAssemblyManager.cs" />
+    <Compile Include="Plugins\PluginAssemblyManagerFactory.cs" />
     <Compile Include="Plugins_old\AdditionalMetadataExistenceCheckResult.cs" />
     <Compile Include="Plugins_old\Controllers\DefaultPluginController.cs" />
     <Compile Include="Plugins_old\Controllers\DistribPluginControllerSystem.cs" />
@@ -80,7 +95,11 @@
     <Compile Include="Processes\Discovery\Metadata\IDistribProcessDetailsMetadata.cs" />
     <Compile Include="Processes\IDistribProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Separation\RemoteDomainBridge.cs" />
+    <Compile Include="Separation\RemoteDomainBridgeFactory.cs" />
     <Compile Include="Utils\CChain.cs" />
+    <Compile Include="Separation\IRemoteDomainBridge.cs" />
+    <Compile Include="Separation\IRemoteDomainBridgeFactory.cs" />
     <Compile Include="Utils\LO.cs" />
     <Compile Include="Utils\ObjectUtils.cs" />
     <Compile Include="Utils\RemoteAppDomainBridge.cs" />
