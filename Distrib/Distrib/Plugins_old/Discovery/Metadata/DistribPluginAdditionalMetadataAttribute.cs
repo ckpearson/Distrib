@@ -1,7 +1,9 @@
 ﻿using Distrib.Plugins;
 using Distrib.Utils;
+using Ninject;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -15,6 +17,7 @@ namespace Distrib.Plugins_old.Discovery.Metadata
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public abstract class DistribPluginAdditionalMetadataAttribute : Attribute
     {
+        private IKernel _kernel;
         private readonly Type m_typMetadataInterface = null;
         private readonly string m_strMetadataIdentity = Guid.NewGuid().ToString();
         private readonly AdditionalPluginMetadataIdentityExistencePolicy m_enumIdentityPolicy = AdditionalPluginMetadataIdentityExistencePolicy.NotImportant;
@@ -29,9 +32,12 @@ namespace Distrib.Plugins_old.Discovery.Metadata
         /// </summary>
         /// <param name="metadataInterfaceType">The interface type that the metadata takes the form of</param>
         /// <param name="identity">The identifier used to represent this type of additional metadata</param>
-        protected DistribPluginAdditionalMetadataAttribute(Type metadataInterfaceType, string identity,
-            AdditionalPluginMetadataIdentityExistencePolicy identityPolicy)
+        [Inject]
+        protected DistribPluginAdditionalMetadataAttribute(
+            Type metadataInterfaceType, string identity,
+            AdditionalPluginMetadataIdentityExistencePolicy identityPolicy,IKernel kernel = null)
         {
+            _kernel = kernel;
             m_typMetadataInterface = metadataInterfaceType;
             m_strMetadataIdentity = identity;
             m_enumIdentityPolicy = identityPolicy;
@@ -153,13 +159,22 @@ namespace Distrib.Plugins_old.Discovery.Metadata
             }
         }
 
-#warning Metadata bundle mechanism needs upgrading
-        internal IPluginMetadataBundle ToMetadataBundle_new()
+        internal IPluginMetadataBundle ToMetadataBundleNew()
         {
             try
             {
-                return new ConcreteDistribPluginAdditionalMetadataBundle(m_typMetadataInterface,
-                    this.GetType(), _doMetadataReturn(), ProvideMetadataKVPs(), m_strMetadataIdentity, m_enumIdentityPolicy);
+                //return new ConcreteDistribPluginAdditionalMetadataBundle(m_typMetadataInterface,
+                //    this.GetType(), _doMetadataReturn(), ProvideMetadataKVPs(), m_strMetadataIdentity, m_enumIdentityPolicy);
+
+#warning Hacky way of getting readonly dictionary, providemetadatakvps needs changing
+                return _kernel.Get<IPluginMetadataBundleFactory>()
+                    .CreateBundle(
+                        m_typMetadataInterface,
+                        this.GetType(),
+                        _doMetadataReturn(),
+                        new ReadOnlyDictionary<string, object>(ProvideMetadataKVPs()),
+                        m_strMetadataIdentity,
+                        (PluginMetadataBundleExistencePolicy)m_enumIdentityPolicy);
             }
             catch (Exception ex)
             {

@@ -45,37 +45,44 @@ namespace Distrib.Plugins
         {
             get
             {
-                throw new NotImplementedException();
+                return (!_controllerType.IsWritten) ? null : _controllerType.Value;
             }
             set
             {
-                throw new NotImplementedException();
+                if (!_controllerType.IsWritten)
+                {
+                    _controllerType.Value = value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Controller type already set");
+                }
             }
         }
 
         public string Name
         {
-            get { throw new NotImplementedException(); }
+            get { return _name; }
         }
 
         public string Description
         {
-            get { throw new NotImplementedException(); }
+            get { return _description; }
         }
 
         public double Version
         {
-            get { throw new NotImplementedException(); }
+            get { return _version; }
         }
 
         public string Author
         {
-            get { throw new NotImplementedException(); }
+            get { return _author; }
         }
 
         public string Identifier
         {
-            get { throw new NotImplementedException(); }
+            get { return _identifier; }
         }
     }
 }

@@ -64,8 +64,10 @@
     <Compile Include="Plugins\IPluginInstance.cs" />
     <Compile Include="Plugins\IPluginMetadata.cs" />
     <Compile Include="Plugins\IPluginMetadataBundle.cs" />
+    <Compile Include="Plugins\IPluginMetadataBundleFactory.cs" />
     <Compile Include="Plugins\IPluginMetadataFactory.cs" />
     <Compile Include="Plugins\IPluginUsabilityChecker.cs" />
+    <Compile Include="Plugins\PluginAdditionalMetadataAttribute.cs" />
     <Compile Include="Plugins\PluginAssembly.cs" />
     <Compile Include="Plugins\PluginAssemblyFactory.cs" />
     <Compile Include="Plugins\PluginAssemblyManager.cs" />
@@ -75,6 +77,9 @@
     <Compile Include="Plugins\PluginDescriptorFactory.cs" />
     <Compile Include="Plugins\PluginExclusionReason.cs" />
     <Compile Include="Plugins\PluginMetadata.cs" />
+    <Compile Include="Plugins\PluginMetadataBundle.cs" />
+    <Compile Include="Plugins\PluginMetadataBundleExistencePolicy.cs" />
+    <Compile Include="Plugins\PluginMetadataBundleFactory.cs" />
     <Compile Include="Plugins\PluginMetadataFactory.cs" />
     <Compile Include="Plugins_old\AdditionalMetadataExistenceCheckResult.cs" />
     <Compile Include="Plugins_old\Controllers\DefaultPluginController.cs" />

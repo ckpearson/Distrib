@@ -13,7 +13,7 @@ namespace Distrib.Plugins_old.Discovery.Metadata
     /// </summary>
     [Serializable()]
     internal sealed class ConcreteDistribPluginAdditionalMetadataBundle
-        : IPluginAdditionalMetadataBundle, IPluginMetadataBundle
+        : IPluginAdditionalMetadataBundle
     {
         private readonly Type m_typMetadataInterface = null;
         private readonly object m_objMetadataInstance = null;

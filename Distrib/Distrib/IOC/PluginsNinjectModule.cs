@@ -22,6 +22,9 @@ namespace Distrib.IOC
 
             Bind<Plugins.IPluginMetadataFactory>().To<Plugins.PluginMetadataFactory>();
             Bind<Plugins.IPluginMetadata>().To<Plugins.PluginMetadata>();
+
+            Bind<Plugins.IPluginMetadataBundleFactory>().To<Plugins.PluginMetadataBundleFactory>();
+            Bind<Plugins.IPluginMetadataBundle>().To<Plugins.PluginMetadataBundle>();
         }
     }
 }

@@ -75,6 +75,10 @@ namespace Distrib.Plugins
                             .GetDescriptor(type.type.FullName, 
                                 _kernel.Get<IPluginMetadataFactory>()
                                     .CreateMetadataFromPluginAttribute(type.attr));
+
+                        // See if the plugin has any additional metadata
+                        var additMetadataDecorated =
+                            type.type.GetCustomAttributes<PluginAdditionalMetadataAttribute>().ToList();
                     }
                 }
 

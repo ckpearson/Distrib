@@ -31,7 +31,8 @@ namespace Distrib.Processes.Discovery
         {
             base.SuppliedMetadataBundles = new List<IPluginMetadataBundle>()
             {
-                new DistribProcessDetailsAttribute(name, description, version, author).ToMetadataBundle_new(),
+#warning Process plugin attribute needs additional metadata attributes upgrading
+                new DistribProcessDetailsAttribute(name, description, version, author).ToMetadataBundleNew(),
             }.AsReadOnly();
         }
     }
