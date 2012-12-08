@@ -13,5 +13,6 @@ namespace Distrib.Plugins
     {
         void Initialise();
         void Unitialise();
+        bool IsInitialised { get; }
     }
 }

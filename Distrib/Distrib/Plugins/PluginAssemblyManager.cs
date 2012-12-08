@@ -3,6 +3,7 @@ using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +14,10 @@ namespace Distrib.Plugins
         private readonly IRemoteKernel _kernel;
         private readonly string _assemblyPath;
 
+        private Assembly _assembly;
+
+        private WeakReference<IReadOnlyList<IPluginDescriptor>> _pluginDescriptorsListReference;
+
         public PluginAssemblyManager(IRemoteKernel kernel, string assemblyPath)
         {
             _kernel = kernel;
@@ -21,7 +26,14 @@ namespace Distrib.Plugins
 
         public void LoadPluginAssemblyIntoDomain()
         {
-            throw new NotImplementedException();
+            try
+            {
+                _assembly = Assembly.LoadFile(_assemblyPath);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to load assembly", ex);
+            }
         }
 
         public object CreateInstanceFromPluginAssembly()
@@ -31,7 +43,34 @@ namespace Distrib.Plugins
 
         public IReadOnlyList<IPluginDescriptor> GetPluginDescriptors()
         {
-            throw new NotImplementedException();
+            bool needToCreate = false;
+            IReadOnlyList<IPluginDescriptor> readonlyDescriptorList = null;
+
+            try
+            {
+                if (_pluginDescriptorsListReference == null)
+                {
+                    needToCreate = true;
+                }
+                else
+                {
+                    needToCreate = !_pluginDescriptorsListReference.TryGetTarget(out readonlyDescriptorList);
+                }
+
+                if (needToCreate)
+                {
+                    var types = _assembly
+                        .GetTypes()
+                        .Where(t => t.GetCustomAttribute<PluginAttribute>() != null)
+                        .ToArray();
+                }
+
+                return readonlyDescriptorList;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to get plugin descriptors", ex);
+            }
         }
 
         public bool PluginTypeAdheresToPluginInterface(IPluginDescriptor descriptor)

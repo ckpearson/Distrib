@@ -68,6 +68,7 @@
     <Compile Include="Plugins\PluginAssemblyFactory.cs" />
     <Compile Include="Plugins\PluginAssemblyManager.cs" />
     <Compile Include="Plugins\PluginAssemblyManagerFactory.cs" />
+    <Compile Include="Plugins\PluginAttribute.cs" />
     <Compile Include="Plugins_old\AdditionalMetadataExistenceCheckResult.cs" />
     <Compile Include="Plugins_old\Controllers\DefaultPluginController.cs" />
     <Compile Include="Plugins_old\Controllers\DistribPluginControllerSystem.cs" />
