@@ -1,4 +1,5 @@
 ﻿using Distrib.Utils;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,9 @@ namespace Distrib.Plugins
                     // Must implement the core controller interface
                     .ThenIf(() => controllerType.GetInterface(typeof(IPluginController).FullName) == null,
                         PluginControllerValidationResult.ControllerInterfaceNotImplemented)
+                    // Must have a constructor taking an IKernel
+                    .ThenIf(() => controllerType.GetConstructor(new[] { typeof(IKernel) }) == null,
+                        PluginControllerValidationResult.KernelAcceptingConstructorNotFound)
                     .Result;
 
                 return new Res<Type, PluginControllerValidationResult>(res == PluginControllerValidationResult.Success,

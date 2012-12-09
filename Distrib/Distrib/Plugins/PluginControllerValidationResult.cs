@@ -32,5 +32,10 @@ namespace Distrib.Plugins
         /// The controller type doesn't implement the controller interface
         /// </summary>
         ControllerInterfaceNotImplemented,
+
+        /// <summary>
+        /// The controller type doesn't have a constructor taking the <see cref="IKernel"/>
+        /// </summary>
+        KernelAcceptingConstructorNotFound,
     }
 }
