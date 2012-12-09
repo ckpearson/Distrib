@@ -116,6 +116,22 @@ namespace Distrib.Plugins
                             continue;
                         }
 
+                        // Perform the verification for usability of the plugin controller
+                        var controllerValidationResult = _kernel.Get<IPluginControllerValidationServiceFactory>()
+                            .CreateService()
+                            .ValidateControllerType(descriptor.Metadata.ControllerType);
+
+                        if (!controllerValidationResult.Success)
+                        {
+                            descriptor.MarkAsUnusable(PluginExclusionReason.PluginControllerInvalid,
+                                controllerValidationResult.ResultTwo);
+
+                            lstPluginDescriptorsForResult.Add(descriptor);
+
+                            continue;
+                        }
+
+
                         // Made it this far so mark as usable
                         descriptor.MarkAsUsable();
                         lstPluginDescriptorsForResult.Add(descriptor);

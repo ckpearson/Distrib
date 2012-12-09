@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Utils
 {
-    [DebuggerDisplay("Success: {Success}")]
+    [DebuggerDisplay("Success: {Success}; CoreResult: {Result}")]
     public class Res<T>
     {
         private readonly bool m_bSuccess = false;
