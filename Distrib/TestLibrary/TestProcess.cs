@@ -42,4 +42,23 @@ namespace TestLibrary
             return "HELLO";
         }
     }
+
+    [DistribProcessPlugin("second process", "second process", 3.0, "Clint Pearson", "{C068F971-7722-4CE1-81F5-E0A548F383DD}")]
+    class SecondProcess : MarshalByRefObject, IDistribPlugin, IDistribProcess
+    {
+        public void InitPlugin(Distrib.Plugins_old.Controllers.IDistribPluginControllerInterface cont)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UninitPlugin(Distrib.Plugins_old.Controllers.IDistribPluginControllerInterface cont)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string SayHello()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

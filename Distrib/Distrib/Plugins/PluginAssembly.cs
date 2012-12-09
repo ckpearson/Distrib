@@ -101,6 +101,21 @@ namespace Distrib.Plugins
                             continue;
                         }
 
+                        // Perform the core usability checking
+                        var usabilityCheckResult = _kernel.Get<IPluginCoreUsabilityCheckServiceFactory>()
+                            .CreateService()
+                            .CheckCoreUsability(descriptor, _assemblyManager);
+
+                        if (!usabilityCheckResult.Success)
+                        {
+                            descriptor.MarkAsUnusable(usabilityCheckResult.Result,
+                                usabilityCheckResult.ResultTwo);
+
+                            lstPluginDescriptorsForResult.Add(descriptor);
+
+                            continue;
+                        }
+
                         // Made it this far so mark as usable
                         descriptor.MarkAsUsable();
                         lstPluginDescriptorsForResult.Add(descriptor);

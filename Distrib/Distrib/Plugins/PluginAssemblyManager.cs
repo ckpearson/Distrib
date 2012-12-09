@@ -107,19 +107,85 @@ namespace Distrib.Plugins
             }
         }
 
-        public bool PluginTypeAdheresToPluginInterface(IPluginDescriptor descriptor)
+        public bool PluginTypeImplementsPromisedInterface(IPluginDescriptor descriptor)
         {
-            throw new NotImplementedException();
+            if (descriptor == null) throw new ArgumentNullException("Descriptor must be supplied");
+
+            try
+            {
+                if (!_pluginExistsInAssembly(descriptor))
+                {
+                    throw new InvalidOperationException("A plugin matching the details supplied could not be found");
+                }
+
+                return _assembly.GetType(descriptor.PluginTypeName)
+                    .GetInterface(descriptor.Metadata.InterfaceType.FullName) != null;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to determine if plugin implements promised interface", ex);
+            }
         }
 
         public bool PluginTypeImplementsCorePluginInterface(IPluginDescriptor descriptor)
         {
-            throw new NotImplementedException();
+            if (descriptor == null) throw new ArgumentNullException("Descriptor must be supplied");
+
+            try
+            {
+                if (!_pluginExistsInAssembly(descriptor))
+                {
+                    throw new InvalidOperationException("A plugin matching the details supplied could not be found");
+                }
+
+                return _assembly.GetType(descriptor.PluginTypeName)
+                    .GetInterface(typeof(IPlugin).FullName) != null;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to determine if plugin implements core plugin interface", ex);
+            }
         }
 
         public bool PluginTypeIsMarshalable(IPluginDescriptor descriptor)
         {
-            throw new NotImplementedException();
+            if (descriptor == null) throw new ArgumentNullException("Descriptor must be supplied");
+
+            try
+            {
+                if (!_pluginExistsInAssembly(descriptor))
+                {
+                    throw new InvalidOperationException("A plugin matching the details supplied could not be found");
+                }
+
+                var t = _assembly.GetType(descriptor.PluginTypeName);
+
+                return (t.BaseType != null && t.BaseType.Equals(typeof(MarshalByRefObject)));
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to determine if plugin is marshalable", ex);
+            }
+        }
+
+        private bool _pluginExistsInAssembly(IPluginDescriptor descriptor)
+        {
+            if (descriptor == null) throw new ArgumentNullException("Descriptor must be supplied");
+
+            try
+            {
+                // While plugins do have identifiers that are intended to be unique, this is by no means
+                // a concrete guarantee that a plugin is present.
+                // Because the plugin type names are most likely to be unique these are used
+                // as the basis of any presence tests.
+                return (GetPluginDescriptors()
+                    .DefaultIfEmpty(null)
+                    .SingleOrDefault(d => d.PluginTypeName == descriptor.PluginTypeName) != null);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to determine if plugin exists within assembly", ex);
+            }
         }
     }
 }

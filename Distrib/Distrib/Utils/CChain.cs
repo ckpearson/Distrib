@@ -12,7 +12,7 @@ namespace Distrib.Utils
     /// <typeparam name="T"></typeparam>
     internal class CChain<T>
     {
-        private readonly T m_result = default(T);
+        private readonly WriteOnce<T> m_result = new WriteOnce<T>(default(T));
         private readonly CChain<T> m_prevChainItem = null;
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace Distrib.Utils
         /// <param name="previousChainItem">The previous item in the condition chain</param>
         private CChain(T result, CChain<T> previousChainItem)
         {
-            m_result = result;
+            m_result.Value = result;
             m_prevChainItem = previousChainItem;
         }
 
@@ -31,11 +31,10 @@ namespace Distrib.Utils
         /// </summary>
         /// <param name="func">The conditional function to perform</param>
         /// <param name="result">The result in case of conditional truth</param>
-        /// <param name="falseResult">The result in case of conditional false</param>
         /// <returns>The stage in the conditional chain</returns>
-        public static CChain<T> If(Func<bool> func, T result, T falseResult = default(T))
+        public static CChain<T> If(Func<bool> func, T result)
         {
-            return new CChain<T>(func() ? result : falseResult, null);
+            return new CChain<T>(func() ? result : default(T), null);
         }
 
         /// <summary>
@@ -46,7 +45,11 @@ namespace Distrib.Utils
         /// <returns>The stage in the conditional chain</returns>
         public CChain<T> ThenIf(Func<bool> func, T result)
         {
-            return new CChain<T>(func() ? result : this.m_result, this);
+            // If the result was actually set previously then the previous condition in the chain
+            // was true and the result was provided, this means this condition is no longer required
+            // therefore simply initialise the next piece in the chain with the result prior to this one (to propogate to the end)
+            // If the result wasn't written however, this piece of the chain needs computing.
+            return new CChain<T>(!this.m_result.IsWritten ? (func() ? result : this.m_result) : this.m_result, this);
         }
 
         /// <summary>

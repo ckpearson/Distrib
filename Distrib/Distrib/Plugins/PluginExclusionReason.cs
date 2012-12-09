@@ -12,6 +12,12 @@
         Unknown = 0,
 
         /// <summary>
+        /// The plugin has been excluded because the identifier for the plugin is in use by a different plugin
+        /// within the same assembly
+        /// </summary>
+        PluginIdentifierNotUnique,
+
+        /// <summary>
         /// The plugin has been excluded owing to the plugin class not implementing the interface
         /// the metadata attribute stated it did.
         /// </summary>
@@ -20,7 +26,7 @@
         /// <summary>
         /// The plugin has been excluded because the plugin doesn't implement the core distrib plugin interface.
         /// </summary>
-        DistribPluginInterfaceNotImplemented,
+        CorePluginInterfaceNotImplemented,
 
         /// <summary>
         /// The plugin has been excluded because the type isn't MarshalByRef making the separation not possible

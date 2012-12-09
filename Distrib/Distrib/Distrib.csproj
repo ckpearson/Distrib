@@ -65,6 +65,8 @@
     <Compile Include="Plugins\IPluginBootstrapServiceFactory.cs" />
     <Compile Include="Plugins\IPluginController.cs" />
     <Compile Include="Plugins\IPluginControllerFactory.cs" />
+    <Compile Include="Plugins\IPluginCoreUsabilityCheckService.cs" />
+    <Compile Include="Plugins\IPluginCoreUsabilityCheckServiceFactory.cs" />
     <Compile Include="Plugins\IPluginDescriptor.cs" />
     <Compile Include="Plugins\IPluginDescriptorFactory.cs" />
     <Compile Include="Plugins\IPluginInstance.cs" />
@@ -85,6 +87,8 @@
     <Compile Include="Plugins\PluginBootstrapService.cs" />
     <Compile Include="Plugins\PluginBootstrapServiceFactory.cs" />
     <Compile Include="Plugins\PluginControllerFactory.cs" />
+    <Compile Include="Plugins\PluginCoreUsabilityCheckService.cs" />
+    <Compile Include="Plugins\PluginCoreUsabilityCheckServiceFactory.cs" />
     <Compile Include="Plugins\PluginDescriptor.cs" />
     <Compile Include="Plugins\PluginDescriptorFactory.cs" />
     <Compile Include="Plugins\PluginExclusionReason.cs" />

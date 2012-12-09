@@ -29,6 +29,9 @@ namespace Distrib.IOC
             Bind<Plugins.IPluginBootstrapServiceFactory>().To<Plugins.PluginBootstrapServiceFactory>().InSingletonScope();
             Bind<Plugins.IPluginBootstrapService>().To<Plugins.PluginBootstrapService>().InSingletonScope();
 
+            Bind<Plugins.IPluginCoreUsabilityCheckServiceFactory>().To<Plugins.PluginCoreUsabilityCheckServiceFactory>().InSingletonScope();
+            Bind<Plugins.IPluginCoreUsabilityCheckService>().To<Plugins.PluginCoreUsabilityCheckService>().InSingletonScope();
+
             Bind<Plugins.IPluginControllerFactory>().To<Plugins.PluginControllerFactory>().InSingletonScope();
             Bind<Plugins.IPluginController>().To<Plugins.StandardPluginController>();
 

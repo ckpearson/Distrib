@@ -14,7 +14,7 @@ namespace Distrib.Plugins
 
         IReadOnlyList<IPluginDescriptor> GetPluginDescriptors();
 
-        bool PluginTypeAdheresToPluginInterface(IPluginDescriptor descriptor);
+        bool PluginTypeImplementsPromisedInterface(IPluginDescriptor descriptor);
         bool PluginTypeImplementsCorePluginInterface(IPluginDescriptor descriptor);
         bool PluginTypeIsMarshalable(IPluginDescriptor descriptor);
     }
