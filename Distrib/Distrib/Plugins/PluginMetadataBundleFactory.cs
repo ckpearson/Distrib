@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins
 {
-    public sealed class PluginMetadataBundleFactory : IPluginMetadataBundleFactory
+    public sealed class PluginMetadataBundleFactory : MarshalByRefObject, IPluginMetadataBundleFactory
     {
         private IKernel _kernel;
 
@@ -18,8 +18,7 @@ namespace Distrib.Plugins
             _kernel = kernel;
         }
 
-        public IPluginMetadataBundle CreateBundle(Type interfaceType, 
-            Type attributeType, 
+        public IPluginMetadataBundle CreateBundle(Type interfaceType,
             object instance, 
             IReadOnlyDictionary<string, object> kvps, 
             string identity, 
@@ -28,7 +27,6 @@ namespace Distrib.Plugins
             return _kernel.Get<IPluginMetadataBundle>(new[]
             {
                 new ConstructorArgument("interfaceType", interfaceType),
-                new ConstructorArgument("attributeType", attributeType),
                 new ConstructorArgument("instance", instance),
                 new ConstructorArgument("kvps", kvps),
                 new ConstructorArgument("identity", identity),

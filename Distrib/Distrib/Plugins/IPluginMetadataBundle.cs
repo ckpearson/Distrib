@@ -8,10 +8,11 @@ namespace Distrib.Plugins
 {
     public interface IPluginMetadataBundle
     {
-        /// <summary>
-        /// Gets the type of the attribute that provided the additional metadata
-        /// </summary>
-        Type AdditionalMetadataAttributeType { get; }
+        ///// <summary>
+        ///// Gets the type of the attribute that provided the additional metadata
+        ///// </summary>
+        //Type AdditionalMetadataAttributeType { get; }
+#warning Investigate whether the additional metadata attribute type property is required
 
         /// <summary>
         /// Gets the underlying metadata object in a given form

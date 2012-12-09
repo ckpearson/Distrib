@@ -11,7 +11,6 @@ namespace Distrib.Plugins
     {
         private readonly Type _metadataInterface;
         private readonly object _metadataInstance;
-        private readonly Type _attributeType;
         private readonly IReadOnlyDictionary<string, object> _kvps;
 
         private readonly string _identity = Guid.NewGuid().ToString();
@@ -19,23 +18,16 @@ namespace Distrib.Plugins
             PluginMetadataBundleExistencePolicy.NotImportant;
 
         public PluginMetadataBundle(Type interfaceType,
-            Type attributeType,
             object instance,
             IReadOnlyDictionary<string, object> kvps,
             string identity,
             PluginMetadataBundleExistencePolicy existencePolicy)
         {
             _metadataInterface = interfaceType;
-            _attributeType = attributeType;
             _metadataInstance = instance;
             _kvps = kvps;
             _identity = identity;
             _existencePolicy = existencePolicy;
-        }
-
-        public Type AdditionalMetadataAttributeType
-        {
-            get { throw new NotImplementedException(); }
         }
 
         public T GetMetadataInstance<T>()

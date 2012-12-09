@@ -29,10 +29,10 @@ namespace Distrib.Processes.Discovery
             string author,
             string identifier) : base(typeof(IDistribProcess), name, description, version, author, identifier)
         {
-            base.SuppliedMetadataBundles = new List<IPluginMetadataBundle>()
+            base.SuppliedMetadataObjects = new List<PluginAdditionalMetadataObject>()
             {
 #warning Process plugin attribute needs additional metadata attributes upgrading
-                new DistribProcessDetailsAttribute(name, description, version, author).ToMetadataBundleNew(),
+                new ProcessMetadataObject(name, description, version, author),
             }.AsReadOnly();
         }
     }

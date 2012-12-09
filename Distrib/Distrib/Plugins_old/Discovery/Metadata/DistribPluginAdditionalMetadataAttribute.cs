@@ -32,7 +32,7 @@ namespace Distrib.Plugins_old.Discovery.Metadata
         /// </summary>
         /// <param name="metadataInterfaceType">The interface type that the metadata takes the form of</param>
         /// <param name="identity">The identifier used to represent this type of additional metadata</param>
-        [Inject]
+        
         protected DistribPluginAdditionalMetadataAttribute(
             Type metadataInterfaceType, string identity,
             AdditionalPluginMetadataIdentityExistencePolicy identityPolicy,IKernel kernel = null)
@@ -170,7 +170,6 @@ namespace Distrib.Plugins_old.Discovery.Metadata
                 return _kernel.Get<IPluginMetadataBundleFactory>()
                     .CreateBundle(
                         m_typMetadataInterface,
-                        this.GetType(),
                         _doMetadataReturn(),
                         new ReadOnlyDictionary<string, object>(ProvideMetadataKVPs()),
                         m_strMetadataIdentity,

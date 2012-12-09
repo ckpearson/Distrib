@@ -67,7 +67,7 @@
     <Compile Include="Plugins\IPluginMetadataBundleFactory.cs" />
     <Compile Include="Plugins\IPluginMetadataFactory.cs" />
     <Compile Include="Plugins\IPluginUsabilityChecker.cs" />
-    <Compile Include="Plugins\PluginAdditionalMetadataAttribute.cs" />
+    <Compile Include="Plugins\PluginAdditionalMetadataObject.cs" />
     <Compile Include="Plugins\PluginAssembly.cs" />
     <Compile Include="Plugins\PluginAssemblyFactory.cs" />
     <Compile Include="Plugins\PluginAssemblyManager.cs" />
@@ -106,6 +106,7 @@
     <Compile Include="Processes\Discovery\DistribProcessPluginAttribute.cs" />
     <Compile Include="Processes\Discovery\Metadata\DistribProcessDetailsAttribute.cs" />
     <Compile Include="Processes\Discovery\Metadata\IDistribProcessDetailsMetadata.cs" />
+    <Compile Include="Processes\Discovery\Metadata\ProcessMetadataObject.cs" />
     <Compile Include="Processes\IDistribProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Separation\RemoteDomainBridge.cs" />

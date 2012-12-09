@@ -2,6 +2,7 @@
 using Ninject;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -76,9 +77,18 @@ namespace Distrib.Plugins
                                 _kernel.Get<IPluginMetadataFactory>()
                                     .CreateMetadataFromPluginAttribute(type.attr));
 
-                        // See if the plugin has any additional metadata
-                        var additMetadataDecorated =
-                            type.type.GetCustomAttributes<PluginAdditionalMetadataAttribute>().ToList();
+                        // See if the plugin has any additional metadata (this is only done via supplied metadata now)
+                        descriptor.SetAdditionalMetadata(
+                            type.attr.SuppliedMetadataObjects == null ? null :
+                            type.attr.SuppliedMetadataObjects.Select(
+                                mo => _kernel.Get<IPluginMetadataBundleFactory>()
+                                    .CreateBundle(
+                                        mo.MetadataInterfaceType,
+                                        mo.ProvideMetadataInstance(),
+                                        new ReadOnlyDictionary<string, object>(mo.ProvideMetadataKVPs()),
+                                        mo.MetadataIdentity,
+                                        mo.MetadataExistencePolicy)));
+#warning New plugin system needs to discover additional metadata bundles
                     }
                 }
 

@@ -9,7 +9,6 @@ namespace Distrib.Plugins
     public interface IPluginMetadataBundleFactory
     {
         IPluginMetadataBundle CreateBundle(Type interfaceType,
-            Type attributeType,
             object instance,
             IReadOnlyDictionary<string, object> kvps,
             string identity,

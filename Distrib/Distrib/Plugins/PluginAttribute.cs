@@ -21,8 +21,8 @@ namespace Distrib.Plugins
 
         private readonly WriteOnce<Type> _controllerType = new WriteOnce<Type>(null);
 
-        private readonly WriteOnce<IReadOnlyList<IPluginMetadataBundle>> _lstSuppliedMetadataBundles
-            = new WriteOnce<IReadOnlyList<IPluginMetadataBundle>>(null);
+        private readonly WriteOnce<IReadOnlyList<PluginAdditionalMetadataObject>> _lstRawSuppliedMetadataObjects =
+            new WriteOnce<IReadOnlyList<PluginAdditionalMetadataObject>>();
 
         public PluginAttribute(Type interfaceType,
             string name,
@@ -97,27 +97,27 @@ namespace Distrib.Plugins
             }
         }
 
-        public IReadOnlyList<IPluginMetadataBundle> SuppliedMetadataBundles
+        public IReadOnlyList<PluginAdditionalMetadataObject> SuppliedMetadataObjects
         {
             get
             {
-                lock (_lstSuppliedMetadataBundles)
+                lock (_lstRawSuppliedMetadataObjects)
                 {
-                    return (!_lstSuppliedMetadataBundles.IsWritten) ? null : _lstSuppliedMetadataBundles.Value;
+                    return (!_lstRawSuppliedMetadataObjects.IsWritten) ? null : _lstRawSuppliedMetadataObjects.Value;
                 }
             }
             
             protected set
             {
-                lock (_lstSuppliedMetadataBundles)
+                lock (_lstRawSuppliedMetadataObjects)
                 {
-                    if (!_lstSuppliedMetadataBundles.IsWritten)
+                    if (!_lstRawSuppliedMetadataObjects.IsWritten)
                     {
-                        _lstSuppliedMetadataBundles.Value = value;
+                        _lstRawSuppliedMetadataObjects.Value = value;
                     }
                     else
                     {
-                        throw new InvalidOperationException("Supplied metadata bundles already set");
+                        throw new InvalidOperationException("Supplied metadata objects already set");
                     }
                 }
             }
