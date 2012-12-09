@@ -1,4 +1,5 @@
-﻿using Distrib.Plugins_old;
+﻿using Distrib.Plugins;
+using Distrib.Plugins_old;
 using Distrib.Plugins_old.Discovery;
 using Distrib.Processes;
 using Distrib.Processes.Discovery;
@@ -23,7 +24,7 @@ namespace TestLibrary
     //    1.0,
     //    "Clint Pearson")]
 
-    [DistribProcessPlugin("Test process", "simple test process", 1.0, "Clint Pearson", "{C068F971-7722-4CE1-81F5-E0A548F383DD}")]
+    [DistribProcessPlugin("Test process", "simple test process", 1.0, "Clint Pearson", "abc")]
     class TestProcess : MarshalByRefObject, IDistribPlugin, IDistribProcess
     {
         void IDistribPlugin.InitPlugin(Distrib.Plugins_old.Controllers.IDistribPluginControllerInterface cont)
@@ -43,7 +44,7 @@ namespace TestLibrary
         }
     }
 
-    [DistribProcessPlugin("second process", "second process", 3.0, "Clint Pearson", "{C068F971-7722-4CE1-81F5-E0A548F383DD}")]
+    [DistribProcessPlugin("second process", "second process", 3.0, "Clint Pearson", "abc")]
     class SecondProcess : MarshalByRefObject, IDistribPlugin, IDistribProcess
     {
         public void InitPlugin(Distrib.Plugins_old.Controllers.IDistribPluginControllerInterface cont)

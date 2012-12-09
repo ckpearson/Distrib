@@ -20,9 +20,18 @@ namespace Distrib.Utils
         /// </summary>
         /// <param name="result">The result to set</param>
         /// <param name="previousChainItem">The previous item in the condition chain</param>
-        private CChain(T result, CChain<T> previousChainItem)
+        /// <param name="valueForSetting">Whether the value is to be set as final or simply as a stand-in until next piece of chain</param>
+        private CChain(T result, CChain<T> previousChainItem, bool valueForSetting = true)
         {
-            m_result.Value = result;
+            if (valueForSetting)
+            {
+                m_result.Value = result;
+            }
+            else
+            {
+                m_result = new WriteOnce<T>(result);
+            }
+
             m_prevChainItem = previousChainItem;
         }
 
@@ -34,7 +43,17 @@ namespace Distrib.Utils
         /// <returns>The stage in the conditional chain</returns>
         public static CChain<T> If(Func<bool> func, T result)
         {
-            return new CChain<T>(func() ? result : default(T), null);
+            //return new CChain<T>(func() ? result : default(T), null, true);
+            var res = func();
+
+            if (res)
+            {
+                return new CChain<T>(result, null, true);
+            }
+            else
+            {
+                return new CChain<T>(default(T), null, false);
+            }
         }
 
         /// <summary>
@@ -49,7 +68,24 @@ namespace Distrib.Utils
             // was true and the result was provided, this means this condition is no longer required
             // therefore simply initialise the next piece in the chain with the result prior to this one (to propogate to the end)
             // If the result wasn't written however, this piece of the chain needs computing.
-            return new CChain<T>(!this.m_result.IsWritten ? (func() ? result : this.m_result) : this.m_result, this);
+
+            if (!this.m_result.IsWritten)
+            {
+                var res = func();
+
+                if (res)
+                {
+                    return new CChain<T>(result, this, true);
+                }
+                else
+                {
+                    return new CChain<T>(m_result, this, false);
+                }
+            }
+            else
+            {
+                return new CChain<T>(m_result, this);
+            }
         }
 
         /// <summary>
