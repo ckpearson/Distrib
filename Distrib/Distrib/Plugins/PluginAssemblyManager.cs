@@ -82,14 +82,21 @@ namespace Distrib.Plugins
                             type.attr.SuppliedMetadataObjects == null ? null :
                             type.attr.SuppliedMetadataObjects.Select(
                                 mo => _kernel.Get<IPluginMetadataBundleFactory>()
-                                    .CreateBundle(
-                                        mo.MetadataInterfaceType,
-                                        mo.ProvideMetadataInstance(),
-                                        new ReadOnlyDictionary<string, object>(mo.ProvideMetadataKVPs()),
-                                        mo.MetadataIdentity,
-                                        mo.MetadataExistencePolicy)));
-#warning New plugin system needs to discover additional metadata bundles
+                                    .CreateBundleFromAdditionalMetadataObject(mo)));
+
+                        lstTempDescriptors.Add(descriptor);
                     }
+
+                    if (_pluginDescriptorsListReference == null)
+                    {
+                        _pluginDescriptorsListReference = new WeakReference<IReadOnlyList<IPluginDescriptor>>(lstTempDescriptors);
+                    }
+                    else
+                    {
+                        _pluginDescriptorsListReference.SetTarget(lstTempDescriptors);
+                    }
+
+                    readonlyDescriptorList = lstTempDescriptors.AsReadOnly();
                 }
 
                 return readonlyDescriptorList;

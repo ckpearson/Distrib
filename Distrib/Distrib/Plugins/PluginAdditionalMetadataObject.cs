@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using Distrib.Utils;
+using System.Collections.ObjectModel;
 
 namespace Distrib.Plugins
 {
@@ -104,7 +105,7 @@ namespace Distrib.Plugins
         /// Gets the key-value pairs of the metadata
         /// </summary>
         /// <returns>A dictionary containing the metadata key-value pairs</returns>
-        internal Dictionary<string, object> ProvideMetadataKVPs()
+        internal IReadOnlyDictionary<string, object> ProvideMetadataKVPs()
         {
             var dict = new Dictionary<string, object>();
 
@@ -132,7 +133,7 @@ namespace Distrib.Plugins
                     dict.Add(pi.Name, pi.GetValue(metadataObject));
                 }
 
-                return dict;
+                return new ReadOnlyDictionary<string, object>(dict);
             }
             catch (Exception ex)
             {

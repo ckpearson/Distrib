@@ -30,7 +30,7 @@ namespace Distrib.Plugins
         /// <summary>
         /// Gets a dictionary containing the metadata keys and their respective values.
         /// </summary>
-        Dictionary<string, object> MetadataKVPs { get; }
+        IReadOnlyDictionary<string, object> MetadataKVPs { get; }
 
         string MetadataInstanceIdentity { get; }
 

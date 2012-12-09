@@ -9,8 +9,8 @@ namespace Distrib.Plugins
     [Serializable()]
     public sealed class PluginMetadataBundle : IPluginMetadataBundle
     {
-        private readonly Type _metadataInterface;
-        private readonly object _metadataInstance;
+        private readonly Type _interface;
+        private readonly object _instance;
         private readonly IReadOnlyDictionary<string, object> _kvps;
 
         private readonly string _identity = Guid.NewGuid().ToString();
@@ -23,8 +23,8 @@ namespace Distrib.Plugins
             string identity,
             PluginMetadataBundleExistencePolicy existencePolicy)
         {
-            _metadataInterface = interfaceType;
-            _metadataInstance = instance;
+            _interface = interfaceType;
+            _instance = instance;
             _kvps = kvps;
             _identity = identity;
             _existencePolicy = existencePolicy;
@@ -32,27 +32,27 @@ namespace Distrib.Plugins
 
         public T GetMetadataInstance<T>()
         {
-            throw new NotImplementedException();
+            return (T)_instance;
         }
 
         public object GetMetadataInstance()
         {
-            throw new NotImplementedException();
+            return _instance;
         }
 
-        public Dictionary<string, object> MetadataKVPs
+        public IReadOnlyDictionary<string, object> MetadataKVPs
         {
-            get { throw new NotImplementedException(); }
+            get { return _kvps; }
         }
 
         public string MetadataInstanceIdentity
         {
-            get { throw new NotImplementedException(); }
+            get { return _identity; }
         }
 
         public PluginMetadataBundleExistencePolicy MetadataInstanceExistencePolicy
         {
-            get { throw new NotImplementedException(); }
+            get { return _existencePolicy; }
         }
     }
 }

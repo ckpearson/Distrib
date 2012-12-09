@@ -13,5 +13,7 @@ namespace Distrib.Plugins
             IReadOnlyDictionary<string, object> kvps,
             string identity,
             PluginMetadataBundleExistencePolicy existencePolicy);
+
+        IPluginMetadataBundle CreateBundleFromAdditionalMetadataObject(PluginAdditionalMetadataObject additionalMetadataObject);
     }
 }

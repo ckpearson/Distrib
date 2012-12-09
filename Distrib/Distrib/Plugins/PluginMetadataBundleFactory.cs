@@ -33,5 +33,16 @@ namespace Distrib.Plugins
                 new ConstructorArgument("existencePolicy", existencePolicy),
             });
         }
+
+
+        public IPluginMetadataBundle CreateBundleFromAdditionalMetadataObject(PluginAdditionalMetadataObject additionalMetadataObject)
+        {
+            return CreateBundle(
+                additionalMetadataObject.MetadataInterfaceType,
+                additionalMetadataObject.ProvideMetadataInstance(),
+                additionalMetadataObject.ProvideMetadataKVPs(),
+                additionalMetadataObject.MetadataIdentity,
+                additionalMetadataObject.MetadataExistencePolicy);
+        }
     }
 }
