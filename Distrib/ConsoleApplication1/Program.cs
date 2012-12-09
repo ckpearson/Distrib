@@ -42,7 +42,7 @@ namespace ConsoleApplication1
             {
                 var asm = kernel.Get<Distrib.Plugins.IPluginAssemblyFactory>().CreatePluginAssemblyFromPath(pluginDll);
 
-                asm.Initialise();
+                var res = asm.Initialise();
             }
         }
 

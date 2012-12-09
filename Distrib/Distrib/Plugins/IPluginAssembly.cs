@@ -11,7 +11,7 @@ namespace Distrib.Plugins
 {
     public interface IPluginAssembly
     {
-        void Initialise();
+        IPluginAssemblyInitialisationResult Initialise();
         void Unitialise();
         bool IsInitialised { get; }
     }

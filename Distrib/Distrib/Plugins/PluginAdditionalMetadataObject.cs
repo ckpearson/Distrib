@@ -21,7 +21,6 @@ namespace Distrib.Plugins
             new WriteOnce<IReadOnlyList<PropertyInfo>>(null);
 
         private PluginAdditionalMetadataObject() { }
-
         protected PluginAdditionalMetadataObject(
             Type interfaceType,
             string identity,
@@ -86,7 +85,7 @@ namespace Distrib.Plugins
         /// Gets the pure object holding the metadata
         /// </summary>
         /// <returns>The metadata object</returns>
-        internal object ProvideMetadataInstance()
+        public object ProvideMetadataInstance()
         {
             return _doMetadataReturn();
         }
@@ -96,7 +95,7 @@ namespace Distrib.Plugins
         /// </summary>
         /// <typeparam name="T">The metadata interface type</typeparam>
         /// <returns>The metadata interface instance</returns>
-        internal T ProvideMetadataInstance<T>()
+        public T ProvideMetadataInstance<T>()
         {
             return (T)_doMetadataReturn();
         }
@@ -105,7 +104,7 @@ namespace Distrib.Plugins
         /// Gets the key-value pairs of the metadata
         /// </summary>
         /// <returns>A dictionary containing the metadata key-value pairs</returns>
-        internal IReadOnlyDictionary<string, object> ProvideMetadataKVPs()
+        public IReadOnlyDictionary<string, object> ProvideMetadataKVPs()
         {
             var dict = new Dictionary<string, object>();
 

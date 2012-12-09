@@ -30,8 +30,10 @@ namespace Distrib.Plugins
             _netAssemblyPath = netAssemblyPath;
         }
 
-        public void Initialise()
+        public IPluginAssemblyInitialisationResult Initialise()
         {
+            List<IPluginDescriptor> lstPluginDescriptorsForResult = new List<IPluginDescriptor>();
+
             try
             {
                 lock (_lock)
@@ -76,6 +78,36 @@ namespace Distrib.Plugins
 
                     // Pull out the plugin descriptors
                     _pluginDescriptors = _assemblyManager.GetPluginDescriptors();
+
+                    if (_pluginDescriptors == null || _pluginDescriptors.Count == 0)
+                    {
+                        throw new InvalidOperationException("Plugin assembly contains no plugins");
+                    }
+
+                    foreach (IPluginDescriptor descriptor in _pluginDescriptors)
+                    {
+                        // Perform the bootstrapping for the plugin
+                        var bootstrapResult = _kernel.Get<IPluginBootstrapServiceFactory>()
+                            .CreateService()
+                            .BootstrapPlugin(descriptor);
+
+                        if (!bootstrapResult.Success)
+                        {
+                            descriptor.MarkAsUnusable(PluginExclusionReason.PluginBootstrapFailure,
+                                bootstrapResult.Result);
+
+                            lstPluginDescriptorsForResult.Add(descriptor);
+
+                            continue;
+                        }
+
+                        // Made it this far so mark as usable
+                        descriptor.MarkAsUsable();
+                        lstPluginDescriptorsForResult.Add(descriptor);
+                    }
+
+                    return _kernel.Get<IPluginAssemblyInitialisationResultFactory>()
+                        .CreateResultFromPlugins(lstPluginDescriptorsForResult.AsReadOnly());
                 }
             }
             catch (Exception ex)

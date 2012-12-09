@@ -11,20 +11,31 @@ namespace Distrib.IOC
     {
         public override void Load()
         {
-            Bind<Plugins.IPluginAssemblyFactory>().To<Plugins.PluginAssemblyFactory>();
+            Bind<Plugins.IPluginAssemblyFactory>().To<Plugins.PluginAssemblyFactory>().InSingletonScope();
             Bind<Plugins.IPluginAssembly>().To<Plugins.PluginAssembly>();
 
-            Bind<Plugins.IPluginAssemblyManagerFactory>().To<Plugins.PluginAssemblyManagerFactory>();
+            Bind<Plugins.IPluginAssemblyManagerFactory>().To<Plugins.PluginAssemblyManagerFactory>().InSingletonScope();
             Bind<Plugins.IPluginAssemblyManager>().To<Plugins.PluginAssemblyManager>();
 
-            Bind<Plugins.IPluginDescriptorFactory>().To<Plugins.PluginDescriptorFactory>();
+            Bind<Plugins.IPluginDescriptorFactory>().To<Plugins.PluginDescriptorFactory>().InSingletonScope();
             Bind<Plugins.IPluginDescriptor>().To<Plugins.PluginDescriptor>();
 
-            Bind<Plugins.IPluginMetadataFactory>().To<Plugins.PluginMetadataFactory>();
+            Bind<Plugins.IPluginMetadataFactory>().To<Plugins.PluginMetadataFactory>().InSingletonScope();
             Bind<Plugins.IPluginMetadata>().To<Plugins.PluginMetadata>();
 
-            Bind<Plugins.IPluginMetadataBundleFactory>().To<Plugins.PluginMetadataBundleFactory>();
+            Bind<Plugins.IPluginMetadataBundleFactory>().To<Plugins.PluginMetadataBundleFactory>().InSingletonScope();
             Bind<Plugins.IPluginMetadataBundle>().To<Plugins.PluginMetadataBundle>();
+
+            Bind<Plugins.IPluginBootstrapServiceFactory>().To<Plugins.PluginBootstrapServiceFactory>().InSingletonScope();
+            Bind<Plugins.IPluginBootstrapService>().To<Plugins.PluginBootstrapService>().InSingletonScope();
+
+            Bind<Plugins.IPluginControllerFactory>().To<Plugins.PluginControllerFactory>().InSingletonScope();
+            Bind<Plugins.IPluginController>().To<Plugins.StandardPluginController>();
+
+            Bind<Plugins.IPluginAssemblyInitialisationResultFactory>().To<Plugins.PluginAssemblyInitialisationResultFactory>()
+                .InSingletonScope();
+
+            Bind<Plugins.IPluginAssemblyInitialisationResult>().To<Plugins.PluginAssemblyInitialisationResult>();
         }
     }
 }
