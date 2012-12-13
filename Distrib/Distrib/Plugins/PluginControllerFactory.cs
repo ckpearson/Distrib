@@ -20,5 +20,29 @@ namespace Distrib.Plugins
         {
             return _kernel.Get<IPluginController>();
         }
+
+        public IPluginController CreateControllerOfType(Type type, IPluginControllerValidationService controllerValidator)
+        {
+            if (type == null) throw new ArgumentNullException("type must be supplied");
+
+            try
+            {
+                var controllerValidationResult = controllerValidator.ValidateControllerType(type);
+
+                if (!controllerValidationResult.Success)
+                {
+                    throw new InvalidOperationException(string.Format("Cannot use type to create controller, type failed validation: {0}",
+                        controllerValidationResult.ResultTwo.ToString()));
+                }
+                else
+                {
+                    return (IPluginController)Activator.CreateInstance(type);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to create controller of given type", ex);
+            }
+        }
     }
 }

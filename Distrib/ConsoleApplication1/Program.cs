@@ -43,6 +43,19 @@ namespace ConsoleApplication1
                 var asm = kernel.Get<Distrib.Plugins.IPluginAssemblyFactory>().CreatePluginAssemblyFromPath(pluginDll);
 
                 var res = asm.Initialise();
+
+                if (res.HasUsablePlugins)
+                {
+                    var firstProc = res.UsablePlugins.DefaultIfEmpty(null)
+                        .FirstOrDefault(p => p.Metadata.InterfaceType.Equals(typeof(IDistribProcess)));
+
+                    if (firstProc == null)
+                    {
+                        throw new InvalidOperationException("No usable process plugin exists");
+                    }
+
+                    var inst = asm.CreatePluginInstance(firstProc);
+                }
             }
         }
 

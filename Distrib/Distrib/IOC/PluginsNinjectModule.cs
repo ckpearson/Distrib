@@ -46,6 +46,9 @@ namespace Distrib.IOC
                 .InSingletonScope();
 
             Bind<Plugins.IPluginAssemblyInitialisationResult>().To<Plugins.PluginAssemblyInitialisationResult>();
+
+            Bind<Plugins.IPluginInstanceFactory>().To<Plugins.PluginInstanceFactory>().InSingletonScope();
+            Bind<Plugins.IPluginInstance>().To<Plugins.PluginInstance>();
         }
     }
 }

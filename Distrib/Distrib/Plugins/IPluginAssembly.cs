@@ -14,5 +14,7 @@ namespace Distrib.Plugins
         IPluginAssemblyInitialisationResult Initialise();
         void Unitialise();
         bool IsInitialised { get; }
+
+        IPluginInstance CreatePluginInstance(IPluginDescriptor descriptor);
     }
 }

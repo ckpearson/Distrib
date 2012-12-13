@@ -23,6 +23,8 @@ namespace Distrib.Plugins
         private readonly IPluginMetadataBundleCheckService _pluginMetadataBundleCheckService;
         private readonly IPluginAssemblyInitialisationResultFactory _pluginAsmInitialisationResultFactory;
 
+        private readonly IPluginInstanceFactory _pluginInstanceFactory;
+
         private readonly object _lock = new object();
 
         private bool _isInitialised = false;
@@ -35,6 +37,7 @@ namespace Distrib.Plugins
             IPluginControllerValidationService pluginControllerValidationService,
             IPluginMetadataBundleCheckService pluginMetadataCheckService,
             IPluginAssemblyInitialisationResultFactory pluginAssemblyInitialisationResultFactory,
+            IPluginInstanceFactory pluginInstanceFactory,
             string netAssemblyPath)
         {
             if (string.IsNullOrEmpty(netAssemblyPath)) throw new ArgumentNullException("Assembly path must be supplied");
@@ -45,6 +48,8 @@ namespace Distrib.Plugins
             _pluginControllerValidationService = pluginControllerValidationService;
             _pluginMetadataBundleCheckService = pluginMetadataCheckService;
             _pluginAsmInitialisationResultFactory = pluginAssemblyInitialisationResultFactory;
+
+            _pluginInstanceFactory = pluginInstanceFactory;
 
             _netAssemblyPath = netAssemblyPath;
         }
@@ -186,6 +191,48 @@ namespace Distrib.Plugins
             catch (Exception ex)
             {
                 throw new ApplicationException("Failed to initialise plugin assembly", ex);
+            }
+        }
+
+        private readonly Dictionary<IPluginDescriptor, List<IPluginInstance>>
+            _pluginInstances = new Dictionary<IPluginDescriptor, List<IPluginInstance>>();
+
+        public IPluginInstance CreatePluginInstance(IPluginDescriptor descriptor)
+        {
+            if (descriptor == null) throw new ArgumentNullException("Plugin descriptor must be supplied");
+
+            IPluginInstance pluginInstance;
+
+            try
+            {
+                if (!descriptor.IsUsable)
+                {
+                    throw new InvalidOperationException(string.Format("Plugin is marked as excluded: {0}",
+                        descriptor.ExlusionReason.ToString()));
+                }
+
+                lock (_lock)
+                {
+                    lock (_pluginInstances)
+                    {
+                        List<IPluginInstance> instancesList;
+                        if (_pluginInstances.TryGetValue(descriptor, out instancesList) == false)
+                        {
+                            instancesList = new List<IPluginInstance>();
+                        }
+
+                        pluginInstance = _pluginInstanceFactory.CreatePluginInstance(descriptor, this);
+                        instancesList.Add(pluginInstance);
+
+                        _pluginInstances[descriptor] = instancesList;
+                    }
+                }
+
+                return pluginInstance;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to create plugin instance", ex);
             }
         }
 

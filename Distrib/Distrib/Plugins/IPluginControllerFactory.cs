@@ -9,5 +9,6 @@ namespace Distrib.Plugins
     public interface IPluginControllerFactory
     {
         IPluginController CreateController();
+        IPluginController CreateControllerOfType(Type type, IPluginControllerValidationService controllerValidator);
     }
 }
