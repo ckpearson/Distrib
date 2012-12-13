@@ -3,6 +3,7 @@ using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -166,6 +167,22 @@ namespace Distrib.Plugins
                         .CreateResultFromPlugins(lstPluginDescriptorsForResult.AsReadOnly());
                 }
             }
+            catch (ReflectionTypeLoadException ex)
+            {
+                // Something went wrong trying to load types in the plugin
+
+                var loaderExceptions = ex.LoaderExceptions;
+
+                var sb = new StringBuilder();
+                sb.AppendLine("Failed to initialise plugin assembly, type loading errors:");
+
+                foreach (var te in loaderExceptions)
+                {
+                    sb.AppendLine(te.Message);
+                }
+
+                throw new ApplicationException(sb.ToString(), ex);
+            }
             catch (Exception ex)
             {
                 throw new ApplicationException("Failed to initialise plugin assembly", ex);
@@ -174,7 +191,24 @@ namespace Distrib.Plugins
 
         public void Unitialise()
         {
-            throw new NotImplementedException();
+            try
+            {
+                lock (_lock)
+                {
+                    if (!IsInitialised)
+                    {
+                        throw new InvalidOperationException("Plugin assembly isn't initialised");
+                    }
+
+                    // If there are any plugin instances they need bringing down
+#warning implement tearing down of instances
+                }
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
         }
 
 

@@ -31,7 +31,6 @@ namespace Distrib.Processes.Discovery
         {
             base.SuppliedMetadataObjects = new List<PluginAdditionalMetadataObject>()
             {
-#warning Process plugin attribute needs additional metadata attributes upgrading
                 new ProcessMetadataObject(name, description, version, author),
             }.AsReadOnly();
         }

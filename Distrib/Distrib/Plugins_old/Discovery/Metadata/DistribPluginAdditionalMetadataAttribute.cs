@@ -158,27 +158,5 @@ namespace Distrib.Plugins_old.Discovery.Metadata
                 throw new ApplicationException("Failed to get metadata bundle", ex);
             }
         }
-
-        internal IPluginMetadataBundle ToMetadataBundleNew()
-        {
-            try
-            {
-                //return new ConcreteDistribPluginAdditionalMetadataBundle(m_typMetadataInterface,
-                //    this.GetType(), _doMetadataReturn(), ProvideMetadataKVPs(), m_strMetadataIdentity, m_enumIdentityPolicy);
-
-#warning Hacky way of getting readonly dictionary, providemetadatakvps needs changing
-                return _kernel.Get<IPluginMetadataBundleFactory>()
-                    .CreateBundle(
-                        m_typMetadataInterface,
-                        _doMetadataReturn(),
-                        new ReadOnlyDictionary<string, object>(ProvideMetadataKVPs()),
-                        m_strMetadataIdentity,
-                        (PluginMetadataBundleExistencePolicy)m_enumIdentityPolicy);
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Failed to get metadata bundle", ex);
-            }
-        }
     }
 }

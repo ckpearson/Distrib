@@ -17,6 +17,7 @@ namespace Distrib.IOC
             Bind<Plugins.IPluginAssemblyManagerFactory>().To<Plugins.PluginAssemblyManagerFactory>().InSingletonScope();
             Bind<Plugins.IPluginAssemblyManager>().To<Plugins.PluginAssemblyManager>();
 
+
             Bind<Plugins.IPluginDescriptorFactory>().To<Plugins.PluginDescriptorFactory>().InSingletonScope();
             Bind<Plugins.IPluginDescriptor>().To<Plugins.PluginDescriptor>();
 
