@@ -28,8 +28,8 @@ namespace Distrib.Plugins
                     .ThenIf(() => controllerType.GetInterface(typeof(IPluginController).FullName) == null,
                         PluginControllerValidationResult.ControllerInterfaceNotImplemented)
                     // Must have a constructor taking an IKernel
-                    .ThenIf(() => controllerType.GetConstructor(new[] { typeof(IKernel) }) == null,
-                        PluginControllerValidationResult.KernelAcceptingConstructorNotFound)
+                    //.ThenIf(() => controllerType.GetConstructor(new[] { typeof(IKernel) }) == null,
+                    //    PluginControllerValidationResult.KernelAcceptingConstructorNotFound)
                     .Result;
 
                 return new Res<Type, PluginControllerValidationResult>(res == PluginControllerValidationResult.Success,

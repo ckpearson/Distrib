@@ -45,7 +45,7 @@ namespace Distrib.Plugins
             get { return _kvps; }
         }
 
-        public string MetadataInstanceIdentity
+        public string MetadataBundleIdentity
         {
             get { return _identity; }
         }

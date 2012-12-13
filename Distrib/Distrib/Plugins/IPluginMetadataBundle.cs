@@ -32,8 +32,14 @@ namespace Distrib.Plugins
         /// </summary>
         IReadOnlyDictionary<string, object> MetadataKVPs { get; }
 
-        string MetadataInstanceIdentity { get; }
+        /// <summary>
+        /// Gets a string representing the shared identity for this type of metadata bundle
+        /// </summary>
+        string MetadataBundleIdentity { get; }
 
+        /// <summary>
+        /// Gets the policy for instance existence for bundles of this type (shared identity)
+        /// </summary>
         PluginMetadataBundleExistencePolicy MetadataInstanceExistencePolicy { get; }
     }
 }

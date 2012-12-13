@@ -12,21 +12,16 @@ namespace Distrib.Plugins
     public sealed class PluginAssemblyManagerFactory : IPluginAssemblyManagerFactory
     {
         private readonly IKernel _kernel;
-        private readonly IRemoteKernel _remoteKernel;
 
         public PluginAssemblyManagerFactory(IKernel kernel)
         {
             _kernel = kernel;
-
-            // Set up the remote kernel using the current kernel
-            _remoteKernel = _kernel.Get<IRemoteKernelFactory>().GetRemoteKernel(_kernel);
         }
 
         public IPluginAssemblyManager CreateManagerForAssembly(string assemblyPath)
         {
             return _kernel.Get<IPluginAssemblyManager>(new[]
             {
-                new ConstructorArgument("kernel", _remoteKernel),
                 new ConstructorArgument("assemblyPath", assemblyPath),
             });
         }
@@ -41,7 +36,8 @@ namespace Distrib.Plugins
                 true,
                 System.Reflection.BindingFlags.CreateInstance,
                 null,
-                new object[] { _remoteKernel, assemblyPath },
+                new object[] { _kernel.Get<IPluginDescriptorFactory>(), _kernel.Get<IPluginMetadataFactory>(),
+                    _kernel.Get<IPluginMetadataBundleFactory>(), assemblyPath },
                 null,
                 null);
         }

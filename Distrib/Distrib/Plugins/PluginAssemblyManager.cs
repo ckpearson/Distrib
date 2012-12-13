@@ -12,16 +12,25 @@ namespace Distrib.Plugins
 {
     public sealed class PluginAssemblyManager : MarshalByRefObject, IPluginAssemblyManager
     {
-        private readonly IRemoteKernel _kernel;
         private readonly string _assemblyPath;
+
+        private readonly IPluginDescriptorFactory _pluginDescriptorFactory;
+        private readonly IPluginMetadataFactory _pluginMetadataFactory;
+        private readonly IPluginMetadataBundleFactory _pluginMetadataBundleFactory;
 
         private Assembly _assembly;
 
         private WeakReference<IReadOnlyList<IPluginDescriptor>> _pluginDescriptorsListReference;
 
-        public PluginAssemblyManager(IRemoteKernel kernel, string assemblyPath)
+        public PluginAssemblyManager(IPluginDescriptorFactory pluginDescriptorFactory,
+            IPluginMetadataFactory pluginMetadataFactory,
+            IPluginMetadataBundleFactory pluginMetadataBundleFactory,
+            string assemblyPath)
         {
-            _kernel = kernel;
+            _pluginDescriptorFactory = pluginDescriptorFactory;
+            _pluginMetadataFactory = pluginMetadataFactory;
+            _pluginMetadataBundleFactory = pluginMetadataBundleFactory;
+
             _assemblyPath = assemblyPath;
         }
 
@@ -72,16 +81,16 @@ namespace Distrib.Plugins
                     foreach (var type in types.Select(t => new { type = t, attr = t.GetCustomAttribute<PluginAttribute>() }))
                     {
                         // Create descriptor
-                        var descriptor = _kernel.Get<IPluginDescriptorFactory>()
+                        var descriptor = _pluginDescriptorFactory
                             .GetDescriptor(type.type.FullName, 
-                                _kernel.Get<IPluginMetadataFactory>()
+                                _pluginMetadataFactory
                                     .CreateMetadataFromPluginAttribute(type.attr));
 
                         // See if the plugin has any additional metadata (this is only done via supplied metadata now)
                         descriptor.SetAdditionalMetadata(
                             type.attr.SuppliedMetadataObjects == null ? null :
                             type.attr.SuppliedMetadataObjects.Select(
-                                mo => _kernel.Get<IPluginMetadataBundleFactory>()
+                                mo => _pluginMetadataBundleFactory
                                     .CreateBundleFromAdditionalMetadataObject(mo)));
 
                         lstTempDescriptors.Add(descriptor);

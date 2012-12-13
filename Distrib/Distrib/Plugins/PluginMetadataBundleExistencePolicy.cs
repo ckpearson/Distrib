@@ -24,10 +24,5 @@ namespace Distrib.Plugins
         /// Only multiple instances of any kind of bundle should exist for a given plugin
         /// </summary>
         MultipleInstances,
-
-        /// <summary>
-        /// At least one instance of any kind of bundle should exist for a given plugin
-        /// </summary>
-        AtLeastOne,
     }
 }

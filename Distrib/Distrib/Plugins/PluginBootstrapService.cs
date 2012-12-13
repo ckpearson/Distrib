@@ -10,11 +10,11 @@ namespace Distrib.Plugins
 {
     public sealed class PluginBootstrapService : IPluginBootstrapService
     {
-        private IKernel _kernel;
+        private readonly IPluginControllerFactory _pluginControllerFactory;
 
-        public PluginBootstrapService(IKernel kernel)
+        public PluginBootstrapService(IPluginControllerFactory pluginControllerFactory)
         {
-            _kernel = kernel;
+            _pluginControllerFactory = pluginControllerFactory;
         }
 
         public Res<PluginBootstrapResult> BootstrapPlugin(IPluginDescriptor descriptor)
@@ -28,7 +28,7 @@ namespace Distrib.Plugins
                 // If descriptor has no controller type set, then set the current default
                 if (descriptor.Metadata.ControllerType == null)
                 {
-                    descriptor.Metadata.ControllerType = _kernel.Get<IPluginControllerFactory>()
+                    descriptor.Metadata.ControllerType = _pluginControllerFactory
                         .CreateController().GetType();
                 }
 

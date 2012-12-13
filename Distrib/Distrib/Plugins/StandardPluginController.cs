@@ -9,11 +9,8 @@ namespace Distrib.Plugins
 {
     public sealed class StandardPluginController : MarshalByRefObject, IPluginController
     {
-        private IKernel _kernel;
-
-        public StandardPluginController(IKernel kernel)
+        public StandardPluginController()
         {
-            _kernel = kernel;
         }
     }
 }

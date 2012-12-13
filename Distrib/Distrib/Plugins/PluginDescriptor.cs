@@ -12,8 +12,6 @@ namespace Distrib.Plugins
     [Serializable()]
     public sealed class PluginDescriptor : IPluginDescriptor
     {
-        //private readonly IKernel _kernel;
-        private readonly IRemoteKernel _kernel;
         private readonly string _typeFullName;
         private readonly IPluginMetadata _metadata;
 
@@ -28,9 +26,8 @@ namespace Distrib.Plugins
 
         private readonly object _lock = new object();
 
-        public PluginDescriptor(IRemoteKernel kernel, string typeFullName, IPluginMetadata metadata)
+        public PluginDescriptor(string typeFullName, IPluginMetadata metadata)
         {
-            _kernel = kernel;
             _typeFullName = typeFullName;
             _metadata = metadata;
         }

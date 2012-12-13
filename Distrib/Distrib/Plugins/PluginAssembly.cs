@@ -11,10 +11,16 @@ namespace Distrib.Plugins
     public sealed class PluginAssembly : IPluginAssembly
     {
         private readonly string _netAssemblyPath;
-        private readonly IKernel _kernel;
 
         private AppDomain _appDomain;
         private IPluginAssemblyManager _assemblyManager;
+
+        private readonly IPluginAssemblyManagerFactory _asmManagerFactory;
+        private readonly IPluginBootstrapService _pluginBootstrapService;
+        private readonly IPluginCoreUsabilityCheckService _pluginCoreUsabilityCheckService;
+        private readonly IPluginControllerValidationService _pluginControllerValidationService;
+        private readonly IPluginMetadataBundleCheckService _pluginMetadataBundleCheckService;
+        private readonly IPluginAssemblyInitialisationResultFactory _pluginAsmInitialisationResultFactory;
 
         private readonly object _lock = new object();
 
@@ -22,11 +28,23 @@ namespace Distrib.Plugins
 
         private IReadOnlyList<IPluginDescriptor> _pluginDescriptors;
 
-        public PluginAssembly(IKernel kernel, string netAssemblyPath)
+        public PluginAssembly(IPluginAssemblyManagerFactory asmManagerFactory, 
+            IPluginBootstrapService pluginBootstrapService,
+            IPluginCoreUsabilityCheckService pluginCoreUsabilityCheckService,
+            IPluginControllerValidationService pluginControllerValidationService,
+            IPluginMetadataBundleCheckService pluginMetadataCheckService,
+            IPluginAssemblyInitialisationResultFactory pluginAssemblyInitialisationResultFactory,
+            string netAssemblyPath)
         {
             if (string.IsNullOrEmpty(netAssemblyPath)) throw new ArgumentNullException("Assembly path must be supplied");
 
-            _kernel = kernel;
+            _asmManagerFactory = asmManagerFactory;
+            _pluginBootstrapService = pluginBootstrapService;
+            _pluginCoreUsabilityCheckService = pluginCoreUsabilityCheckService;
+            _pluginControllerValidationService = pluginControllerValidationService;
+            _pluginMetadataBundleCheckService = pluginMetadataCheckService;
+            _pluginAsmInitialisationResultFactory = pluginAssemblyInitialisationResultFactory;
+
             _netAssemblyPath = netAssemblyPath;
         }
 
@@ -49,11 +67,9 @@ namespace Distrib.Plugins
                     try
                     {
                         // Create the assembly manager
-                        _assemblyManager =
-                            _kernel.Get<IPluginAssemblyManagerFactory>()
-                                .CreateManagerForAssemblyInGivenDomain(
-                                    _netAssemblyPath,
-                                    _appDomain);
+                        _assemblyManager = _asmManagerFactory.CreateManagerForAssemblyInGivenDomain(
+                            _netAssemblyPath,
+                            _appDomain);
                     }
                     catch (Exception ex)
                     {
@@ -87,9 +103,7 @@ namespace Distrib.Plugins
                     foreach (IPluginDescriptor descriptor in _pluginDescriptors)
                     {
                         // Perform the bootstrapping for the plugin
-                        var bootstrapResult = _kernel.Get<IPluginBootstrapServiceFactory>()
-                            .CreateService()
-                            .BootstrapPlugin(descriptor);
+                        var bootstrapResult = _pluginBootstrapService.BootstrapPlugin(descriptor);
 
                         if (!bootstrapResult.Success)
                         {
@@ -102,8 +116,7 @@ namespace Distrib.Plugins
                         }
 
                         // Perform the core usability checking
-                        var usabilityCheckResult = _kernel.Get<IPluginCoreUsabilityCheckServiceFactory>()
-                            .CreateService()
+                        var usabilityCheckResult = _pluginCoreUsabilityCheckService
                             .CheckCoreUsability(descriptor, _assemblyManager);
 
                         if (!usabilityCheckResult.Success)
@@ -117,8 +130,7 @@ namespace Distrib.Plugins
                         }
 
                         // Perform the verification for usability of the plugin controller
-                        var controllerValidationResult = _kernel.Get<IPluginControllerValidationServiceFactory>()
-                            .CreateService()
+                        var controllerValidationResult = _pluginControllerValidationService
                             .ValidateControllerType(descriptor.Metadata.ControllerType);
 
                         if (!controllerValidationResult.Success)
@@ -131,20 +143,32 @@ namespace Distrib.Plugins
                             continue;
                         }
 
+                        // Make sure the additional metadata bundles adhere to their constraints
+                        var metadataConstraintsCheckResult = _pluginMetadataBundleCheckService
+                            .CheckMetadataBundlesFulfilConstraints(descriptor.AdditionalMetadataBundles);
+
+                        if (!metadataConstraintsCheckResult.Success)
+                        {
+                            descriptor.MarkAsUnusable(PluginExclusionReason.PluginAdditionalMetadataConstraintsNotMet,
+                                metadataConstraintsCheckResult.Result);
+
+                            lstPluginDescriptorsForResult.Add(descriptor);
+
+                            continue;
+                        }
 
                         // Made it this far so mark as usable
                         descriptor.MarkAsUsable();
                         lstPluginDescriptorsForResult.Add(descriptor);
                     }
 
-                    return _kernel.Get<IPluginAssemblyInitialisationResultFactory>()
+                    return _pluginAsmInitialisationResultFactory
                         .CreateResultFromPlugins(lstPluginDescriptorsForResult.AsReadOnly());
                 }
             }
             catch (Exception ex)
             {
-                
-                throw;
+                throw new ApplicationException("Failed to initialise plugin assembly", ex);
             }
         }
 

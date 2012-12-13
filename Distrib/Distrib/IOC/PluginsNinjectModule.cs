@@ -35,6 +35,9 @@ namespace Distrib.IOC
             Bind<Plugins.IPluginControllerValidationServiceFactory>().To<Plugins.PluginControllerValidationServiceFactory>().InSingletonScope();
             Bind<Plugins.IPluginControllerValidationService>().To<Plugins.PluginControllerValidationService>().InSingletonScope();
 
+            Bind<Plugins.IPluginMetadataBundleCheckServiceFactory>().To<Plugins.PluginMetadataBundleCheckServiceFactory>().InSingletonScope();
+            Bind<Plugins.IPluginMetadataBundleCheckService>().To<Plugins.PluginMetadataBundleCheckService>().InSingletonScope();
+
             Bind<Plugins.IPluginControllerFactory>().To<Plugins.PluginControllerFactory>().InSingletonScope();
             Bind<Plugins.IPluginController>().To<Plugins.StandardPluginController>();
 
