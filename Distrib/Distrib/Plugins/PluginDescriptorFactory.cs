@@ -22,9 +22,6 @@ namespace Distrib.Plugins
         {
             return _kernel.Get<IPluginDescriptor>(new[]
             {
-                new ConstructorArgument("kernel",
-                    _kernel.Get<IRemoteKernelFactory>()
-                        .GetRemoteKernel(_kernel)),
                 new ConstructorArgument("typeFullName", typeFullName),
                 new ConstructorArgument("metadata", pluginMetadata),
             });

@@ -13,9 +13,6 @@ namespace Distrib.IOC
         {
             Bind<Separation.IRemoteDomainBridgeFactory>().To<Separation.RemoteDomainBridgeFactory>();
             Bind<Separation.IRemoteDomainBridge>().To<Separation.RemoteDomainBridge>();
-
-            Bind<IOC.IRemoteKernelFactory>().To<IOC.RemoteKernelFactory>();
-            Bind<IOC.IRemoteKernel>().To<IOC.RemoteKernel>();
         }
     }
 }

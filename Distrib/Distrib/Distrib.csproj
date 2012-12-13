@@ -50,8 +50,6 @@
     <Compile Include="IOC\IRemoteKernel.cs" />
     <Compile Include="IOC\IRemoteKernelFactory.cs" />
     <Compile Include="IOC\PluginsNinjectModule.cs" />
-    <Compile Include="IOC\RemoteKernel.cs" />
-    <Compile Include="IOC\RemoteKernelFactory.cs" />
     <Compile Include="IOC\SeparationNinjectModule.cs" />
     <Compile Include="Jobs\DistribJob.cs" />
     <Compile Include="Plugins\IPluginMetadataBundleCheckService.cs" />
