@@ -251,7 +251,21 @@ namespace Distrib.Plugins
                     }
 
                     // If there are any plugin instances they need bringing down
-#warning implement tearing down of instances
+                    lock (_pluginInstances)
+                    {
+                        if (_pluginInstances.Count > 0)
+                        {
+                            foreach (IPluginInstance instance in _pluginInstances.Values.SelectMany(v => v))
+                            {
+                                if (instance.IsInitialised)
+                                {
+                                    instance.Unitialise(); 
+                                }
+                            }
+                        }
+
+                        _pluginInstances.Clear();
+                    }
                 }
             }
             catch (Exception)

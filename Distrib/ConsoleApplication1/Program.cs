@@ -57,6 +57,8 @@ namespace ConsoleApplication1
 
                     var proc = inst.GetUnderlyingInstance<IDistribProcess>();
 
+                    var msg = proc.SayHello();
+
                     inst.Unitialise();
 
                     asm.Unitialise();
