@@ -8,6 +8,7 @@ namespace Distrib.Plugins
 {
     public interface IPlugin
     {
-
+        void InitialisePlugin();
+        void UninitialisePlugin();
     }
 }

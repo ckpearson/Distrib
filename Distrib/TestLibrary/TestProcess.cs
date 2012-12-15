@@ -70,5 +70,13 @@ namespace TestLibrary
         {
             throw new NotImplementedException();
         }
+
+        public void InitialisePlugin()
+        {
+        }
+
+        public void UninitialisePlugin()
+        {
+        }
     }
 }

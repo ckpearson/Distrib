@@ -1,4 +1,5 @@
-﻿using Ninject;
+﻿using Distrib.Utils;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,98 @@ namespace Distrib.Plugins
 {
     public sealed class StandardPluginController : MarshalByRefObject, IPluginController
     {
+        private WriteOnce<RemoteAppDomainBridge> _appDomainBridge =
+            new WriteOnce<RemoteAppDomainBridge>(null);
+
+        private WriteOnce<IPluginDescriptor> _pluginDescriptor =
+            new WriteOnce<IPluginDescriptor>(null);
+
+        private WriteOnce<IPlugin> _pluginInstance =
+            new WriteOnce<IPlugin>(null);
+
+        private readonly object _lock = new object();
+
         public StandardPluginController()
         {
+        }
+
+        public void TakeRemoteBridge(RemoteAppDomainBridge bridge)
+        {
+            lock (_lock)
+            {
+                if (!_appDomainBridge.IsWritten)
+                {
+                    _appDomainBridge.Value = bridge;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Bridge already supplied");
+                }
+            }
+        }
+
+        public object CreatePluginInstance(IPluginDescriptor descriptor, string pluginAssemblyPath)
+        {
+            if (descriptor == null) throw new ArgumentNullException("Plugin descriptor must be supplied");
+            if (string.IsNullOrEmpty(pluginAssemblyPath)) throw new ArgumentNullException("Plugin assembly path must be supplied");
+
+            try
+            {
+                lock (_lock)
+                {
+                    if (!_pluginInstance.IsWritten)
+                    {
+                        _pluginDescriptor.Value = descriptor;
+
+                        _pluginInstance.Value = (IPlugin)_appDomainBridge.Value.CreateInstance(descriptor.PluginTypeName,
+                            pluginAssemblyPath);
+
+                        return _pluginInstance.Value;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Controller already created plugin instance");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to create plugin instance", ex);
+            }
+        }
+
+        public void InitController()
+        {
+            // Controller initialisation
+        }
+
+        public void UninitController()
+        {
+            // Controller unitialisation (not to unitialise instance here)
+        }
+
+        public void InitialiseInstance()
+        {
+            if (_pluginInstance.IsWritten)
+            {
+                _pluginInstance.Value.InitialisePlugin();
+            }
+            else
+            {
+                throw new InvalidOperationException("Controller doesn't hold an instance yet");
+            }
+        }
+
+        public void UnitialiseInstance()
+        {
+            if (_pluginInstance.IsWritten)
+            {
+                _pluginInstance.Value.UninitialisePlugin();
+            }
+            else
+            {
+                throw new InvalidProgramException("Controller doesn't hold an instance yet");
+            }
         }
     }
 }

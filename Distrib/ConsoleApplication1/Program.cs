@@ -55,6 +55,13 @@ namespace ConsoleApplication1
                     }
 
                     var inst = asm.CreatePluginInstance(firstProc);
+                    inst.Initialise();
+
+                    var proc = inst.GetUnderlyingInstance<IDistribProcess>();
+
+                    inst.Unitialise();
+
+                    asm.Unitialise();
                 }
             }
         }

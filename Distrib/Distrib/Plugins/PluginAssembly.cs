@@ -168,6 +168,9 @@ namespace Distrib.Plugins
                         lstPluginDescriptorsForResult.Add(descriptor);
                     }
 
+                    // Mark as initialised
+                    _isInitialised = true;
+
                     return _pluginAsmInitialisationResultFactory
                         .CreateResultFromPlugins(lstPluginDescriptorsForResult.AsReadOnly());
                 }
@@ -268,6 +271,11 @@ namespace Distrib.Plugins
                     return _isInitialised;
                 }
             }
+        }
+
+        public string AssemblyFilePath
+        {
+            get { return _netAssemblyPath; }
         }
     }
 }
