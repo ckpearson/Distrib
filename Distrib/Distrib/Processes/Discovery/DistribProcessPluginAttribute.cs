@@ -1,5 +1,4 @@
 ﻿using Distrib.Plugins;
-using Distrib.Plugins_old.Discovery;
 using Distrib.Processes.Discovery.Metadata;
 using System;
 using System.Collections.Generic;

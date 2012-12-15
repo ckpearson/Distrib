@@ -36,5 +36,27 @@ namespace Distrib.Plugins
                 }
             }
         }
+
+        public DateTime PluginCreationStamp
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _pluginManagedInstance.InstanceCreationStamp;
+                }
+            }
+        }
+
+        public IPluginMetadata PluginMetadata
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _pluginDescriptor.Metadata;
+                }
+            }
+        }
     }
 }

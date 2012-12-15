@@ -8,6 +8,8 @@ namespace Distrib.Plugins
 {
     public interface IPluginInteractionLink
     {
+        IPluginMetadata PluginMetadata { get; }
         IReadOnlyList<IPluginMetadataBundle> AdditionalMetadataBundles { get; }
+        DateTime PluginCreationStamp { get; }
     }
 }

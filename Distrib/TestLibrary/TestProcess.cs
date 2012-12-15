@@ -1,6 +1,4 @@
 ﻿using Distrib.Plugins;
-using Distrib.Plugins_old;
-using Distrib.Plugins_old.Discovery;
 using Distrib.Processes;
 using Distrib.Processes.Discovery;
 using Distrib.Processes.Discovery.Metadata;
