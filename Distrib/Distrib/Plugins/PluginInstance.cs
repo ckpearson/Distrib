@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins
 {
-    public sealed class PluginInstance : IPluginInstance
+    public sealed class PluginInstance : MarshalByRefObject, IPluginInstance
     {
         private readonly IPluginDescriptor _pluginDescriptor;
         private readonly IPluginAssembly _pluginAssembly;
@@ -26,10 +26,15 @@ namespace Distrib.Plugins
         private readonly string _instanceID;
         private readonly WriteOnce<DateTime> _instanceCreationStamp = new WriteOnce<DateTime>();
 
-        public PluginInstance(IPluginDescriptor descriptor, IPluginAssembly pluginAssembly)
+        private readonly IPluginInteractionLinkFactory _pluginInteractionLinkFactory;
+
+        public PluginInstance(IPluginDescriptor descriptor, IPluginAssembly pluginAssembly, IPluginInteractionLinkFactory
+            pluginInteractionLinkFactory)
         {
             _pluginDescriptor = descriptor;
             _pluginAssembly = pluginAssembly;
+
+            _pluginInteractionLinkFactory = pluginInteractionLinkFactory;
 
             _instanceID = Guid.NewGuid().ToString();
         }
@@ -105,7 +110,9 @@ namespace Distrib.Plugins
 
                         // Get the controller to create the plugin instance
                         _underlyingInstance.Value = _pluginController.Value.CreatePluginInstance(_pluginDescriptor,
-                            _pluginAssembly.AssemblyFilePath);
+                            _pluginAssembly.AssemblyFilePath,
+                            this,
+                            _pluginInteractionLinkFactory);
 
                         // Set the creation stamp
                         _instanceCreationStamp.Value = DateTime.Now;

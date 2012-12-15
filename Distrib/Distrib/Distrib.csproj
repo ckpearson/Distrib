@@ -53,6 +53,8 @@
     <Compile Include="IOC\SeparationNinjectModule.cs" />
     <Compile Include="Jobs\DistribJob.cs" />
     <Compile Include="Plugins\IPluginInstanceFactory.cs" />
+    <Compile Include="Plugins\IPluginInteractionLink.cs" />
+    <Compile Include="Plugins\IPluginInteractionLinkFactory.cs" />
     <Compile Include="Plugins\IPluginMetadataBundleCheckService.cs" />
     <Compile Include="Plugins\IPluginAssembly.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Plugins\IPluginUsabilityChecker.cs" />
     <Compile Include="Plugins\PluginInstance.cs" />
     <Compile Include="Plugins\PluginInstanceFactory.cs" />
+    <Compile Include="Plugins\PluginInteractionLinkFactory.cs" />
     <Compile Include="Plugins\PluginMetadataBundleExistenceCheckResult.cs" />
     <Compile Include="Plugins\PluginAdditionalMetadataObject.cs" />
     <Compile Include="Plugins\PluginAssembly.cs" />
@@ -109,6 +112,7 @@
     <Compile Include="Plugins\PluginMetadataBundleFactory.cs" />
     <Compile Include="Plugins\PluginMetadataFactory.cs" />
     <Compile Include="Plugins\StandardPluginController.cs" />
+    <Compile Include="Plugins\StandardPluginInteractionLink.cs" />
     <Compile Include="Plugins_old\AdditionalMetadataExistenceCheckResult.cs" />
     <Compile Include="Plugins_old\Controllers\DefaultPluginController.cs" />
     <Compile Include="Plugins_old\Controllers\DistribPluginControllerSystem.cs" />

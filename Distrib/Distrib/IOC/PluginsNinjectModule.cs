@@ -42,6 +42,9 @@ namespace Distrib.IOC
             Bind<Plugins.IPluginControllerFactory>().To<Plugins.PluginControllerFactory>().InSingletonScope();
             Bind<Plugins.IPluginController>().To<Plugins.StandardPluginController>();
 
+            Bind<Plugins.IPluginInteractionLinkFactory>().To<Plugins.PluginInteractionLinkFactory>().InSingletonScope();
+            Bind<Plugins.IPluginInteractionLink>().To<Plugins.StandardPluginInteractionLink>().InSingletonScope();
+
             Bind<Plugins.IPluginAssemblyInitialisationResultFactory>().To<Plugins.PluginAssemblyInitialisationResultFactory>()
                 .InSingletonScope();
 

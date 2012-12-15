@@ -71,11 +71,11 @@ namespace TestLibrary
             throw new NotImplementedException();
         }
 
-        public void InitialisePlugin()
+        public void InitialisePlugin(IPluginInteractionLink interactionLink)
         {
         }
 
-        public void UninitialisePlugin()
+        public void UninitialisePlugin(IPluginInteractionLink interactionLink)
         {
         }
     }

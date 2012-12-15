@@ -8,7 +8,7 @@ namespace Distrib.Plugins
 {
     public interface IPlugin
     {
-        void InitialisePlugin();
-        void UninitialisePlugin();
+        void InitialisePlugin(IPluginInteractionLink interactionLink);
+        void UninitialisePlugin(IPluginInteractionLink interactionLink);
     }
 }

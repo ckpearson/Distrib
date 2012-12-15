@@ -10,7 +10,9 @@ namespace Distrib.Plugins
     public interface IPluginController
     {
         void TakeRemoteBridge(RemoteAppDomainBridge bridge);
-        object CreatePluginInstance(IPluginDescriptor descriptor, string pluginAssemblyPath);
+        object CreatePluginInstance(IPluginDescriptor descriptor, string pluginAssemblyPath,
+            IPluginInstance pluginManagedInstance,
+            IPluginInteractionLinkFactory pluginInteractionLinkFactory);
 
         void InitController();
         void UninitController();

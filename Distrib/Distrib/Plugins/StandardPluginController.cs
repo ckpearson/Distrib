@@ -19,6 +19,8 @@ namespace Distrib.Plugins
         private WriteOnce<IPlugin> _pluginInstance =
             new WriteOnce<IPlugin>(null);
 
+        private WriteOnce<IPluginInteractionLink> _pluginInteractionLink = new WriteOnce<IPluginInteractionLink>(null);
+
         private readonly object _lock = new object();
 
         public StandardPluginController()
@@ -40,7 +42,9 @@ namespace Distrib.Plugins
             }
         }
 
-        public object CreatePluginInstance(IPluginDescriptor descriptor, string pluginAssemblyPath)
+        public object CreatePluginInstance(IPluginDescriptor descriptor, string pluginAssemblyPath,
+            IPluginInstance pluginManagedInstance,
+            IPluginInteractionLinkFactory pluginInteractionLinkFactory)
         {
             if (descriptor == null) throw new ArgumentNullException("Plugin descriptor must be supplied");
             if (string.IsNullOrEmpty(pluginAssemblyPath)) throw new ArgumentNullException("Plugin assembly path must be supplied");
@@ -55,6 +59,12 @@ namespace Distrib.Plugins
 
                         _pluginInstance.Value = (IPlugin)_appDomainBridge.Value.CreateInstance(descriptor.PluginTypeName,
                             pluginAssemblyPath);
+
+                        _pluginInteractionLink.Value = pluginInteractionLinkFactory.CreateInteractionLink(
+                            descriptor,
+                            _pluginInstance.Value,
+                            this,
+                            pluginManagedInstance);
 
                         return _pluginInstance.Value;
                     }
@@ -84,7 +94,7 @@ namespace Distrib.Plugins
         {
             if (_pluginInstance.IsWritten)
             {
-                _pluginInstance.Value.InitialisePlugin();
+                _pluginInstance.Value.InitialisePlugin(_pluginInteractionLink.Value);
             }
             else
             {
@@ -96,7 +106,7 @@ namespace Distrib.Plugins
         {
             if (_pluginInstance.IsWritten)
             {
-                _pluginInstance.Value.UninitialisePlugin();
+                _pluginInstance.Value.UninitialisePlugin(_pluginInteractionLink.Value);
             }
             else
             {
