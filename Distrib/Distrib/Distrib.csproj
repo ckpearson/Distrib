@@ -47,8 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IOC\IRemoteKernel.cs" />
-    <Compile Include="IOC\IRemoteKernelFactory.cs" />
     <Compile Include="IOC\PluginsNinjectModule.cs" />
     <Compile Include="IOC\SeparationNinjectModule.cs" />
     <Compile Include="Jobs\DistribJob.cs" />

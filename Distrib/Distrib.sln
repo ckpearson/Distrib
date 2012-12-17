@@ -7,9 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "Cons
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLibrary", "TestLibrary\TestLibrary.csproj", "{54B74BF1-09ED-4A92-88DA-1C66FF458531}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleProcessHost", "SimpleProcessHost\SimpleProcessHost.csproj", "{D0F0AECC-4E5D-4535-A516-A7D16E7DDDA5}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
 		SccLocalPath0 = .
@@ -22,6 +24,9 @@ Global
 		SccProjectUniqueName3 = TestLibrary\\TestLibrary.csproj
 		SccProjectName3 = TestLibrary
 		SccLocalPath3 = TestLibrary
+		SccProjectUniqueName4 = SimpleProcessHost\\SimpleProcessHost.csproj
+		SccProjectName4 = SimpleProcessHost
+		SccLocalPath4 = SimpleProcessHost
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +45,10 @@ Global
 		{54B74BF1-09ED-4A92-88DA-1C66FF458531}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54B74BF1-09ED-4A92-88DA-1C66FF458531}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54B74BF1-09ED-4A92-88DA-1C66FF458531}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0F0AECC-4E5D-4535-A516-A7D16E7DDDA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0F0AECC-4E5D-4535-A516-A7D16E7DDDA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0F0AECC-4E5D-4535-A516-A7D16E7DDDA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0F0AECC-4E5D-4535-A516-A7D16E7DDDA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
