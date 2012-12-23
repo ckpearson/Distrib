@@ -30,6 +30,19 @@ namespace SimpleProcessHost
 
         private void Run()
         {
+            var kernel = new StandardKernel(
+                typeof(IDistribProcess).Assembly.GetTypes()
+                .Where(t => t.BaseType != null && t.BaseType.Equals(typeof(Ninject.Modules.NinjectModule)))
+                .Select(t => Activator.CreateInstance(t) as Ninject.Modules.NinjectModule)
+                .ToArray());
+
+            Output.Indent = 0;
+            
+
+        }
+
+        private void _Run()
+        {
             // Create Ninject kernel loading all the modules in the Distrib assembly
             var kernel = new StandardKernel(
                 typeof(Distrib.IOC.PluginsNinjectModule).Assembly.GetTypes()

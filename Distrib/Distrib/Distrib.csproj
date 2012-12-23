@@ -111,9 +111,9 @@
     <Compile Include="Plugins\PluginMetadataFactory.cs" />
     <Compile Include="Plugins\StandardPluginController.cs" />
     <Compile Include="Plugins\StandardPluginInteractionLink.cs" />
-    <Compile Include="Processes\Discovery\DistribProcessPluginAttribute.cs" />
-    <Compile Include="Processes\Discovery\Metadata\IDistribProcessDetailsMetadata.cs" />
-    <Compile Include="Processes\Discovery\Metadata\ProcessMetadataObject.cs" />
+    <Compile Include="Processes\Plugin\DistribProcessPluginAttribute.cs" />
+    <Compile Include="Processes\Plugin\IDistribProcessDetailsMetadata.cs" />
+    <Compile Include="Processes\Plugin\ProcessMetadataObject.cs" />
     <Compile Include="Processes\IDistribProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Separation\RemoteDomainBridge.cs" />

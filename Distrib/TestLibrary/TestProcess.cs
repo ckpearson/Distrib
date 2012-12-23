@@ -1,7 +1,6 @@
 ﻿using Distrib.Plugins;
 using Distrib.Processes;
-using Distrib.Processes.Discovery;
-using Distrib.Processes.Discovery.Metadata;
+using Distrib.Processes.Plugin;
 using System;
 using System.Collections.Generic;
 using System.Linq;

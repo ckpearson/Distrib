@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Distrib.Plugins
 {
     [Serializable()]
+    [System.Diagnostics.DebuggerDisplay("Metadata Bundle of: {_instance.GetType().Name}, ident: {_identity}, pol: {_existencePolicy}")]
     public sealed class PluginMetadataBundle : IPluginMetadataBundle
     {
         private readonly Type _interface;
