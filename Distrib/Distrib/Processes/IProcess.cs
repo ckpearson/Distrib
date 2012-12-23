@@ -11,8 +11,9 @@ namespace Distrib.Processes
     /// <summary>
     /// Core interface for defining a Distrib-enabled process
     /// </summary>
-    public interface IDistribProcess
+    public interface IProcess
     {
-        string SayHello();
+        IProcessJobDefinition JobDefinition { get; }
+        void PerformJob(IProcessJob job);
     }
 }

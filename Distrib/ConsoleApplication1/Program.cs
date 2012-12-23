@@ -52,7 +52,7 @@ namespace ConsoleApplication1
 
                 var firstProcPlugin = initRes.UsablePlugins
                     .DefaultIfEmpty(null)
-                    .FirstOrDefault(p => p.Metadata.InterfaceType.Equals(typeof(IDistribProcess)));
+                    .FirstOrDefault(p => p.Metadata.InterfaceType.Equals(typeof(IProcess)));
 
                 if (firstProcPlugin == null)
                     throw new InvalidOperationException("No process plugin present in plugin assembly");
@@ -61,8 +61,8 @@ namespace ConsoleApplication1
 
                 manPluginInst.Initialise();
 
-                IDistribProcess procInstance =
-                    manPluginInst.GetUnderlyingInstance<IDistribProcess>();
+                IProcess procInstance =
+                    manPluginInst.GetUnderlyingInstance<IProcess>();
             }
             catch (Exception ex)
             {
@@ -75,50 +75,6 @@ namespace ConsoleApplication1
                     if (pluginAsm != null && pluginAsm.IsInitialised)
                         pluginAsm.Unitialise();
                 }catch { }
-            }
-        }
-
-        public void RunNew()
-        {
-            //var kernel = new StandardKernel(new[]
-            //    {
-                    
-            //    });
-
-            // Hacky way of just loading every single Ninject Module present in Distrib assembly
-            var kernel = new StandardKernel(
-                    typeof(Distrib.IOC.PluginsNinjectModule).Assembly.GetTypes()
-                    .Where(t => t.BaseType != null && t.BaseType.Equals(typeof(Ninject.Modules.NinjectModule)))
-                    .Select(t => Activator.CreateInstance(t) as Ninject.Modules.INinjectModule)
-                    .ToArray());
-
-            foreach (var pluginDll in Directory.EnumerateFiles(dir, "*.dll"))
-            {
-                var asm = kernel.Get<Distrib.Plugins.IPluginAssemblyFactory>().CreatePluginAssemblyFromPath(pluginDll);
-
-                var res = asm.Initialise();
-
-                if (res.HasUsablePlugins)
-                {
-                    var firstProc = res.UsablePlugins.DefaultIfEmpty(null)
-                        .FirstOrDefault(p => p.Metadata.InterfaceType.Equals(typeof(IDistribProcess)));
-
-                    if (firstProc == null)
-                    {
-                        throw new InvalidOperationException("No usable process plugin exists");
-                    }
-
-                    var inst = asm.CreatePluginInstance(firstProc);
-                    inst.Initialise();
-
-                    var proc = inst.GetUnderlyingInstance<IDistribProcess>();
-
-                    var msg = proc.SayHello();
-
-                    inst.Unitialise();
-
-                    asm.Unitialise();
-                }
             }
         }
 
