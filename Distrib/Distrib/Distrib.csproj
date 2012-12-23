@@ -49,7 +49,6 @@
   <ItemGroup>
     <Compile Include="IOC\PluginsNinjectModule.cs" />
     <Compile Include="IOC\SeparationNinjectModule.cs" />
-    <Compile Include="Jobs\DistribJob.cs" />
     <Compile Include="Plugins\IPluginInstanceFactory.cs" />
     <Compile Include="Plugins\IPluginInteractionLink.cs" />
     <Compile Include="Plugins\IPluginInteractionLinkFactory.cs" />
