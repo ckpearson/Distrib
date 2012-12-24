@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,6 +20,15 @@ namespace Distrib.Processes
         string IProcessJobDefinition.Name
         {
             get { return _name; }
+        }
+    }
+
+    public abstract class ProcessJobDefinition<T> : ProcessJobDefinition
+    {
+        public ProcessJobDefinition(string jobName)
+            : base(jobName)
+        {
+
         }
     }
 }

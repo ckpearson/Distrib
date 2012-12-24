@@ -50,41 +50,22 @@ namespace TestLibrary
         }
     }
 
-    public sealed class NewTestProcessJobDefinition : ProcessJobDefinition
+    public sealed class NewTestProcessJobDefinition : ProcessJobDefinition<INewTestProcessJobInputFront>
     {
         public NewTestProcessJobDefinition()
             : base("NewTestProcessJob")
         {
-
+            
         }
     }
 
-    public sealed class NewTestProcessJob : ProcessJobBase
-    {
-        public NewTestProcessJob()
-            : base()
-        {
-
-        }
-    }
-
-    public sealed class NewTestProcessJobInputDefinition : INewTestProcessJobInput
-    {
-        private readonly string _sayHelloTo;
-
-        public NewTestProcessJobInputDefinition(string sayHelloTo)
-        {
-            _sayHelloTo = sayHelloTo;
-        }
-
-        public string SayHelloTo
-        {
-            get { return _sayHelloTo; }
-        }
-    }
-
-    public interface INewTestProcessJobInput
+    public interface INewTestProcessJobInputFront
     {
         string SayHelloTo { get; }
+    }
+
+    public sealed class NewTestProcessJobInput : ProcessJobInput
+    {
+
     }
 }
