@@ -8,9 +8,6 @@ namespace Distrib.Utils
 {
     public static class ObjectUtils
     {
-        public static T NullIfSo<T>(this T value) where T : class
-        {
-            return value == null ? null : value;
-        }
+        
     }
 }
