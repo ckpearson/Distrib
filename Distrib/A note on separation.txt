@@ -1,0 +1,31 @@
+A note on separation:
+
+Separation is a vital part of the Distrib system, it allows plugins to be loaded in isolation
+not only for discovery, but also for individual instances; however, separation (via AppDomains) presents
+a number of challenges, the most important you need to remember when working with Distrib is:
+
+1. For the most part, the individual subsystems will manage their separation themselves
+	> If you need to work with a process plugin, it's best to go through the existing
+		subsystem implementations to do so
+2.	Separation (primarily in the form of the plugins) causes headaches:
+	> The plugin is separate and you get hold of an instance, then call a method only to have a
+		type residing in the plugin assembly being returned:
+			> You *will* get an exception because while the plugin instance lives inside its own
+				closed off AppDomain with the assembly loaded into it, your calling AppDomain
+				will most likely not, hence the exception.
+			> You will need to load the plugin assembly into your AppDomain to pass these items
+				> To do so would break the point of the separation unless you're careful to
+					manage this yourself.
+
+
+Get Distrib Plugin Assembly |> Get managed instance > Get underlying instance |> Call method.
+
+^ Where '|' is present denotes an AppDomain break, unless you wrap the whole process inside an AppDomain
+that has the plugin assembly (.NET assembly) loaded into it, you will lose your separation.
+
+Note: Calling Assembly.LoadFrom(path) prior to getting your instance *does not* solve the missing assembly
+	issue; you need to handle the AppDomain.ResolveAssembly event.
+
+If you really need to manually get down and discover & load your plugins then if you want to maintain
+	correct separation try to keep the AppDomain enclosures in mind; if, however you just want to make use
+	of the process subsystem then do so, instantiating the pieces yourself may lead to reinventing the wheel.

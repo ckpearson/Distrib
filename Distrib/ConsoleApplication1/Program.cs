@@ -31,6 +31,7 @@ namespace ConsoleApplication1
         {
             var p = new Program();
             p.RunProcessTest();
+
         }
 
         private void RunProcessTest()
@@ -41,7 +42,9 @@ namespace ConsoleApplication1
             if (asmFile == null)
                 throw new InvalidOperationException("No assemblies found in directory");
 
+
             var pluginAsm = kernel.Get<IPluginAssemblyFactory>().CreatePluginAssemblyFromPath(asmFile);
+
 
             var initRes = pluginAsm.Initialise();
 
@@ -56,6 +59,7 @@ namespace ConsoleApplication1
 
                 if (firstProcPlugin == null)
                     throw new InvalidOperationException("No process plugin present in plugin assembly");
+                
 
                 var manPluginInst = pluginAsm.CreatePluginInstance(firstProcPlugin);
 
@@ -63,6 +67,8 @@ namespace ConsoleApplication1
 
                 IProcess procInstance =
                     manPluginInst.GetUnderlyingInstance<IProcess>();
+
+                var jd = procInstance.JobDefinition as object;
             }
             catch (Exception ex)
             {

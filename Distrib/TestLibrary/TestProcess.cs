@@ -25,8 +25,23 @@ namespace TestLibrary
         void IPlugin.UninitialisePlugin(IPluginInteractionLink interactionLink)
         {
         }
+
+        private WriteOnce<ProcessJobDefinition> _jobDefinition = new WriteOnce<ProcessJobDefinition>(null);
+        ProcessJobDefinition IProcess.JobDefinition
+        {
+            get
+            {
+                if (!_jobDefinition.IsWritten)
+                {
+                    _jobDefinition.Value = new NewTestProcessJobDefinition();
+                }
+
+                return _jobDefinition.Value;
+            }
+        }
     }
 
+    [Serializable()]
     public sealed class NewTestProcessJobDefinition : ProcessJobDefinition<INewTestProcessJobInputAccessor, INewTestProcessJobOutputAccessor>
     {
         public NewTestProcessJobDefinition()

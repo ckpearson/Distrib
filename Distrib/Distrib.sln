@@ -9,6 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLibrary", "TestLibrary\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{2F6FE43B-8F75-4470-B47A-08685BABD081}"
 	ProjectSection(SolutionItems) = preProject
+		A note on separation.txt = A note on separation.txt
 		Process System Design.txt = Process System Design.txt
 	EndProjectSection
 EndProject
