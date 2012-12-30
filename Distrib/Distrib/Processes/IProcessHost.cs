@@ -8,5 +8,7 @@ namespace Distrib.Processes
 {
     public interface IProcessHost
     {
+        void Initialise();
+        void Unitialise();
     }
 }

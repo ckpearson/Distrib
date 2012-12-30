@@ -109,6 +109,7 @@
     <Compile Include="Plugins\PluginMetadataBundleExistencePolicy.cs" />
     <Compile Include="Plugins\PluginMetadataBundleFactory.cs" />
     <Compile Include="Plugins\PluginMetadataFactory.cs" />
+    <Compile Include="Plugins\PluginUtils.cs" />
     <Compile Include="Plugins\StandardPluginController.cs" />
     <Compile Include="Plugins\StandardPluginInteractionLink.cs" />
     <Compile Include="Processes\IProcessHost.cs" />

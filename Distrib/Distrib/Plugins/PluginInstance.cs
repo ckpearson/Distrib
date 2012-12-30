@@ -39,6 +39,16 @@ namespace Distrib.Plugins
             _instanceID = Guid.NewGuid().ToString();
         }
 
+        public IPluginDescriptor PluginDescriptor
+        {
+            get { return _pluginDescriptor; }
+        }
+
+        public IPluginAssembly SpawningAssembly
+        {
+            get { return _pluginAssembly; }
+        }
+
         public string InstanceID
         {
             get { return _instanceID; }

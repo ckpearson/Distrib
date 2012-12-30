@@ -39,5 +39,9 @@ namespace Distrib.Plugins
         /// Unitialises the plugin instance
         /// </summary>
         void Unitialise();
+
+        IPluginDescriptor PluginDescriptor { get; }
+
+        IPluginAssembly SpawningAssembly { get; }
     }
 }
