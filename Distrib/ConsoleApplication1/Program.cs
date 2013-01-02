@@ -30,7 +30,20 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
             var p = new Program();
-            p.RunProcessSubsystemTest();
+            //p.RunProcessSubsystemTest();
+            p.RunNewPluginTest();
+        }
+
+        private void RunNewPluginTest()
+        {
+            var kernel = kernelGet();
+
+            var asmFile = Directory.EnumerateFiles(dir, "*.dll").DefaultIfEmpty(null).FirstOrDefault();
+            if (asmFile == null)
+                throw new InvalidOperationException("No assemblies found in directory");
+
+            var pluginAsm = kernel.Get<_IPluginAssemblyFactory>().FromPath(asmFile);
+            var descs = pluginAsm.PluginDescriptors;
         }
 
         private void RunProcessSubsystemTest()

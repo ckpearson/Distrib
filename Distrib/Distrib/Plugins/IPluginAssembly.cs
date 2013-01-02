@@ -19,4 +19,12 @@ namespace Distrib.Plugins
 
         IPluginInstance CreatePluginInstance(IPluginDescriptor descriptor);
     }
+
+    public interface _IPluginAssembly
+    {
+        string AssemblyLocation { get; }
+        IEnumerable<IPluginDescriptor> PluginDescriptors { get; }
+
+        IPluginInstance CreateInstance(IPluginDescriptor descriptor);
+    }
 }

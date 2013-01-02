@@ -112,6 +112,9 @@
     <Compile Include="Plugins\PluginUtils.cs" />
     <Compile Include="Plugins\StandardPluginController.cs" />
     <Compile Include="Plugins\StandardPluginInteractionLink.cs" />
+    <Compile Include="Plugins\_IPluginAssemblyFactory.cs" />
+    <Compile Include="Plugins\_PluginAssembly.cs" />
+    <Compile Include="Plugins\_PluginAssemblyFactory.cs" />
     <Compile Include="Processes\IProcessHost.cs" />
     <Compile Include="Processes\IProcessHostFactory.cs" />
     <Compile Include="Processes\Plugin\DistribProcessPluginAttribute.cs" />
