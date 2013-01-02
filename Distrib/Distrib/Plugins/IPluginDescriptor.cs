@@ -14,18 +14,18 @@ namespace Distrib.Plugins
 
         IReadOnlyList<IPluginMetadataBundle> AdditionalMetadataBundles { get; }
 
-        void SetAdditionalMetadata(IEnumerable<IPluginMetadataBundle> additionalMetadataBundles);
+        void SetAdditionalMetadata(IEnumerable<IPluginMetadataBundle> additonalMetadata);
+    }
 
+    public interface ICheckedPluginDescriptor : IPluginDescriptor
+    {
         bool IsUsable { get; }
 
-        PluginExclusionReason ExlusionReason { get; }
+        PluginExclusionReason ExclusionReason { get; }
 
         object ExclusionTag { get; }
 
         void MarkAsUsable();
-
         void MarkAsUnusable(PluginExclusionReason exclusionReason, object tag = null);
-
-        bool UsabilitySet { get; }
     }
 }

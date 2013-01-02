@@ -42,8 +42,7 @@ namespace ConsoleApplication1
             if (asmFile == null)
                 throw new InvalidOperationException("No assemblies found in directory");
 
-            var pluginAsm = kernel.Get<_IPluginAssemblyFactory>().FromPath(asmFile);
-            var descs = pluginAsm.PluginDescriptors;
+            
         }
 
         private void RunProcessSubsystemTest()
