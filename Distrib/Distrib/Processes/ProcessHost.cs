@@ -12,7 +12,7 @@ namespace Distrib.Processes
 {
     public sealed class ProcessHost : MarshalByRefObject, IProcessHost
     {
-        public ProcessHost([IOC(false)] IPluginDescriptor descriptor, IPluginAssemblyFactory fact)
+        public ProcessHost([IOC(false)] IPluginDescriptor descriptor, [IOC(true)] IPluginAssemblyFactory fact)
         {
 
         }

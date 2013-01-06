@@ -10,7 +10,6 @@ namespace Distrib.Processes
     public interface IProcessHostFactory
     {
         IProcessHost CreateHostFromPlugin(IPluginDescriptor descriptor);
-
-        IProcessHost CreateHostFromPluginInDomain(IPluginDescriptor descriptor, AppDomain domain = null);
+        IProcessHost CreateHostFromPluginSeparated(IPluginDescriptor descriptor);
     }
 }

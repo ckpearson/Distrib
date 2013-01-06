@@ -1,4 +1,5 @@
 ﻿using Ninject;
+using Ninject.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,16 @@ namespace Distrib.Separation
 
         public ISeparateInstanceCreator CreateCreator()
         {
-            return _kernel.Get<ISeparateInstanceCreator>();
+            return _kernel.Get<ISeparateInstanceCreator>(new[]
+            {
+                new ConstructorArgument("iocHasType", new Func<Type, bool>((t) => 
+                    {
+                        var bindings = _kernel.GetBindings(t);
+                        return bindings != null && bindings.Count() > 0;
+                    })),
+
+                new ConstructorArgument("iocGetInstance", new Func<Type, object>((t) => _kernel.Get(t))),
+            });
         }
     }
 }

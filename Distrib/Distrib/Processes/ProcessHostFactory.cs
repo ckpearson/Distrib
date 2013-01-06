@@ -29,13 +29,18 @@ namespace Distrib.Processes
             });
         }
 
-        public IProcessHost CreateHostFromPluginInDomain(IPluginDescriptor descriptor, AppDomain domain = null)
+        public IProcessHost CreateHostFromPluginSeparated(IPluginDescriptor descriptor)
         {
-            return _instFactory.CreateCreator().CreateInstance(
-                CreateHostFromPlugin(descriptor).GetType(),
-                new object[]
+            //return _instFactory.CreateCreator()
+            //    .CreateInstance(CreateHostFromPlugin(descriptor).GetType(), new[]
+            //    {
+            //        descriptor,
+            //    }) as IProcessHost;
+
+            return _instFactory.CreateCreator()
+                .CreateInstanceWithSeparation(CreateHostFromPlugin(descriptor).GetType(), new[]
                 {
-                    descriptor,
+                    new KeyValuePair<string, object>("descriptor", descriptor),
                 }) as IProcessHost;
         }
     }

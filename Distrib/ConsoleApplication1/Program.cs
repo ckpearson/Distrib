@@ -58,7 +58,10 @@ namespace ConsoleApplication1
 
                 if (fpp == null) throw new ArgumentNullException();
 
-                var prochost = kernel.Get<IProcessHostFactory>().CreateHostFromPluginInDomain(fpp);
+                var procHost = kernel.Get<IProcessHostFactory>()
+                    .CreateHostFromPluginSeparated(fpp);
+
+               
                 
             }
             catch (Exception)
