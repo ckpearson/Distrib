@@ -14,6 +14,7 @@ namespace Distrib.Plugins
     {
         private readonly string _typeFullName;
         private readonly IPluginMetadata _metadata;
+        private readonly string _assemblyPath;
 
         private readonly WriteOnce<bool> _pluginFoundUsable = new WriteOnce<bool>(false);
         private readonly WriteOnce<PluginExclusionReason> _pluginExclusionReason =
@@ -23,13 +24,14 @@ namespace Distrib.Plugins
 
         private readonly WriteOnce<IReadOnlyList<IPluginMetadataBundle>> _additionalMetadata =
             new WriteOnce<IReadOnlyList<IPluginMetadataBundle>>(null);
-
+         
         private readonly object _lock = new object();
 
-        public PluginDescriptor(string typeFullName, IPluginMetadata metadata)
+        public PluginDescriptor(string typeFullName, IPluginMetadata metadata, string assemblyPath)
         {
             _typeFullName = typeFullName;
             _metadata = metadata;
+            _assemblyPath = assemblyPath;
         }
 
         public string PluginTypeName
@@ -150,6 +152,12 @@ namespace Distrib.Plugins
                     return _pluginFoundUsable.IsWritten;
                 }
             }
+        }
+
+
+        public string AssemblyPath
+        {
+            get { return _assemblyPath; }
         }
     }
 }

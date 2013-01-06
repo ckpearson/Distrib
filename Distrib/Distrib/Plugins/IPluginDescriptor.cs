@@ -10,22 +10,24 @@ namespace Distrib.Plugins
     {
         string PluginTypeName { get; }
 
+        string AssemblyPath { get; }
+
         IPluginMetadata Metadata { get; }
 
         IReadOnlyList<IPluginMetadataBundle> AdditionalMetadataBundles { get; }
 
-        void SetAdditionalMetadata(IEnumerable<IPluginMetadataBundle> additonalMetadata);
-    }
+        void SetAdditionalMetadata(IEnumerable<IPluginMetadataBundle> additionalMetadataBundles);
 
-    public interface ICheckedPluginDescriptor : IPluginDescriptor
-    {
         bool IsUsable { get; }
 
-        PluginExclusionReason ExclusionReason { get; }
+        PluginExclusionReason ExlusionReason { get; }
 
         object ExclusionTag { get; }
 
         void MarkAsUsable();
+
         void MarkAsUnusable(PluginExclusionReason exclusionReason, object tag = null);
+
+        bool UsabilitySet { get; }
     }
 }

@@ -11,8 +11,11 @@ namespace Distrib.IOC
     {
         public override void Load()
         {
-            Bind<Separation.IRemoteDomainBridgeFactory>().To<Separation.RemoteDomainBridgeFactory>();
+            Bind<Separation.IRemoteDomainBridgeFactory>().To<Separation.RemoteDomainBridgeFactory>().InSingletonScope();
             Bind<Separation.IRemoteDomainBridge>().To<Separation.RemoteDomainBridge>();
+
+            Bind<Separation.ISeparateInstanceCreatorFactory>().To<Separation.SeparateInstanceCreatorFactory>().InSingletonScope();
+            Bind<Separation.ISeparateInstanceCreator>().To<Separation.SeparateInstanceCreator>();
         }
     }
 }

@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Distrib.Separation
 {
-    public interface IRemoteDomainBridge
+    public interface ISeparateInstanceCreatorFactory
     {
-        void LoadAssembly(string filePath);
-        object CreateInstance(string typeName, object[] args);
+        ISeparateInstanceCreator CreateCreator();
     }
 }

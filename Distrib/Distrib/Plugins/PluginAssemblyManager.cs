@@ -82,9 +82,10 @@ namespace Distrib.Plugins
                     {
                         // Create descriptor
                         var descriptor = _pluginDescriptorFactory
-                            .GetDescriptor(type.type.FullName, 
+                            .GetDescriptor(type.type.FullName,
                                 _pluginMetadataFactory
-                                    .CreateMetadataFromPluginAttribute(type.attr));
+                                    .CreateMetadataFromPluginAttribute(type.attr),
+                                    _assemblyPath);
 
                         // See if the plugin has any additional metadata (this is only done via supplied metadata now)
                         descriptor.SetAdditionalMetadata(

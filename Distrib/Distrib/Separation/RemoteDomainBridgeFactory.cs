@@ -17,11 +17,6 @@ namespace Distrib.Separation
             _kernel = kernel;
         }
 
-        public IRemoteDomainBridge CreateDomainBridge()
-        {
-            return _kernel.Get<IRemoteDomainBridge>();
-        }
-
         public IRemoteDomainBridge ForAppDomain(AppDomain domain)
         {
             var t = _kernel.Get<IRemoteDomainBridge>().GetType();

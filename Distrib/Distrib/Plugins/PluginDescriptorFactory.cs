@@ -18,12 +18,14 @@ namespace Distrib.Plugins
             _kernel = kernel;
         }
 
-        public IPluginDescriptor GetDescriptor(string typeFullName, IPluginMetadata pluginMetadata)
+        public IPluginDescriptor GetDescriptor(string typeFullName, IPluginMetadata pluginMetadata, 
+            string assemblyPath)
         {
             return _kernel.Get<IPluginDescriptor>(new[]
             {
                 new ConstructorArgument("typeFullName", typeFullName),
                 new ConstructorArgument("metadata", pluginMetadata),
+                new ConstructorArgument("assemblyPath", assemblyPath),
             });
         }
     }

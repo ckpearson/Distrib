@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IOC\IOCAttribute.cs" />
     <Compile Include="IOC\PluginsNinjectModule.cs" />
     <Compile Include="IOC\ProcessesNinjectModule.cs" />
     <Compile Include="IOC\SeparationNinjectModule.cs" />
@@ -121,8 +122,12 @@
     <Compile Include="Processes\ProcessHost.cs" />
     <Compile Include="Processes\ProcessHostFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Separation\ISeparateInstanceCreator.cs" />
+    <Compile Include="Separation\ISeparateInstanceCreatorFactory.cs" />
     <Compile Include="Separation\RemoteDomainBridge.cs" />
     <Compile Include="Separation\RemoteDomainBridgeFactory.cs" />
+    <Compile Include="Separation\SeparateInstanceCreator.cs" />
+    <Compile Include="Separation\SeparateInstanceCreatorFactory.cs" />
     <Compile Include="Separation\SerType.cs" />
     <Compile Include="Utils\CChain.cs" />
     <Compile Include="Separation\IRemoteDomainBridge.cs" />

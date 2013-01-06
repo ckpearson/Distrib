@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,12 +16,12 @@ namespace Distrib.Separation
 
         public void LoadAssembly(string filePath)
         {
-            throw new NotImplementedException();
+            Assembly.LoadFrom(filePath);
         }
 
-        public object CreateInstance(string typeName, string assemblyPath)
+        public object CreateInstance(string typeName, object[] args)
         {
-            throw new NotImplementedException();
+            return Activator.CreateInstance(Type.GetType(typeName), args);
         }
     }
 }

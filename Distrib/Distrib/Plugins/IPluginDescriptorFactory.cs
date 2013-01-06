@@ -8,6 +8,7 @@ namespace Distrib.Plugins
 {
     public interface IPluginDescriptorFactory
     {
-        IPluginDescriptor GetDescriptor(string typeFullName, IPluginMetadata pluginMetadata);
+        IPluginDescriptor GetDescriptor(string typeFullName, IPluginMetadata pluginMetadata,
+            string assemblyLocation);
     }
 }

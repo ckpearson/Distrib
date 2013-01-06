@@ -31,10 +31,10 @@ namespace ConsoleApplication1
         {
             var p = new Program();
             //p.RunProcessSubsystemTest();
-            p.RunNewPluginTest();
+            p.RunProcessHostTest();
         }
 
-        private void RunNewPluginTest()
+        private void RunProcessHostTest()
         {
             var kernel = kernelGet();
 
@@ -42,16 +42,6 @@ namespace ConsoleApplication1
             if (asmFile == null)
                 throw new InvalidOperationException("No assemblies found in directory");
 
-            
-        }
-
-        private void RunProcessSubsystemTest()
-        {
-            var kernel = kernelGet();
-
-            var asmFile = Directory.EnumerateFiles(dir, "*.dll").DefaultIfEmpty(null).FirstOrDefault();
-            if (asmFile == null)
-                throw new InvalidOperationException("No assemblies found in directory");
 
             var pluginAsm = kernel.Get<IPluginAssemblyFactory>().CreatePluginAssemblyFromPath(asmFile);
 
@@ -60,33 +50,20 @@ namespace ConsoleApplication1
 
             try
             {
-                if (!initRes.HasUsablePlugins)
-                    throw new InvalidOperationException("Plugin assembly contains no usable plugins");
+                if (!initRes.HasUsablePlugins) throw new ApplicationException();
 
-                var firstProcPlugin = initRes.UsablePlugins
+                var fpp = initRes.UsablePlugins
                     .DefaultIfEmpty(null)
                     .FirstOrDefault(p => p.Metadata.InterfaceType.Equals(typeof(IProcess)));
 
-                if (firstProcPlugin == null)
-                    throw new InvalidOperationException("No process plugin present in plugin assembly");
+                if (fpp == null) throw new ArgumentNullException();
 
-                var phost = kernel.Get<IProcessHostFactory>()
-                    .CreateHostForProcessPlugin(pluginAsm.CreatePluginInstance(firstProcPlugin));
-
-                phost.Initialise();
+                var prochost = kernel.Get<IProcessHostFactory>().CreateHostFromPluginInDomain(fpp);
+                
             }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Unexpected error", ex);
-            }
-            finally
-            {
-                try
-                {
-                    if (pluginAsm != null && pluginAsm.IsInitialised)
-                        pluginAsm.Unitialise();
-                }
-                catch { }
+            catch (Exception)
+            {   
+                throw;
             }
         }
 
