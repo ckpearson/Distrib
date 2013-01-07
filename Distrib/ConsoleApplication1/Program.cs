@@ -61,8 +61,9 @@ namespace ConsoleApplication1
                 var procHost = kernel.Get<IProcessHostFactory>()
                     .CreateHostFromPluginSeparated(fpp);
 
-               
-                
+                procHost.Initialise();
+
+                procHost.Unitialise();
             }
             catch (Exception)
             {   

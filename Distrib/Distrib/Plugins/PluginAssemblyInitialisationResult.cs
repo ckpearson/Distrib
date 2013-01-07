@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins
 {
+    [Serializable()]
     public sealed class PluginAssemblyInitialisationResult : IPluginAssemblyInitialisationResult
     {
         private readonly IReadOnlyList<IPluginDescriptor> _plugins = null;

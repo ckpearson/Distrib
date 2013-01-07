@@ -24,7 +24,7 @@ namespace Distrib.Plugins
 
         private readonly WriteOnce<IReadOnlyList<IPluginMetadataBundle>> _additionalMetadata =
             new WriteOnce<IReadOnlyList<IPluginMetadataBundle>>(null);
-         
+
         private readonly object _lock = new object();
 
         public PluginDescriptor(string typeFullName, IPluginMetadata metadata, string assemblyPath)
@@ -158,6 +158,25 @@ namespace Distrib.Plugins
         public string AssemblyPath
         {
             get { return _assemblyPath; }
+        }
+
+
+        public bool Match(IPluginDescriptor descriptor)
+        {
+            if (descriptor == null) throw new ArgumentNullException("Descriptor must be supplied");
+
+            try
+            {
+                lock (_lock)
+                {
+                    return (this.AssemblyPath == descriptor.AssemblyPath &&
+                        this.PluginTypeName == descriptor.PluginTypeName);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to determine a match", ex);
+            }
         }
     }
 }

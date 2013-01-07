@@ -10,5 +10,7 @@ namespace Distrib.Processes
     {
         void Initialise();
         void Unitialise();
+
+        bool IsInitialised { get; }
     }
 }

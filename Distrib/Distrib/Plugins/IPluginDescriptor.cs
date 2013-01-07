@@ -29,5 +29,13 @@ namespace Distrib.Plugins
         void MarkAsUnusable(PluginExclusionReason exclusionReason, object tag = null);
 
         bool UsabilitySet { get; }
+
+        /// <summary>
+        /// Determines whether a given <see cref="IPluginDescriptor"/> describes the same fundamental
+        /// plugin as the current one (no check into usability / metadata)
+        /// </summary>
+        /// <param name="descriptor">The descriptor to check against</param>
+        /// <returns><c>True</c> if it is the same plugin, <c>False</c> otherwise</returns>
+        bool Match(IPluginDescriptor descriptor);
     }
 }

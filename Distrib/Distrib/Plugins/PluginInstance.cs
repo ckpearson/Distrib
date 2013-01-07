@@ -206,11 +206,14 @@ namespace Distrib.Plugins
                         throw new InvalidOperationException("Plugin instance not initialised");
                     }
 
-                    // Get the controller to unitialise the instance
-                    _pluginController.Value.UnitialiseInstance();
+                    if (_pluginController.IsWritten)
+                    {
+                        // Get the controller to unitialise the instance
+                        _pluginController.Value.UnitialiseInstance();
 
-                    // Unitialise controller
-                    _pluginController.Value.UninitController();
+                        // Unitialise controller
+                        _pluginController.Value.UninitController(); 
+                    }
 
                     // Destroy bridge
                     _appDomainBridge = null;

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins
 {
-    public sealed class PluginAssembly : IPluginAssembly
+    public sealed class PluginAssembly : MarshalByRefObject, IPluginAssembly
     {
         private readonly string _netAssemblyPath;
 

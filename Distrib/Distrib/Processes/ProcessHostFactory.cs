@@ -31,12 +31,6 @@ namespace Distrib.Processes
 
         public IProcessHost CreateHostFromPluginSeparated(IPluginDescriptor descriptor)
         {
-            //return _instFactory.CreateCreator()
-            //    .CreateInstance(CreateHostFromPlugin(descriptor).GetType(), new[]
-            //    {
-            //        descriptor,
-            //    }) as IProcessHost;
-
             return _instFactory.CreateCreator()
                 .CreateInstanceWithSeparation(CreateHostFromPlugin(descriptor).GetType(), new[]
                 {
