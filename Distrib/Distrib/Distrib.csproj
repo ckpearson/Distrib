@@ -48,9 +48,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IOC\IOCAttribute.cs" />
+    <Compile Include="IOC\PersistenceNinjectModule.cs" />
     <Compile Include="IOC\PluginsNinjectModule.cs" />
     <Compile Include="IOC\ProcessesNinjectModule.cs" />
     <Compile Include="IOC\SeparationNinjectModule.cs" />
+    <Compile Include="Persistence\IPersistable.cs" />
+    <Compile Include="Persistence\PersistenceDataBag.cs" />
+    <Compile Include="Persistence\PersistenceDataBagFactory.cs" />
+    <Compile Include="Persistence\IPersistenceDataBag.cs" />
+    <Compile Include="Persistence\IPersistenceDataBagFactory.cs" />
+    <Compile Include="Plugins\IPluginDescriptorPersistor.cs" />
+    <Compile Include="Plugins\IPluginDescriptorPersistorFactory.cs" />
     <Compile Include="Plugins\IPluginInstanceFactory.cs" />
     <Compile Include="Plugins\IPluginInteractionLink.cs" />
     <Compile Include="Plugins\IPluginInteractionLinkFactory.cs" />
@@ -79,6 +87,8 @@
     <Compile Include="Plugins\IPluginMetadataBundleFactory.cs" />
     <Compile Include="Plugins\IPluginMetadataFactory.cs" />
     <Compile Include="Plugins\IPluginUsabilityChecker.cs" />
+    <Compile Include="Plugins\PluginDescriptorPersistor.cs" />
+    <Compile Include="Plugins\PluginDescriptorPersistorFactory.cs" />
     <Compile Include="Plugins\PluginInstance.cs" />
     <Compile Include="Plugins\PluginInstanceFactory.cs" />
     <Compile Include="Plugins\PluginInteractionLinkFactory.cs" />

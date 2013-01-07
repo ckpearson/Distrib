@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins
 {
-    public interface IPluginDescriptor
+    public interface IPluginDescriptor : Persistence.IPersistable
     {
         string PluginTypeName { get; }
 
