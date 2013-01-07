@@ -23,6 +23,8 @@ namespace Distrib.Processes
 
         private IPluginInstance _pluginInstance;
 
+        private IProcess _processInstance;
+
         public ProcessHost([IOC(false)] IPluginDescriptor descriptor, [IOC(true)] IPluginAssemblyFactory assemblyFactory)
         {
             if (descriptor == null) throw new ArgumentNullException("Descriptor must be supplied");
@@ -91,9 +93,9 @@ namespace Distrib.Processes
 
                     _pluginInstance.Initialise();
 
-                    var inst = _pluginInstance.GetUnderlyingInstance<IProcess>();
+                    _processInstance = _pluginInstance.GetUnderlyingInstance<IProcess>();
 
-                    _isInitialised = true; 
+                    _isInitialised = true;
                 }
             }
             catch (Exception ex)
@@ -116,7 +118,11 @@ namespace Distrib.Processes
                     if (_pluginAssembly != null && _pluginAssembly.IsInitialised)
                     {
                         _pluginAssembly.Unitialise();
-                    } 
+                    }
+
+                    _pluginAssembly = null;
+                    _pluginInstance = null;
+                    _processInstance = null;
                 }
             }
             catch (Exception ex)

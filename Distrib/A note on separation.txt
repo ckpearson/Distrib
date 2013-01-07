@@ -29,3 +29,32 @@ Note: Calling Assembly.LoadFrom(path) prior to getting your instance *does not* 
 If you really need to manually get down and discover & load your plugins then if you want to maintain
 	correct separation try to keep the AppDomain enclosures in mind; if, however you just want to make use
 	of the process subsystem then do so, instantiating the pieces yourself may lead to reinventing the wheel.
+
+--------------------------------------------------------------------------------------- (07/01/2012)
+
+Core subsystems that utilise the plugin system will take IPluginDescriptors for the plugins they are to utilise, the subsystem itself
+will then have to spin up an IPluginAssemblyFactory to grab hold of an instance.
+
+Core subsystems won't manage underlying separation using AppDomains themselves, as this can cause a headache and a lot of fuss
+in order to create all the required objects in that AppDomain and then manage it:
+
+Instead, it's recommended that the factories for the subsystems take advantage of the new ISeparateInstanceCreatorFactory, this allows them to
+request that an instance of the subsystem be created in its own AppDomain, that way all the running code within the subsystem will be running
+inside that AppDomain and no fussy messing around is required (think of Java's thread model but for AppDomains).
+
+On the subject of separation and accessibility of types:
+
+1. Factories should be MarshalByRef
+	For the most part factories are bound as singletons inside the AppDomain the IOC container resides, because they should hold no state themselves
+	it's safe to have them Marshalable purely for the sake of providing instances.
+
+2. Instances should be MarshalByRef where they pass / are interacted with across boundaries
+	Some instances may be pulled across the boundaries (e.g. IPluginAssembly, IPluginAssemblyManager) and should be marshalable.
+
+	Even when instances aren't likely to be accessed this way, ensuring they are marshalable means they can be separated with ISeparateInstanceCreator.
+
+3. Bundle instances should be serialisable
+	Unless the instance holds any major functionality or help dependencies on other services they should be serialisable as required.
+
+	An example of this is IPluginDescriptor, it simply ensures that they can be thrown across domains / persisted without still having the
+	possibility to muck around in the domain they were created in.

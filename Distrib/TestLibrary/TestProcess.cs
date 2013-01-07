@@ -24,6 +24,7 @@ namespace TestLibrary
 
         void IPlugin.UninitialisePlugin(IPluginInteractionLink interactionLink)
         {
+            
         }
 
         private WriteOnce<ProcessJobDefinition> _jobDefinition = new WriteOnce<ProcessJobDefinition>(null);
