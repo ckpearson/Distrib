@@ -16,6 +16,8 @@ namespace Distrib.Processes
     /// </summary>
     public interface IProcess
     {
+        void InitProcess();
+        void UninitProcess();
         ProcessJobDefinition JobDefinition { get; }
     }
 

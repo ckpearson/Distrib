@@ -95,6 +95,8 @@ namespace Distrib.Processes
 
                     _processInstance = _pluginInstance.GetUnderlyingInstance<IProcess>();
 
+                    _processInstance.InitProcess();
+
                     _isInitialised = true;
                 }
             }
@@ -114,6 +116,8 @@ namespace Distrib.Processes
                     {
                         throw new InvalidOperationException("Not initialised");
                     }
+
+                    _processInstance.UninitProcess();
 
                     if (_pluginAssembly != null && _pluginAssembly.IsInitialised)
                     {

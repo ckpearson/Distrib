@@ -1,0 +1,31 @@
+A note on plugin implementation:
+
+All Plugins must adhere to the following criteria:
+
+1. They must derive from MarshalByRefObject
+2. They must implement the IPlugin interface for core plugin interaction
+3. They must be decorated with the subsystem-appropriate plugin attribute
+	> This provides the core plugin details (name, version, etc)
+	> This also allows the plugin to carry subsystem-specific metadata along with it
+	> This also provides two of the most important pieces of information about a plugin:
+		1. The interface the consuming host will use to interact with the plugin (this will primarily be the given subsystem e.g. IProcess)
+		2. The type for the plugin controller that will manage the core tasks of:
+			> Creating the actual instance of the plugin
+			> Managing the interaction between the plugin and the plugin system
+				> Initialisation etc
+4. They must implement the plugin interface that is given by the attribute (Process = IProcess etc)
+
+-------------------------- PLUGIN INTERACTION
+
+The core plugin system will interact with plugins via their IPlugin interface, this is mostly for providing the plugin the chance to perform
+any initialisation / uninitialisation prior to the subsystem grabbing hold of it.
+
+Many IPlugin methods allow the plugin to interact with the plugin system via an IPluginInteractionLink, primarily this is:
+	1. Used to get information at runtime about the plugin
+		> Metadata bundles, creation time (etc)
+	2. Interact further with the plugin system (e.g. loading additional assemblies - yet to be implemented)
+
+!CORE INTERACTION WITH HOST-------------------------
+
+Interaction with the subsystems consuming a plugin itself is left entirely down to the subsystem itself, this interaction will be provided (if at all)
+via the subsystem plugin interface (Process = IProcess etc).

@@ -40,6 +40,16 @@ namespace TestLibrary
                 return _jobDefinition.Value;
             }
         }
+
+        void IProcess.InitProcess()
+        {
+            // The process has been loaded into a host and is to initialise
+        }
+
+        void IProcess.UninitProcess()
+        {
+            // The process is about to be unloaded by a host and is to unitialise
+        }
     }
 
     [Serializable()]

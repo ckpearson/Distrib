@@ -87,7 +87,7 @@ namespace Distrib.Plugins
 
         public void UninitController()
         {
-            // Controller unitialisation (not to unitialise instance here)
+            // Controller uninitialisation (not to unitialise instance here)
         }
 
         public void InitialiseInstance()
