@@ -178,10 +178,5 @@ namespace Distrib.Plugins
                 throw new ApplicationException("Failed to determine a match", ex);
             }
         }
-
-        public void Persist(Persistence.IPersistenceDataBag bag)
-        {
-            bag.AddData("asmPath", _assemblyPath);
-        }
     }
 }

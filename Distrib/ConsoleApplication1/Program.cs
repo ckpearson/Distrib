@@ -10,8 +10,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace ConsoleApplication1
 {
@@ -66,7 +68,7 @@ namespace ConsoleApplication1
                 procHost.Unitialise();
             }
             catch (Exception)
-            {   
+            {
                 throw;
             }
         }
@@ -96,7 +98,7 @@ namespace ConsoleApplication1
 
                 if (firstProcPlugin == null)
                     throw new InvalidOperationException("No process plugin present in plugin assembly");
-                
+
 
                 var manPluginInst = pluginAsm.CreatePluginInstance(firstProcPlugin);
 
@@ -117,7 +119,8 @@ namespace ConsoleApplication1
                 {
                     if (pluginAsm != null && pluginAsm.IsInitialised)
                         pluginAsm.Unitialise();
-                }catch { }
+                }
+                catch { }
             }
         }
 
