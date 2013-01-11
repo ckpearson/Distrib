@@ -31,70 +31,69 @@ namespace Distrib.Processes
     [Serializable()]
     public class ProcessJobDefinition : IJobDefinition
     {
-        private readonly Type _inputInterfaceType;
-        private readonly Type _outputInterfaceType;
+        private readonly Type _inputType;
+        private readonly Type _outputType;
 
-        private List<ProcessJobField> _inputFields =
-            new List<ProcessJobField>();
-
-        private List<ProcessJobField> _outputFields =
+        private readonly List<ProcessJobField> _fields =
             new List<ProcessJobField>();
 
         public ProcessJobDefinition(Type inputInterfaceType, Type outputInterfaceType)
         {
-            if (inputInterfaceType == null) throw new ArgumentNullException("input interface type required");
-            if (outputInterfaceType == null) throw new ArgumentNullException("output interface type required");
+            _inputType = inputInterfaceType;
+            _outputType = outputInterfaceType;
 
-            if (!inputInterfaceType.IsInterface) throw new ArgumentException("input interface type must be an interface");
-            if (!outputInterfaceType.IsInterface) throw new ArgumentException("output interface type must be an interface");
-
-            _inputInterfaceType = inputInterfaceType;
-            _outputInterfaceType = outputInterfaceType;
+            _buildInitialFields();
         }
 
-        protected void AddField(ProcessJobField field)
+        private void _buildInitialFields()
         {
-            switch (field.Mode)
+            var fields = (_inputType.GetProperties()
+                .Where(p => p.HasGetterAndSetter() && (p.PropertyType.IsClass || p.PropertyType.IsValueType) && p.PropertyType.IsSerializable)
+                .Select(p => new ProcessJobField(p.PropertyType, p.Name, FieldMode.Input))
+            .Concat(
+                _outputType.GetProperties()
+                    .Where(p => p.HasGetterAndSetter() && (p.PropertyType.IsClass || p.PropertyType.IsValueType) && p.PropertyType.IsSerializable)
+                    .Select(p => new ProcessJobField(p.PropertyType, p.Name, FieldMode.Output)))).ToList();
+
+            if (fields == null || fields.Count == 0)
             {
-                case ProcessJobFieldMode.Input:
-                    _inputFields.Add(field);
-                    break;
-                case ProcessJobFieldMode.Output:
-                    _outputFields.Add(field);
-                    break;
-                default:
-                    throw new Exception();
+                throw new InvalidOperationException("No fields could be found on either the input or output types");
             }
+
+            _fields.Clear();
+            _fields.AddRange(fields);
         }
 
         public IReadOnlyList<ProcessJobField> InputFields
         {
             get
             {
-                return _inputFields.AsReadOnly();
+                return _fields.Where(f => f.Mode == FieldMode.Input).ToList().AsReadOnly();
             }
         }
 
         public IReadOnlyList<ProcessJobField> OutputFields
         {
-            get
-            {
-                return _outputFields.AsReadOnly();
-            }
+            get { return _fields.Where(f => f.Mode == FieldMode.Output).ToList().AsReadOnly(); }
+        }
+
+        protected ProcessJobField GetField(PropertyInfo pi)
+        {
+            return _fields.SingleOrDefault(f => f.Name == pi.Name && f.Type.Equals(pi.PropertyType));
+        }
+
+        protected ProcessJobField ReplaceField(ProcessJobField field, ProcessJobField replacement)
+        {
+            _fields[_fields.IndexOf(field)] = replacement;
+            return replacement;
         }
     }
 
     [Serializable()]
-    public class ProcessJobDefinition<TInput, TOutput> : ProcessJobDefinition
-        where TInput : class
-        where TOutput : class
+    public sealed class ProcessJobDefinition<TInput, TOutput> : ProcessJobDefinition
     {
         public ProcessJobDefinition()
             : base(typeof(TInput), typeof(TOutput))
-        {
-        }
-
-        public void RegInput<TProp>(Expression<Func<TInput, TProp>> expr)
         {
 
         }
@@ -102,148 +101,140 @@ namespace Distrib.Processes
         public ProcessJobFieldConfig<TProp> ConfigInput<TProp>(Expression<Func<TInput, TProp>> expr)
         {
             var pi = expr.GetPropertyInfo();
-            var field = base.InputFields
-                .SingleOrDefault(f => f.Name.Equals(pi.Name) && f.Type.Equals(pi.PropertyType));
-            if (field == null)
+            var field = GetField(pi);
+            if (!field.GetType().ContainsGenericParameters)
             {
-                // Assume not been created yet
-#warning be sure to implement checks to ensure the pointed property actually has a getter & setter
-
-                var nf = new ProcessJobField<TProp>(pi.Name, ProcessJobFieldMode.Input);
-                base.AddField(nf);
-                return nf.Config as ProcessJobFieldConfig<TProp>;
+                // The field isn't the strongly-typed generic version, so it's an initial field
+                // given we'd only be here if in the first place it was a generic definition
+                // we can replace the non-generic field with a correct generic one (because we know the property type here)
+                // Preserve the original config though, in case there are any values configured (they may have cast to the non-generic type
+                // and done so then come back here)
+                var origConfig = field.Config;
+                field = base.ReplaceField(field, new ProcessJobField<TProp>(field.Name, field.Mode));
+                // At this point the config will be empty of any values that may have existed before turning it generic
+                // add those back
+                field.Config.Adopt(origConfig);
             }
 
             return field.Config as ProcessJobFieldConfig<TProp>;
         }
 
-        //public ProcessJobFieldConfig<TProp> ConfigInput<TProp>(Expression<Func<TInput, TProp>> expr)
-        //{
-        //    if (expr == null) throw new ArgumentNullException("Property expression must be supplied");
-
-        //    var pi = expr.GetPropertyInfo();
-        //    var field = base.InputFields.DefaultIfEmpty(null)
-        //        .SingleOrDefault(f => f.Name.Equals(pi.Name) && f.Type.Equals(pi.PropertyType));
-        //    if (field == null)
-        //    {
-        //        throw new InvalidOperationException("Couldn't find the input field for property");
-        //    }
-
-        //    return (ProcessJobFieldConfig<TProp>)field.Config;
-        //}
-
-        public ProcessJobFieldConfig ConfigOutput<TProp>(Expression<Func<TOutput, TProp>> expr)
+        public ProcessJobFieldConfig<TProp> ConfigOutput<TProp>(Expression<Func<TOutput, TProp>> expr)
         {
-            if (expr == null) throw new ArgumentNullException("Property expression must be supplied");
-
             var pi = expr.GetPropertyInfo();
-            var field = base.OutputFields.DefaultIfEmpty(null)
-                .SingleOrDefault(f => f.Name.Equals(pi.Name) && f.Type.Equals(pi.PropertyType));
-            if (field == null)
+            var field = GetField(pi);
+            if (!field.GetType().ContainsGenericParameters)
             {
-                throw new InvalidOperationException("Couldn't find the output field for property");
+                // The field isn't the strongly-typed generic version, so it's an initial field
+                // given we'd only be here if in the first place it was a generic definition
+                // we can replace the non-generic field with a correct generic one (because we know the property type here)
+                // Preserve the original config though, in case there are any values configured (they may have cast to the non-generic type
+                // and done so then come back here)
+                var origConfig = field.Config;
+                field = base.ReplaceField(field, new ProcessJobField<TProp>(field.Name, field.Mode));
+                // At this point the config will be empty of any values that may have existed before turning it generic
+                // add those back
+                field.Config.Adopt(origConfig);
             }
 
-            return field.Config;
-        }
-    }
-
-    [Serializable()]
-    public sealed class ProcessJobField<T> : ProcessJobField
-    {
-        public ProcessJobField(string fieldName, ProcessJobFieldMode fieldMode)
-            : base(fieldName, typeof(T), fieldMode)
-        {
-            base.Config = new ProcessJobFieldConfig<T>();
+            return field.Config as ProcessJobFieldConfig<TProp>;
         }
     }
 
     [Serializable()]
     public class ProcessJobField
     {
+        private readonly object _lock = new object();
+
         private readonly Type _fieldType;
         private readonly string _fieldName;
-        private readonly ProcessJobFieldMode _fieldMode = ProcessJobFieldMode.Input;
+        private readonly FieldMode _fieldMode;
 
-        private WriteOnce<ProcessJobFieldConfig> _fieldConfig = new WriteOnce<ProcessJobFieldConfig>();
+        private ProcessJobFieldConfig _fieldConfig = new ProcessJobFieldConfig();
 
-        public ProcessJobField(string fieldName, Type fieldType, ProcessJobFieldMode fieldMode)
+        public ProcessJobField(Type fieldType, string fieldName, FieldMode fieldMode)
         {
-            if (fieldType == null) throw new ArgumentNullException();
-            if (string.IsNullOrEmpty(fieldName)) throw new ArgumentNullException();
-
-            if (!fieldType.IsClass && !fieldType.IsValueType && !fieldType.IsSerializable)
-            {
-                throw new ArgumentException("Field type must be either a class / value type and must be serializable");
-            }
-
-            _fieldName = fieldName;
             _fieldType = fieldType;
+            _fieldName = fieldName;
             _fieldMode = fieldMode;
-        }
-
-        public string Name
-        {
-            get
-            {
-                return _fieldName;
-            }
         }
 
         public Type Type
         {
-            get
-            {
-                return _fieldType;
-            }
+            get { return _fieldType; }
         }
 
-        public ProcessJobFieldMode Mode
+        public string Name
         {
-            get
-            {
-                return _fieldMode;
-            }
+            get { return _fieldName; }
+        }
+
+        public FieldMode Mode
+        {
+            get { return _fieldMode; }
         }
 
         public ProcessJobFieldConfig Config
         {
-            get
-            {
-                return _fieldConfig.Value;
-            }
-
+            get { return _fieldConfig; }
             protected set
             {
-                _fieldConfig.Value = value;
+                lock (_lock)
+                {
+                    _fieldConfig = value;
+                }
             }
+        }
+    }
+
+    [Serializable()]
+    public sealed class ProcessJobField<T> : ProcessJobField
+    {
+        public ProcessJobField(string fieldName, FieldMode fieldMode)
+            : base(typeof(T), fieldName, fieldMode)
+        {
+            base.Config = new ProcessJobFieldConfig<T>();
         }
     }
 
     [Serializable()]
     public class ProcessJobFieldConfig
     {
-        private readonly object _lock = new object();
+        protected readonly object _lock = new object();
 
         private object _defaultValue;
-        public virtual object DefaultValue
+        public object DefaultValue
         {
             get
             {
                 lock (_lock)
+                {
                     return _defaultValue;
+                }
             }
-
             set
             {
                 lock (_lock)
+                {
                     _defaultValue = value;
+                }
+            }
+        }
+
+        internal void Adopt(ProcessJobFieldConfig config)
+        {
+            lock (_lock)
+            {
+                foreach (var pi in config.GetType().GetProperties())
+                {
+                    pi.SetValue(this, pi.GetValue(config));
+                }
             }
         }
     }
 
     [Serializable()]
-    public class ProcessJobFieldConfig<T> : ProcessJobFieldConfig
+    public sealed class ProcessJobFieldConfig<T> : ProcessJobFieldConfig
     {
         public new T DefaultValue
         {
@@ -252,9 +243,9 @@ namespace Distrib.Processes
         }
     }
 
-    public enum ProcessJobFieldMode
+    public enum FieldMode
     {
         Input,
-        Output
+        Output,
     }
 }
