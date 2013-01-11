@@ -98,6 +98,8 @@ namespace Distrib.Processes
                     _processInstance.InitProcess();
 
                     _isInitialised = true;
+
+                    var jd = _processInstance.JobDefinition;
                 }
             }
             catch (Exception ex)

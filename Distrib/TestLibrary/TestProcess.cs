@@ -19,26 +19,11 @@ namespace TestLibrary
     {
         void IPlugin.InitialisePlugin(IPluginInteractionLink interactionLink)
         {
-            var npjd = new NewTestProcessJobDefinition();
         }
 
         void IPlugin.UninitialisePlugin(IPluginInteractionLink interactionLink)
         {
             
-        }
-
-        private WriteOnce<ProcessJobDefinition> _jobDefinition = new WriteOnce<ProcessJobDefinition>(null);
-        ProcessJobDefinition IProcess.JobDefinition
-        {
-            get
-            {
-                if (!_jobDefinition.IsWritten)
-                {
-                    _jobDefinition.Value = new NewTestProcessJobDefinition();
-                }
-
-                return _jobDefinition.Value;
-            }
         }
 
         void IProcess.InitProcess()
@@ -50,24 +35,30 @@ namespace TestLibrary
         {
             // The process is about to be unloaded by a host and is to unitialise
         }
-    }
 
-    [Serializable()]
-    public sealed class NewTestProcessJobDefinition : ProcessJobDefinition<INewTestProcessJobInputAccessor, INewTestProcessJobOutputAccessor>
-    {
-        public NewTestProcessJobDefinition()
-            : base("New test process job")
+        private ProcessJobDefinition<IInput, IOutput> _def;
+        IJobDefinition IProcess.JobDefinition
         {
-            
+            get
+            {
+                if (_def == null)
+                {
+                    _def = new ProcessJobDefinition<IInput, IOutput>();
+
+                }
+
+                return _def;
+            }
         }
     }
 
-    public interface INewTestProcessJobInputAccessor
+    public interface IInput
     {
         string SayHelloTo { get; set; }
+        DateTime Something { get; set; }
     }
 
-    public interface INewTestProcessJobOutputAccessor
+    public interface IOutput
     {
         string Message { get; set; }
     }

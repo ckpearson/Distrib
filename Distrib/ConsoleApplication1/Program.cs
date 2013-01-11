@@ -106,8 +106,6 @@ namespace ConsoleApplication1
 
                 IProcess procInstance =
                     manPluginInst.GetUnderlyingInstance<IProcess>();
-
-                var jd = procInstance.JobDefinition as object;
             }
             catch (Exception ex)
             {

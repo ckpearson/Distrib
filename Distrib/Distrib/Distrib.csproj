@@ -134,6 +134,7 @@
     <Compile Include="Separation\IRemoteDomainBridgeFactory.cs" />
     <Compile Include="Utils\LO.cs" />
     <Compile Include="Utils\ObjectUtils.cs" />
+    <Compile Include="Utils\PropertyUtils.cs" />
     <Compile Include="Utils\RemoteAppDomainBridge.cs" />
     <Compile Include="Utils\Res.cs" />
     <Compile Include="Utils\StringUtils.cs" />
