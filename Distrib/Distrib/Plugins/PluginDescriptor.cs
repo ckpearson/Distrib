@@ -93,7 +93,7 @@ namespace Distrib.Plugins
             }
         }
 
-        public PluginExclusionReason ExlusionReason
+        public PluginExclusionReason ExclusionReason
         {
             get
             {

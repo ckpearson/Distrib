@@ -211,7 +211,7 @@ namespace Distrib.Plugins
                 if (!descriptor.IsUsable)
                 {
                     throw new InvalidOperationException(string.Format("Plugin is marked as excluded: {0}",
-                        descriptor.ExlusionReason.ToString()));
+                        descriptor.ExclusionReason.ToString()));
                 }
 
                 lock (_lock)
@@ -266,6 +266,12 @@ namespace Distrib.Plugins
 
                         _pluginInstances.Clear();
                     }
+
+                    _pluginDescriptors = null;
+                    _assemblyManager = null;
+                    AppDomain.Unload(_appDomain);
+                    _appDomain = null;
+                    _isInitialised = false;
                 }
             }
             catch (Exception)

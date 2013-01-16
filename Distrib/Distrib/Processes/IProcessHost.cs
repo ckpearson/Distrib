@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Distrib.Plugins;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,7 @@ namespace Distrib.Processes
         IEnumerable<ProcessJobField> ProcessJob(IEnumerable<ProcessJobField> inputValues = null);
 
         IReadOnlyList<ProcessJobField> GetInputFields();
+
+        IPluginDescriptor PluginDescriptor { get; }
     }
 }

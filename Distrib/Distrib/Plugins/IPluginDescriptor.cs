@@ -20,7 +20,7 @@ namespace Distrib.Plugins
 
         bool IsUsable { get; }
 
-        PluginExclusionReason ExlusionReason { get; }
+        PluginExclusionReason ExclusionReason { get; }
 
         object ExclusionTag { get; }
 

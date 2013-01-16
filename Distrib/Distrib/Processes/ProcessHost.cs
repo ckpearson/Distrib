@@ -118,7 +118,10 @@ namespace Distrib.Processes
                         throw new InvalidOperationException("Not initialised");
                     }
 
-                    _processInstance.UninitProcess();
+                    if (_processInstance != null)
+                    {
+                        _processInstance.UninitProcess();
+                    }
 
                     if (_pluginAssembly != null && _pluginAssembly.IsInitialised)
                     {
@@ -347,6 +350,12 @@ namespace Distrib.Processes
         public IReadOnlyList<ProcessJobField> GetInputFields()
         {
             return _processInstance.JobDefinition.InputFields;
+        }
+
+
+        public IPluginDescriptor PluginDescriptor
+        {
+            get { return _descriptor; }
         }
     }
 }

@@ -11,6 +11,25 @@ using System.Threading.Tasks;
 
 namespace TestLibrary
 {
+    [DistribProcessPlugin("invalid process",
+        "An invalid process",
+        1.0,
+        "Clint Pearson",
+        "invalid")]
+    public class InvalidProcess : IPlugin
+    {
+
+        public void InitialisePlugin(IPluginInteractionLink interactionLink)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UninitialisePlugin(IPluginInteractionLink interactionLink)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     [DistribProcessPlugin("New test process",
         "new process for the new plugin system",
         1.0,
@@ -46,6 +65,8 @@ namespace TestLibrary
                 if (_def == null)
                 {
                     _def = new ProcessJobDefinition<IInput, IOutput>("New test process job");
+
+                    _def.ConfigInput(i => i.SayHelloTo).DefaultValue = "Bob";
                 }
 
                 return _def;
@@ -55,6 +76,8 @@ namespace TestLibrary
         public void ProcessJob(IJob job)
         {
             var input = new NewTestProcessInput(job);
+
+            Thread.Sleep(3000);
 
             var output = new NewTestProcessOutput(job);
 
