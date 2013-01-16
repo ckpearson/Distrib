@@ -1,0 +1,46 @@
+﻿<metro:Window x:Class="ProcessTester.MainWindow"
+        xmlns:metro="http://schemas.codeplex.com/elysium"
+        xmlns:params="http://schemas.codeplex.com/elysium/params"
+        params:Manager.Theme="Light"
+        params:Manager.AccentBrush="{x:Static metro:AccentBrushes.Blue}"
+        params:Manager.ContrastBrush="White"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ProcessTester"
+        Title="MainWindow" Height="579" Width="606" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+    <Window.Resources>
+        <local:IsNullConverter x:Key="inc" />
+    </Window.Resources>
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <GroupBox Header="Plugin Assembly" Padding="10">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Assembly: " />
+                    <Label Content="{Binding Path=CurrentAssemblyPath, FallbackValue='No assembly chosen'}" Width="404" />
+                    <Button x:Name="btnChoose" Content="Choose" Click="btnChoose_Click_1" Width="75" Margin="10,0,0,0"/>
+                </StackPanel>
+            </GroupBox>
+            
+            <GroupBox Header="Processes">
+                <ListBox x:Name="procList" ItemsSource="{Binding Processes}" Height="200">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="Distrib.Plugins.IPluginDescriptor}">
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="Name: " />
+                                <Label Content="{Binding Metadata.Name}" />
+                                <Label Content="Description " />
+                                <Label Content="{Binding Metadata.Description}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </GroupBox>
+
+            <GroupBox x:Name="cpg" Header="Current Process" DataContext="{Binding ElementName=procList, Path=SelectedItem}">
+                <StackPanel Orientation="Vertical">
+                    
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+    </Grid>
+</metro:Window>
