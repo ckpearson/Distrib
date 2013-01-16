@@ -99,36 +99,6 @@ namespace Distrib.Processes
                     _processInstance.InitProcess();
 
                     _isInitialised = true;
-
-                    var jd = _processInstance.JobDefinition;
-
-                    var job = new ProcessJob(this, this, jd);
-                    job.SetInputValue(jd.InputFields[0], "Suzy");
-                    _processInstance.ProcessJob(job);
-
-                    // At this point we now have the output values
-                    var outFields = ((IJob_Internal)job).OutputValueFields;
-
-                    foreach (var outDefField in jd.OutputFields)
-                    {
-                        var matchValField = outFields.SingleOrDefault(f => f.Name == outDefField.Name);
-
-                        if (matchValField == null)
-                        {
-                            // No value for this output was provided by the process, it could be it has a default value
-                            if (outDefField.Config.HasDefaultValue)
-                            {
-                                // Chuck the default into the job output fields (will need to re-retrieve)
-                                ((IJob_Internal)job).SetOutputValue(outDefField, outDefField.Config.DefaultValue);
-                            }
-                            else
-                            {
-                                throw new InvalidOperationException("No output was provided for the field");
-                            }
-                        }
-                    }
-
-                    outFields = ((IJob_Internal)job).OutputValueFields;
                 }
             }
             catch (Exception ex)
@@ -230,7 +200,8 @@ namespace Distrib.Processes
                 }
                 else
                 {
-                    throw new InvalidOperationException("No value could be retrieved for this input field");
+                    throw new InvalidOperationException(string.Format("No value could be found for input '{0}' and it has no default",
+                        inputDefField.Name));
                 }
             }
         }
@@ -317,6 +288,65 @@ namespace Distrib.Processes
             {
                 internalJob.SetOutputValue(outputDefField, value);
             }
+        }
+
+
+        public IEnumerable<ProcessJobField> ProcessJob(IEnumerable<ProcessJobField> inputFields = null)
+        {
+            IJob job = new ProcessJob(this, this, _processInstance.JobDefinition);
+            var jobInternal = ((IJob_Internal)job);
+
+            if (inputFields != null)
+            {
+                foreach (var infield in inputFields)
+                {
+                    jobInternal.SetInputValue(infield, infield.Value);
+                }
+            }
+
+            _processInstance.ProcessJob(job);
+
+           
+
+            var outValues = jobInternal.OutputValueFields;
+
+            if (outValues == null)
+            {
+                outValues = new List<ProcessJobField>();
+            }
+
+            foreach (var defOutField in jobInternal.JobDefinition.OutputFields)
+            {
+                var matchValField = outValues.SingleOrDefault(f => f.Name == defOutField.Name);
+
+                if (matchValField != null)
+                {
+                    // The value field was found, so it's been set by the process
+                    continue;
+                }
+                else
+                {
+                    // The output hasn't been set, it may have a default value
+                    if (defOutField.Config.HasDefaultValue)
+                    {
+                        jobInternal.SetOutputValue(defOutField, defOutField.Config.DefaultValue);
+                        continue;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException(string.Format("The process didn't set the output '{0}' and no default is configured",
+                            defOutField.Name));
+                    }
+                }
+            }
+
+            return jobInternal.OutputValueFields;
+        }
+
+
+        public IReadOnlyList<ProcessJobField> GetInputFields()
+        {
+            return _processInstance.JobDefinition.InputFields;
         }
     }
 }

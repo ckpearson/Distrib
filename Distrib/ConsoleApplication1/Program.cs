@@ -65,6 +65,12 @@ namespace ConsoleApplication1
 
                 procHost.Initialise();
 
+                var inputFields = procHost.GetInputFields();
+
+                inputFields[0].Value = "Clint";
+
+                var outputs = procHost.ProcessJob(inputFields);
+
                 procHost.Unitialise();
             }
             catch (Exception)

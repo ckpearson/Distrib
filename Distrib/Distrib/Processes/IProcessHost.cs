@@ -12,5 +12,9 @@ namespace Distrib.Processes
         void Unitialise();
 
         bool IsInitialised { get; }
+
+        IEnumerable<ProcessJobField> ProcessJob(IEnumerable<ProcessJobField> inputValues = null);
+
+        IReadOnlyList<ProcessJobField> GetInputFields();
     }
 }

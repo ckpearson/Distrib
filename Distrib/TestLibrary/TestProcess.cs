@@ -46,8 +46,6 @@ namespace TestLibrary
                 if (_def == null)
                 {
                     _def = new ProcessJobDefinition<IInput, IOutput>("New test process job");
-                    _def.ConfigInput(i => i.SayHelloTo).DefaultValue = "bob";
-                    _def.ConfigOutput(o => o.Message).DefaultValue = "Something ought to go here really...";
                 }
 
                 return _def;
@@ -60,7 +58,7 @@ namespace TestLibrary
 
             var output = new NewTestProcessOutput(job);
 
-           // output.Message = string.Format("Hello, {0}!", input.SayHelloTo);
+            output.Message = string.Format("Hello, {0}!", input.SayHelloTo);
         }
     }
 

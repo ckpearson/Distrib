@@ -31,6 +31,7 @@ namespace Distrib.Processes
         List<ProcessJobField> OutputValueFields { get; }
         void SetInputValue(ProcessJobField defField, object value);
         void SetOutputValue(ProcessJobField defField, object value);
+        IJobDefinition JobDefinition { get; }
     }
 
     public interface IJob
@@ -127,6 +128,12 @@ namespace Distrib.Processes
         public IJobOutputTracker OutputTracker
         {
             get { return _outputTracker; }
+        }
+
+
+        public IJobDefinition JobDefinition
+        {
+            get { return _jobDefinition; }
         }
     }
 
