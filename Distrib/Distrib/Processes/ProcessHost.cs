@@ -5,12 +5,13 @@ using Distrib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Distrib.Processes
 {
-    public sealed class ProcessHost : MarshalByRefObject, IProcessHost
+    public sealed class ProcessHost : MarshalByRefObject, IProcessHost, IJobInputTracker, IJobOutputTracker
     {
         private readonly IPluginDescriptor _descriptor;
         private readonly IPluginAssemblyFactory _assemblyFactory;
@@ -100,6 +101,34 @@ namespace Distrib.Processes
                     _isInitialised = true;
 
                     var jd = _processInstance.JobDefinition;
+
+                    var job = new ProcessJob(this, this, jd);
+                    job.SetInputValue(jd.InputFields[0], "Suzy");
+                    _processInstance.ProcessJob(job);
+
+                    // At this point we now have the output values
+                    var outFields = ((IJob_Internal)job).OutputValueFields;
+
+                    foreach (var outDefField in jd.OutputFields)
+                    {
+                        var matchValField = outFields.SingleOrDefault(f => f.Name == outDefField.Name);
+
+                        if (matchValField == null)
+                        {
+                            // No value for this output was provided by the process, it could be it has a default value
+                            if (outDefField.Config.HasDefaultValue)
+                            {
+                                // Chuck the default into the job output fields (will need to re-retrieve)
+                                ((IJob_Internal)job).SetOutputValue(outDefField, outDefField.Config.DefaultValue);
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException("No output was provided for the field");
+                            }
+                        }
+                    }
+
+                    outFields = ((IJob_Internal)job).OutputValueFields;
                 }
             }
             catch (Exception ex)
@@ -153,6 +182,140 @@ namespace Distrib.Processes
                 {
                     throw new ApplicationException("Failed to determine if initialised", ex);
                 }
+            }
+        }
+
+        T IJobInputTracker.GetInput<T>(IJob forJob, string prop)
+        {
+            if (string.IsNullOrEmpty(prop))
+            {
+                throw new InvalidOperationException("input property name must be supplied");
+            }
+
+            var internalJob = forJob as IJob_Internal;
+
+            var jd = _processInstance.JobDefinition;
+
+
+            // Check the definition contains an input field by that name
+            var inputDefField = jd.InputFields.SingleOrDefault(f => f.Name == prop);
+
+            if (inputDefField == null)
+            {
+                throw new InvalidOperationException("No input field could be found for that input property");
+            }
+
+            // Check to see if the input has already been bundled with the job definition / already asked for and cached
+            var inputValueField = internalJob.InputValueFields.SingleOrDefault(f => f.Name == prop);
+
+            if (inputValueField != null)
+            {
+                // The job already has that information
+                return (T)inputValueField.Value;
+            }
+            else
+            {
+                // The job doesn't have the value data for this field, this is where any retrieval of lazy-retrieve values would be done
+                // it's also where any sort of default value things could be done too
+
+                if (inputDefField.Config.HasDefaultValue)
+                {
+                    var value = inputDefField.Config.DefaultValue;
+
+                    // Need to shove this in as an input field so it's cached and ready to go
+
+                    internalJob.SetInputValue(inputDefField, value);
+
+                    return (T)value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("No value could be retrieved for this input field");
+                }
+            }
+        }
+
+        T IJobOutputTracker.GetOutput<T>(IJob forJob, string prop)
+        {
+            if (string.IsNullOrEmpty(prop))
+            {
+                throw new InvalidOperationException("input property name must be supplied");
+            }
+
+            var internalJob = forJob as IJob_Internal;
+
+            var jd = _processInstance.JobDefinition;
+
+
+            // Check the definition contains an input field by that name
+            var outputDefField = jd.OutputFields.SingleOrDefault(f => f.Name == prop);
+
+            if (outputDefField == null)
+            {
+                throw new InvalidOperationException("No input field could be found for that input property");
+            }
+
+            // Check to see if the input has already been bundled with the job definition / already asked for and cached
+            var outputValueField = internalJob.OutputValueFields.SingleOrDefault(f => f.Name == prop);
+
+            if (outputValueField != null)
+            {
+                // The job already has that information
+                return (T)outputValueField.Value;
+            }
+            else
+            {
+                // The job doesn't have the value data for this field, this is where any retrieval of lazy-retrieve values would be done
+                // it's also where any sort of default value things could be done too
+
+                if (outputDefField.Config.HasDefaultValue)
+                {
+                    var value = outputDefField.Config.DefaultValue;
+
+                    // Need to shove this in as an input field so it's cached and ready to go
+
+                    internalJob.SetInputValue(outputDefField, value);
+
+                    return (T)value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("No value could be retrieved for this input field");
+                }
+            }
+        }
+
+        void IJobOutputTracker.SetOutput<T>(IJob forJob, T value, string prop)
+        {
+            if (string.IsNullOrEmpty(prop))
+            {
+                throw new InvalidOperationException("input property name must be supplied");
+            }
+
+            var internalJob = forJob as IJob_Internal;
+
+            var jd = _processInstance.JobDefinition;
+
+
+            // Check the definition contains an input field by that name
+            var outputDefField = jd.OutputFields.SingleOrDefault(f => f.Name == prop);
+
+            if (outputDefField == null)
+            {
+                throw new InvalidOperationException("No input field could be found for that input property");
+            }
+
+            // Check to see if the input has already been bundled with the job definition / already asked for and cached
+            var outputValueField = internalJob.OutputValueFields.SingleOrDefault(f => f.Name == prop);
+
+            if (outputValueField != null)
+            {
+                // The output for that has already been set, just overrite it
+                outputValueField.Value = value;
+            }
+            else
+            {
+                internalJob.SetOutputValue(outputDefField, value);
             }
         }
     }

@@ -163,6 +163,13 @@ namespace Distrib.Plugins
                         _pluginAssembly.AssemblyFilePath,
                         _pluginDescriptor.PluginTypeName));
 
+                    _appDomain.AssemblyResolve += (s, e) =>
+                        {
+                            return AppDomain.CurrentDomain.GetAssemblies()
+                                .DefaultIfEmpty(null)
+                                .SingleOrDefault(asm => asm.FullName == e.Name);
+                        };
+
                     // Create the remote bridge
                     _appDomainBridge = RemoteAppDomainBridge.FromAppDomain(_appDomain);
 

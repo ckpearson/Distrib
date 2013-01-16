@@ -133,11 +133,13 @@
     <Compile Include="Separation\IRemoteDomainBridge.cs" />
     <Compile Include="Separation\IRemoteDomainBridgeFactory.cs" />
     <Compile Include="Utils\LO.cs" />
+    <Compile Include="Utils\LockValue.cs" />
     <Compile Include="Utils\ObjectUtils.cs" />
     <Compile Include="Utils\PropertyUtils.cs" />
     <Compile Include="Utils\RemoteAppDomainBridge.cs" />
     <Compile Include="Utils\Res.cs" />
     <Compile Include="Utils\StringUtils.cs" />
+    <Compile Include="Utils\TrackWritten.cs" />
     <Compile Include="Utils\WriteOnce.cs" />
   </ItemGroup>
   <ItemGroup />

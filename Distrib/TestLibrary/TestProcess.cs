@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TestLibrary
@@ -29,6 +30,7 @@ namespace TestLibrary
         void IProcess.InitProcess()
         {
             // The process has been loaded into a host and is to initialise
+            
         }
 
         void IProcess.UninitProcess()
@@ -43,19 +45,71 @@ namespace TestLibrary
             {
                 if (_def == null)
                 {
-                    _def = new ProcessJobDefinition<IInput, IOutput>();
-
+                    _def = new ProcessJobDefinition<IInput, IOutput>("New test process job");
+                    _def.ConfigInput(i => i.SayHelloTo).DefaultValue = "bob";
+                    _def.ConfigOutput(o => o.Message).DefaultValue = "Something ought to go here really...";
                 }
 
                 return _def;
+            }
+        }
+
+        public void ProcessJob(IJob job)
+        {
+            var input = new NewTestProcessInput(job);
+
+            var output = new NewTestProcessOutput(job);
+
+           // output.Message = string.Format("Hello, {0}!", input.SayHelloTo);
+        }
+    }
+
+    [Serializable()]
+    public sealed class NewTestProcessInput : IInput
+    {
+        private readonly IJob _job;
+
+        public NewTestProcessInput(IJob job)
+        {
+            _job = job;
+        }
+
+        public string SayHelloTo
+        {
+            get
+            {
+                return _job.InputTracker.GetInput<string>(_job);
+            }
+        }
+    }
+
+    [Serializable()]
+    public sealed class NewTestProcessOutput : IOutput
+    {
+        private readonly IJob _job;
+
+        public NewTestProcessOutput(IJob job)
+        {
+            _job = job;
+        }
+
+        public string Message
+        {
+            get
+            {
+                return _job.OutputTracker.GetOutput<string>(_job);
+            }
+
+            set
+            {
+                _job.OutputTracker.SetOutput<string>(_job, value);
             }
         }
     }
 
     public interface IInput
     {
-        string SayHelloTo { get; set; }
-        DateTime Something { get; set; }
+        string SayHelloTo { get; }
     }
 
     public interface IOutput

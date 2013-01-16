@@ -157,7 +157,7 @@ namespace Distrib.Separation
                                         catch (Exception ex)
                                         {
                                             throw new ApplicationException(string.Format("Failed to get instance of type '{0}' from IOC for " +
-                                                "parameter '{1}", param.ParameterType.FullName, param.Name));
+                                                "parameter '{1}", param.ParameterType.FullName, param.Name), ex);
                                         }
                                     }
                                 }
@@ -220,7 +220,7 @@ namespace Distrib.Separation
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Failed to create non-separated instance");
+                throw new ApplicationException("Failed to create non-separated instance", ex);
             }
         }
     }
