@@ -31,8 +31,8 @@ namespace ProcessTester
 
             _mainViewModel = new MainViewModel();
             this.DataContext = _mainViewModel;
-            _mainViewModel.CurrentAssembly = new Model.PluginAssemblyModel(IOC.Kernel.Get<IPluginAssemblyFactory>()
-            .CreatePluginAssemblyFromPath(@"C:\Users\Clint\Desktop\distrib plugins\TestLibrary.dll"));
+            //_mainViewModel.CurrentAssembly = new Model.PluginAssemblyModel(IOC.Kernel.Get<IPluginAssemblyFactory>()
+            //.CreatePluginAssemblyFromPath(@"C:\Users\Clint\Desktop\distrib plugins\TestLibrary.dll"));
 
             this.Loaded += MainWindow_Loaded;
         }

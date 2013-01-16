@@ -4,6 +4,7 @@ using Distrib.Separation;
 using Distrib.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -181,7 +182,7 @@ namespace Distrib.Processes
             // Check to see if the input has already been bundled with the job definition / already asked for and cached
             var inputValueField = internalJob.InputValueFields.SingleOrDefault(f => f.Name == prop);
 
-            if (inputValueField != null)
+            if (inputValueField != null && inputValueField.Value != null)
             {
                 // The job already has that information
                 return (T)inputValueField.Value;

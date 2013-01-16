@@ -11,6 +11,108 @@ using System.Threading.Tasks;
 
 namespace TestLibrary
 {
+    [DistribProcessPlugin(
+        name: "My Distrib Process",
+        description: "My first distrib process",
+        version: 1.0,
+        author: "Me",
+        identifier: "Some unique identifier for this process")]
+    public sealed class MyProcess : MarshalByRefObject, IPlugin, IProcess
+    {
+        void IPlugin.InitialisePlugin(IPluginInteractionLink interactionLink)
+        {
+        }
+
+        void IPlugin.UninitialisePlugin(IPluginInteractionLink interactionLink)
+        {
+        }
+
+        void IProcess.InitProcess()
+        {
+        }
+
+        void IProcess.UninitProcess()
+        {
+        }
+
+        private ProcessJobDefinition<IMyProcessInput, IMyProcessOutput> _jobDefinition;
+        IJobDefinition IProcess.JobDefinition
+        {
+            get
+            {
+                if (_jobDefinition == null)
+                {
+                    _jobDefinition = new ProcessJobDefinition<IMyProcessInput, IMyProcessOutput>("My Process Job");
+                }
+
+                return _jobDefinition;
+            }
+        }
+
+        void IProcess.ProcessJob(IJob job)
+        {
+            var input = new MyProcessInput(job);
+            var output = new MyProcessOutput(job);
+
+            output.Result = input.x + input.y;
+        }
+    }
+
+    public interface IMyProcessInput
+    {
+        int x { get; }
+        int y { get; }
+    }
+
+    public sealed class MyProcessInput : IMyProcessInput
+    {
+        private readonly IJob _job;
+
+        public MyProcessInput(IJob job)
+        {
+            _job = job;
+        }
+
+        public int x
+        {
+            get { return _job.InputTracker.GetInput<int>(_job); }
+        }
+
+        public int y
+        {
+            get { return _job.InputTracker.GetInput<int>(_job); }
+        }
+    }
+
+    public sealed class MyProcessOutput : IMyProcessOutput
+    {
+        private readonly IJob _job;
+
+        public MyProcessOutput(IJob job)
+        {
+            _job = job;
+        }
+
+        public int Result
+        {
+            get
+            {
+                return _job.OutputTracker.GetOutput<int>(_job);
+            }
+            set
+            {
+                _job.OutputTracker.SetOutput<int>(_job, value);
+            }
+        }
+    }
+
+
+
+    public interface IMyProcessOutput
+    {
+        int Result { get; set; }
+    }
+
     [DistribProcessPlugin("invalid process",
         "An invalid process",
         1.0,
@@ -76,8 +178,6 @@ namespace TestLibrary
         public void ProcessJob(IJob job)
         {
             var input = new NewTestProcessInput(job);
-
-            Thread.Sleep(3000);
 
             var output = new NewTestProcessOutput(job);
 

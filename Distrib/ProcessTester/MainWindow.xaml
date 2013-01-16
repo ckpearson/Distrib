@@ -415,7 +415,10 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
 
-                            <Button Command="{Binding CurrentAssembly.PerformJobCommand}" Content="Perform Job" Margin="10" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <DockPanel Margin="10" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <TextBlock FontSize="14" FontWeight="Bold" Foreground="Red" HorizontalAlignment="Stretch" Width="280" DockPanel.Dock="Left" Margin="5" Text="{Binding CurrentAssembly.ProcessExecutionError}" TextWrapping="WrapWithOverflow"  />
+                                <Button DockPanel.Dock="Right" Margin="10" Command="{Binding CurrentAssembly.PerformJobCommand}" Content="Perform Job" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </DockPanel>
                         </Grid>
                     </GroupBox>
                     

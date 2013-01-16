@@ -182,6 +182,17 @@ namespace ProcessTester.Model
             }
         }
 
+        private string _processExecutionError;
+        public string ProcessExecutionError
+        {
+            get { return _processExecutionError; }
+            set
+            {
+                _processExecutionError = value;
+                PropChange("ProcessExecutionError");
+            }
+        }
+
         private RelayCommand _performJobCommand;
         public ICommand PerformJobCommand
         {
@@ -197,7 +208,35 @@ namespace ProcessTester.Model
                                     {
                                         lock (ProcessHost)
                                         {
-                                            ProcessOutputs = ProcessHost.ProcessJob(ProcessInputs).ToList().AsReadOnly();
+                                            ProcessExecutionError = null;
+
+                                            try
+                                            {
+                                                foreach (var input in ProcessInputs)
+                                                {
+                                                    if (input.Value != null)
+                                                    {
+                                                        try
+                                                        {
+                                                            input.Value = Convert.ChangeType(input.Value, input.Type);
+                                                        }
+                                                        catch (Exception)
+                                                        {
+                                                            ProcessExecutionError =
+                                                                string.Format("Could not convert '{0}' to '{1}' for input '{2}'",
+                                                                input.Value,
+                                                                input.Type.Name,
+                                                                input.Name);
+                                                            return;
+                                                        }
+                                                    }
+                                                }
+                                                ProcessOutputs = ProcessHost.ProcessJob(ProcessInputs).ToList().AsReadOnly();
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                ProcessExecutionError = ex.Message;
+                                            }
                                         }
                                     }
                                 });
