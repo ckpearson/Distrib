@@ -182,6 +182,7 @@ namespace Distrib.Processes
 
         private void _buildInitialFields()
         {
+            // Input need only be getter on the interface, output needs to be getter & setter
             var fields = (_inputInterfaceType.GetProperties()
                 .Where(p => p.CanRead && (p.PropertyType.IsClass || p.PropertyType.IsValueType) && p.PropertyType.IsSerializable)
                 .Select(p => new ProcessJobField(p.PropertyType, p.Name, FieldMode.Input))
