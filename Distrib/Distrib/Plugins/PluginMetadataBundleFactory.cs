@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins
 {
-    public sealed class PluginMetadataBundleFactory : MarshalByRefObject, IPluginMetadataBundleFactory
+    public sealed class PluginMetadataBundleFactory : CrossAppDomainObject, IPluginMetadataBundleFactory
     {
         private IKernel _kernel;
 

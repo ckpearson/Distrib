@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Separation
 {
-    public sealed class RemoteDomainBridge : MarshalByRefObject, IRemoteDomainBridge
+    public sealed class RemoteDomainBridge : CrossAppDomainObject, IRemoteDomainBridge
     {
         public RemoteDomainBridge()
         {

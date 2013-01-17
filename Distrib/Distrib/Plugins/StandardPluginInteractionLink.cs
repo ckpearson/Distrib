@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins
 {
-    internal sealed class StandardPluginInteractionLink : MarshalByRefObject, IPluginInteractionLink
+    internal sealed class StandardPluginInteractionLink : CrossAppDomainObject, IPluginInteractionLink
     {
         private readonly IPluginDescriptor _pluginDescriptor;
         private readonly IPlugin _pluginRawInstance;

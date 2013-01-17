@@ -193,6 +193,7 @@ namespace Distrib.Separation
                             var domain = AppDomain.CreateDomain(Guid.NewGuid().ToString());
                             var bridge = _bridgeFactory.ForAppDomain(domain);
                             bridge.LoadAssembly(type.Assembly.Location);
+                            domain.InitializeLifetimeService();
                             return bridge.CreateInstance(t.FullName, a);
                         });
             }

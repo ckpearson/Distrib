@@ -11,7 +11,7 @@ namespace Distrib.Plugins
     /// <summary>
     /// Factory class for creating plugin assemblies
     /// </summary>
-    public sealed class PluginAssemblyFactory : MarshalByRefObject, IPluginAssemblyFactory
+    public sealed class PluginAssemblyFactory : CrossAppDomainObject, IPluginAssemblyFactory
     {
         private IKernel _kernel;
 

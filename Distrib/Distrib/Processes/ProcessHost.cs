@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Processes
 {
-    public sealed class ProcessHost : MarshalByRefObject, IProcessHost, IJobInputTracker, IJobOutputTracker
+    public sealed class ProcessHost : CrossAppDomainObject, IProcessHost, IJobInputTracker, IJobOutputTracker
     {
         private readonly IPluginDescriptor _descriptor;
         private readonly IPluginAssemblyFactory _assemblyFactory;

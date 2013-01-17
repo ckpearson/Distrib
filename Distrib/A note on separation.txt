@@ -44,11 +44,11 @@ inside that AppDomain and no fussy messing around is required (think of Java's t
 
 On the subject of separation and accessibility of types:
 
-1. Factories should be MarshalByRef
+1. Factories should be CrossAppDomainObject
 	For the most part factories are bound as singletons inside the AppDomain the IOC container resides, because they should hold no state themselves
 	it's safe to have them Marshalable purely for the sake of providing instances.
 
-2. Instances should be MarshalByRef where they pass / are interacted with across boundaries
+2. Instances should be CrossAppDomainObject where they pass / are interacted with across boundaries
 	Some instances may be pulled across the boundaries (e.g. IPluginAssembly, IPluginAssemblyManager) and should be marshalable.
 
 	Even when instances aren't likely to be accessed this way, ensuring they are marshalable means they can be separated with ISeparateInstanceCreator.

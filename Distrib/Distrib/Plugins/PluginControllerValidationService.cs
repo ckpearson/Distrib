@@ -22,7 +22,7 @@ namespace Distrib.Plugins
                     // Must be a class
                     .If(() => !controllerType.IsClass, PluginControllerValidationResult.ControllerTypeNotAClass)
                     // Must be marshalable
-                    .ThenIf(() => controllerType.BaseType == null || controllerType.BaseType != typeof(MarshalByRefObject),
+                    .ThenIf(() => controllerType.BaseType == null || controllerType.BaseType != typeof(CrossAppDomainObject),
                         PluginControllerValidationResult.ControllerTypeNotMarshalable)
                     // Must implement the core controller interface
                     .ThenIf(() => controllerType.GetInterface(typeof(IPluginController).FullName) == null,

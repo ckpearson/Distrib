@@ -40,7 +40,7 @@ namespace Distrib.Processes
         IJobOutputTracker OutputTracker { get; }
     }
 
-    public sealed class ProcessJob : MarshalByRefObject, IJob, IJob_Internal
+    public sealed class ProcessJob : CrossAppDomainObject, IJob, IJob_Internal
     {
         private readonly IJobInputTracker _inputTracker;
         private readonly IJobOutputTracker _outputTracker;

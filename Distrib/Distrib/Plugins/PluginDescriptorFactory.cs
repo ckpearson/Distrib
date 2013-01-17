@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins
 {
-    public sealed class PluginDescriptorFactory : MarshalByRefObject, IPluginDescriptorFactory
+    public sealed class PluginDescriptorFactory : CrossAppDomainObject, IPluginDescriptorFactory
     {
         private readonly IKernel _kernel;
 

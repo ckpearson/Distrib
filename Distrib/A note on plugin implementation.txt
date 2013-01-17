@@ -2,7 +2,7 @@ A note on plugin implementation:
 
 All Plugins must adhere to the following criteria:
 
-1. They must derive from MarshalByRefObject
+1. They must derive from CrossAppDomainObject
 2. They must implement the IPlugin interface for core plugin interaction
 3. They must be decorated with the subsystem-appropriate plugin attribute
 	> This provides the core plugin details (name, version, etc)

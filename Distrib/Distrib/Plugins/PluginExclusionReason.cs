@@ -29,9 +29,9 @@
         CorePluginInterfaceNotImplemented,
 
         /// <summary>
-        /// The plugin has been excluded because the type isn't MarshalByRef making the separation not possible
+        /// The plugin has been excluded because the type isn't CrossAppDomainObject making the separation not possible
         /// </summary>
-        TypeNotMarshalable,
+        TypeNotCrossAppDomainObject,
 
         /// <summary>
         /// The plugin has been excluded because the controller for the plugin failed validation

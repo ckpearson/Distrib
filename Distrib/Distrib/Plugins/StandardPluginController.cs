@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins
 {
-    public sealed class StandardPluginController : MarshalByRefObject, IPluginController
+    public sealed class StandardPluginController : CrossAppDomainObject, IPluginController
     {
         private WriteOnce<RemoteAppDomainBridge> _appDomainBridge =
             new WriteOnce<RemoteAppDomainBridge>(null);

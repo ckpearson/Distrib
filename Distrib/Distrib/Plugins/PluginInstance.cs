@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins
 {
-    public sealed class PluginInstance : MarshalByRefObject, IPluginInstance
+    public sealed class PluginInstance : CrossAppDomainObject, IPluginInstance
     {
         private readonly IPluginDescriptor _pluginDescriptor;
         private readonly IPluginAssembly _pluginAssembly;

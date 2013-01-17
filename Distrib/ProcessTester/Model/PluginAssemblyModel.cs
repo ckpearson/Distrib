@@ -126,7 +126,15 @@ namespace ProcessTester.Model
                                     }
                                     else
                                     {
-                                        _initResult = _assembly.Initialise();
+                                        try
+                                        {
+                                            _initResult = _assembly.Initialise();
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            if (_assembly.IsInitialised)
+                                                _assembly.Unitialise();
+                                        }
                                         PropChange("Plugins");
                                     }
 

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins
 {
-    public sealed class PluginAssemblyManager : MarshalByRefObject, IPluginAssemblyManager
+    public sealed class PluginAssemblyManager : CrossAppDomainObject, IPluginAssemblyManager
     {
         private readonly string _assemblyPath;
 
@@ -170,7 +170,7 @@ namespace Distrib.Plugins
 
                 var t = _assembly.GetType(descriptor.PluginTypeName);
 
-                return (t.BaseType != null && t.BaseType.Equals(typeof(MarshalByRefObject)));
+                return (t.BaseType != null && t.BaseType.Equals(typeof(CrossAppDomainObject)));
             }
             catch (Exception ex)
             {

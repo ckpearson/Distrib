@@ -35,7 +35,7 @@ namespace Distrib.Plugins
                                 .AsReadOnly()))
                     // Check the plugin is marshalable
                     .ThenIf(() => !assemblyManager.PluginTypeIsMarshalable(descriptor),
-                        new Tuple<PluginExclusionReason, object>(PluginExclusionReason.TypeNotMarshalable, null))
+                        new Tuple<PluginExclusionReason, object>(PluginExclusionReason.TypeNotCrossAppDomainObject, null))
                     // Check it implements the IPlugin interface
                     .ThenIf(() => !assemblyManager.PluginTypeImplementsCorePluginInterface(descriptor),
                         new Tuple<PluginExclusionReason,object>(PluginExclusionReason.CorePluginInterfaceNotImplemented, null))

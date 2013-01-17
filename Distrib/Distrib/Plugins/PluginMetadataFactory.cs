@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins
 {
-    public sealed class PluginMetadataFactory : MarshalByRefObject, IPluginMetadataFactory
+    public sealed class PluginMetadataFactory : CrossAppDomainObject, IPluginMetadataFactory
     {
         private readonly IKernel _kernel;
 

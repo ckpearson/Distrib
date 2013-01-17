@@ -1,4 +1,5 @@
-﻿using Distrib.Plugins;
+﻿using Distrib;
+using Distrib.Plugins;
 using Distrib.Processes;
 using Distrib.Processes.Plugin;
 using Distrib.Utils;
@@ -17,7 +18,7 @@ namespace TestLibrary
         version: 1.0,
         author: "Me",
         identifier: "Some unique identifier for this process")]
-    public sealed class MyProcess : MarshalByRefObject, IPlugin, IProcess
+    public sealed class MyProcess : CrossAppDomainObject, IPlugin, IProcess
     {
         void IPlugin.InitialisePlugin(IPluginInteractionLink interactionLink)
         {
@@ -43,6 +44,13 @@ namespace TestLibrary
                 if (_jobDefinition == null)
                 {
                     _jobDefinition = new ProcessJobDefinition<IMyProcessInput, IMyProcessOutput>("My Process Job");
+
+                    _jobDefinition.ConfigInput(i => i.x).DefaultValue = 2;
+                    _jobDefinition.ConfigInput(i => i.y).DefaultValue = 3;
+
+                    _jobDefinition.ConfigOutput(o => o.Result).DefaultValue =
+                        _jobDefinition.ConfigInput(i => i.x).DefaultValue +
+                        _jobDefinition.ConfigInput(i => i.y).DefaultValue;
                 }
 
                 return _jobDefinition;
@@ -84,6 +92,12 @@ namespace TestLibrary
         }
     }
 
+
+    public interface IMyProcessOutput
+    {
+        int Result { get; set; }
+    }
+
     public sealed class MyProcessOutput : IMyProcessOutput
     {
         private readonly IJob _job;
@@ -106,12 +120,6 @@ namespace TestLibrary
         }
     }
 
-
-
-    public interface IMyProcessOutput
-    {
-        int Result { get; set; }
-    }
 
     [DistribProcessPlugin("invalid process",
         "An invalid process",
@@ -137,7 +145,7 @@ namespace TestLibrary
         1.0,
         "Clint Pearson",
         "identifier")]
-    public class NewTestProcess : MarshalByRefObject, IPlugin, IProcess
+    public class NewTestProcess : CrossAppDomainObject, IPlugin, IProcess
     {
         void IPlugin.InitialisePlugin(IPluginInteractionLink interactionLink)
         {

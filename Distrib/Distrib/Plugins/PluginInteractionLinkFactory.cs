@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins
 {
-    public sealed class PluginInteractionLinkFactory : MarshalByRefObject, IPluginInteractionLinkFactory
+    public sealed class PluginInteractionLinkFactory : CrossAppDomainObject, IPluginInteractionLinkFactory
     {
         public IPluginInteractionLink CreateInteractionLink(IPluginDescriptor pluginDescriptor, 
             IPlugin pluginRawInstance, IPluginController pluginController, IPluginInstance pluginManagedInstance)
