@@ -35,6 +35,13 @@ namespace Distrib.Processes
         IEnumerable<IProcessJobField> ProcessJob(IEnumerable<IProcessJobField> inputValues = null);
 
         /// <summary>
+        /// Create and process a job using the given input values asynchronously
+        /// </summary>
+        /// <param name="inputValues">The input values to give to the job</param>
+        /// <returns>The task to invoke</returns>
+        Task<IEnumerable<IProcessJobField>> ProcessJobAsync(IEnumerable<IProcessJobField> inputValues = null);
+
+        /// <summary>
         /// Gets the input definition fields of the job
         /// </summary>
         IReadOnlyList<IProcessJobField> InputFields { get; }

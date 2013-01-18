@@ -364,5 +364,14 @@ namespace Distrib.Processes
         {
             get { return _descriptor; }
         }
+
+
+        public Task<IEnumerable<IProcessJobField>> ProcessJobAsync(IEnumerable<IProcessJobField> inputValues = null)
+        {
+            return Task<IEnumerable<IProcessJobField>>.Factory.StartNew(() =>
+                {
+                    return ProcessJob(inputValues);
+                });
+        }
     }
 }
