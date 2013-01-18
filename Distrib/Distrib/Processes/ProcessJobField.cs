@@ -86,7 +86,14 @@ namespace Distrib.Processes
         {
             get
             {
-                return (T)base.Value;
+                if (base.Value == null)
+                {
+                    return default(T);
+                }
+                else
+                {
+                    return (T)base.Value;
+                }
             }
             set
             {

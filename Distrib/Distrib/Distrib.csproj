@@ -54,7 +54,6 @@
     <Compile Include="Plugins\IPluginInstanceFactory.cs" />
     <Compile Include="Plugins\IPluginInteractionLink.cs" />
     <Compile Include="Plugins\IPluginInteractionLinkFactory.cs" />
-    <Compile Include="Plugins\IPluginInteractionLink_internal.cs" />
     <Compile Include="Plugins\IPluginMetadataBundleCheckService.cs" />
     <Compile Include="Plugins\IPluginAssembly.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
@@ -115,7 +114,11 @@
     <Compile Include="Plugins\PluginUtils.cs" />
     <Compile Include="Plugins\StandardPluginController.cs" />
     <Compile Include="Plugins\StandardPluginInteractionLink.cs" />
+    <Compile Include="Processes\DeferredValueCacheMode.cs" />
+    <Compile Include="Processes\DeferredValueProvider.cs" />
     <Compile Include="Processes\FieldMode.cs" />
+    <Compile Include="Processes\IDeferredValueProvider.cs" />
+    <Compile Include="Processes\IDeferredValueSource.cs" />
     <Compile Include="Processes\IJob.cs" />
     <Compile Include="Processes\IJobDefinition.cs" />
     <Compile Include="Processes\IJobDescriptor.cs" />

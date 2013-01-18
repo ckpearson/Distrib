@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Distrib.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,15 @@ namespace Distrib.Processes
     {
         object DefaultValue { get; set; }
         bool HasDefaultValue { get; }
+
+        IDeferredValueProvider DeferredValueProvider { get; set; }
+        bool HasDeferredValueProvider { get; }
     }
 
     public interface IProcessJobFieldConfig<T> : IProcessJobFieldConfig
     {
         new T DefaultValue { get; set; }
+        new IDeferredValueProvider<T> DeferredValueProvider { get; set; }
     }
 
     internal interface IProcessJobFieldConfig_Internal : IProcessJobFieldConfig

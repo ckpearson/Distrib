@@ -28,7 +28,7 @@ namespace Distrib.Plugins
 
         private readonly IPluginInteractionLinkFactory _pluginInteractionLinkFactory;
 
-        private IPluginInteractionLink_internal _pluginInteractionLink;
+        private IPluginInteractionLink _pluginInteractionLink;
 
         public PluginInstance(IPluginDescriptor descriptor, IPluginAssembly pluginAssembly, IPluginInteractionLinkFactory
             pluginInteractionLinkFactory)
@@ -132,7 +132,9 @@ namespace Distrib.Plugins
                         // Get the controller to initialise the plugin instance
                         _pluginController.Value.InitialiseInstance();
 
-                        _pluginInteractionLink = (IPluginInteractionLink_internal)_pluginController.Value.InteractionLink;
+                        // Pull out the interaction link so it can be checked / interacted with outside of the
+                        // controller
+                        _pluginInteractionLink = _pluginController.Value.InteractionLink;
                     }
 
                     return (T)_underlyingInstance.Value;

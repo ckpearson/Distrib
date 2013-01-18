@@ -50,5 +50,7 @@ namespace Distrib.Processes
         /// Gets the plugin descriptor for the process
         /// </summary>
         IPluginDescriptor PluginDescriptor { get; }
+
+        IReadOnlyList<string> RegisteredPluginDependencyAssemblies { get; }
     }
 }

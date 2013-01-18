@@ -161,7 +161,6 @@ namespace Distrib.Processes
             }
         }
 
-        [DebuggerHidden()]
         T IJobInputTracker.GetInput<T>(IJob forJob, string prop)
         {
             if (string.IsNullOrEmpty(prop))
@@ -207,8 +206,15 @@ namespace Distrib.Processes
                 }
                 else
                 {
-                    throw new InvalidOperationException(string.Format("No value could be found for input '{0}' and it has no default",
-                        inputDefField.Name));
+                    if (!inputDefField.Config.HasDeferredValueProvider)
+                    {
+                        throw new InvalidOperationException(string.Format("No value could be found for input '{0}' and it has no default",
+                            inputDefField.Name));
+                    }
+                    else
+                    {
+                        return (T)inputDefField.Config.DeferredValueProvider.RetrieveValue();
+                    }
                 }
             }
         }
@@ -381,6 +387,23 @@ namespace Distrib.Processes
                 {
                     return ProcessJob(inputValues);
                 });
+        }
+
+
+        public IReadOnlyList<string> RegisteredPluginDependencyAssemblies
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    if (!IsInitialised)
+                    {
+                        return null;
+                    }
+
+                    return _pluginInstance.DeclaredAssemblyDependencies;
+                }
+            }
         }
     }
 }

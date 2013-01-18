@@ -47,7 +47,8 @@ namespace TestLibrary
                 if (_def == null)
                 {
                     _def = new ProcessJobDefinition<IAddInput, IAddOutput>("Add int job");
-                    _def.ConfigInput(i => i.X).DefaultValue = 0;
+                    _def.ConfigInput(i => i.X)
+                        .DeferredValueProvider = new DeferredValueProvider<int, XInputProvider>(DeferredValueCacheMode.ReadOnceAndCache);
                     _def.ConfigInput(i => i.Y).DefaultValue = 0;
                 }
 
@@ -60,7 +61,22 @@ namespace TestLibrary
             var input = new AddIntegerInput(job);
             var output = new AddIntegerOutput(job);
 
+            var a = input.X;
+            a = input.X;
+            a = input.X;
+
             output.Result = MathLib.Add(input.X, input.Y);
+        }
+    }
+
+    public sealed class XInputProvider : CrossAppDomainObject, IDeferredValueSource<int>
+    {
+        public XInputProvider() { }
+
+        public int ProvideValue()
+        {
+            Thread.Sleep(3000);
+            return 5;
         }
     }
 

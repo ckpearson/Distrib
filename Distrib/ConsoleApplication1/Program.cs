@@ -7,6 +7,7 @@ using Ninject.Modules;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -63,7 +64,7 @@ namespace ConsoleApplication1
                 if (fpp == null) throw new ArgumentNullException();
 
                 var procHost = kernel.Get<IProcessHostFactory>()
-                    .CreateHostFromPluginSeparated(fpp);
+                    .CreateHostFromPlugin(fpp);
 
                 procHost.Initialise();
 
@@ -71,8 +72,13 @@ namespace ConsoleApplication1
 
                 inputFields[0].Value = "Clint";
 
-
+                var sw = new Stopwatch();
+                sw.Start();
                 var outputs = procHost.ProcessJob(inputFields);
+                sw.Stop();
+
+                Console.WriteLine("Process took '{0}' to execute", sw.Elapsed);
+
 
                 procHost.Unitialise();
             }
@@ -80,6 +86,8 @@ namespace ConsoleApplication1
             {
                 throw;
             }
+
+            Console.ReadLine();
         }
 
         private void RunProcessTest()

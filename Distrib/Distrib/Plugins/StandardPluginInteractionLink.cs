@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace Distrib.Plugins
 {
     public sealed class StandardPluginInteractionLink : CrossAppDomainObject, IPluginInteractionLink
-        , IPluginInteractionLink_internal
     {
         private readonly IPluginDescriptor _pluginDescriptor;
         private readonly IPlugin _pluginRawInstance;

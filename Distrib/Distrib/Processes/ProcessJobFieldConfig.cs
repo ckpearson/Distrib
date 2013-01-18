@@ -12,40 +12,69 @@ namespace Distrib.Processes
     {
         protected readonly object _lock = new object();
 
-        private LockValue<TrackWritten<object>> _defaultValue = new LockValue<TrackWritten<object>>
-            (new TrackWritten<object>(null));
+        private LockValue<object> _defaultValue = new LockValue<object>(null);
 
         public object DefaultValue
         {
             get
             {
-                return _defaultValue.Value.Value;
+                return _defaultValue.Value;
             }
             set
             {
-                _defaultValue.Value.Value = value;
+                _defaultValue.Value = value;
             }
         }
 
         public bool HasDefaultValue
         {
-            get { return _defaultValue.Value.Written; }
+            get { return _defaultValue.Value != null; }
         }
 
         public void Adopt(IProcessJobFieldConfig config)
         {
             this.DefaultValue = config.DefaultValue;
+            this.DeferredValueProvider = config.DeferredValueProvider;
+        }
+
+        private LockValue<IDeferredValueProvider> _deferredValueProvider = new LockValue<IDeferredValueProvider>(null);
+        public IDeferredValueProvider DeferredValueProvider
+        {
+            get { return _deferredValueProvider.Value; }
+            set
+            {
+                _deferredValueProvider.Value = value;
+            }
+        }
+
+
+        public bool HasDeferredValueProvider
+        {
+            get { return _deferredValueProvider.Value != null; }
         }
     }
 
     [Serializable()]
     internal sealed class ProcessJobFieldConfig<T> : ProcessJobFieldConfig, IProcessJobFieldConfig<T>
     {
+        public new IDeferredValueProvider<T> DeferredValueProvider
+        {
+            get { return (IDeferredValueProvider<T>)base.DeferredValueProvider; }
+            set { base.DeferredValueProvider = value; }
+        }
+
         public new T DefaultValue
         {
             get
             {
-                return (T)base.DefaultValue;
+                if (!base.HasDefaultValue)
+                {
+                    return default(T);
+                }
+                else
+                {
+                    return (T)base.DefaultValue;
+                }
             }
             set
             {
