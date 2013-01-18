@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Distrib.Processes
 {
+    /// <summary>
+    /// Default process host factory
+    /// </summary>
     public sealed class ProcessHostFactory : IProcessHostFactory
     {
         private readonly IKernel _kernel;

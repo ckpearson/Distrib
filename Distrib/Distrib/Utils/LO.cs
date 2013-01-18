@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Distrib.Utils
 {
-    public sealed class LO<T>
+    public sealed class LO<T> : IDisposable
     {
         private T m_value = default(T);
         private ReaderWriterLockSlim m_lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
@@ -27,10 +27,6 @@ namespace Distrib.Utils
                     m_lock.EnterReadLock();
                     bRead = true;
                     return m_value;
-                }
-                catch (Exception ex)
-                {
-                    throw new ApplicationException("Failed to get value", ex);
                 }
                 finally
                 {
@@ -67,6 +63,14 @@ namespace Distrib.Utils
         public static implicit operator T(LO<T> lockObj)
         {
             return lockObj.Value;
+        }
+
+        public void Dispose()
+        {
+            if (m_lock != null)
+            {
+                m_lock.Dispose();
+            }
         }
     }
 }

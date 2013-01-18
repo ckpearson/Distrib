@@ -5,6 +5,7 @@ using Distrib.Processes.Plugin;
 using Distrib.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -12,20 +13,24 @@ using System.Threading.Tasks;
 
 namespace TestLibrary
 {
-    [DistribProcessPlugin(
-        name: "My Distrib Process",
-        description: "My first distrib process",
-        version: 1.0,
-        author: "Me",
-        identifier: "Some unique identifier for this process")]
-    public sealed class MyProcess : CrossAppDomainObject, IPlugin, IProcess
+    [DistribProcessPlugin("Add integer process",
+        "Adds two integers together",
+        1.0,
+        "Clint Pearson",
+        "AddIntProc")]
+    public sealed class AddIntegerProcess : CrossAppDomainObject, IPlugin, IProcess
     {
         void IPlugin.InitialisePlugin(IPluginInteractionLink interactionLink)
         {
+            AppDomain.CurrentDomain.AssemblyResolve += (s, e) =>
+                {
+                    return null;
+                };
         }
 
         void IPlugin.UninitialisePlugin(IPluginInteractionLink interactionLink)
         {
+
         }
 
         void IProcess.InitProcess()
@@ -36,73 +41,67 @@ namespace TestLibrary
         {
         }
 
-        private ProcessJobDefinition<IMyProcessInput, IMyProcessOutput> _jobDefinition;
+        private IJobDefinition<IAddInput, IAddOutput> _def;
         IJobDefinition IProcess.JobDefinition
         {
             get
             {
-                if (_jobDefinition == null)
+                if (_def == null)
                 {
-                    _jobDefinition = new ProcessJobDefinition<IMyProcessInput, IMyProcessOutput>("My Process Job");
-
-                    _jobDefinition.ConfigInput(i => i.x).DefaultValue = 2;
-                    _jobDefinition.ConfigInput(i => i.y).DefaultValue = 3;
-
-                    _jobDefinition.ConfigOutput(o => o.Result).DefaultValue =
-                        _jobDefinition.ConfigInput(i => i.x).DefaultValue +
-                        _jobDefinition.ConfigInput(i => i.y).DefaultValue;
+                    _def = new ProcessJobDefinition<IAddInput, IAddOutput>("Add int job");
+                    _def.ConfigInput(i => i.X).DefaultValue = 0;
+                    _def.ConfigInput(i => i.Y).DefaultValue = 0;
                 }
 
-                return _jobDefinition;
+                return _def;
             }
         }
 
         void IProcess.ProcessJob(IJob job)
         {
-            var input = new MyProcessInput(job);
-            var output = new MyProcessOutput(job);
+            var input = new AddIntegerInput(job);
+            var output = new AddIntegerOutput(job);
 
-            output.Result = input.x + input.y;
+            output.Result = input.X + input.Y;
         }
     }
 
-    public interface IMyProcessInput
+    public interface IAddInput
     {
-        int x { get; }
-        int y { get; }
+        int X { get; }
+        int Y { get; }
     }
 
-    public sealed class MyProcessInput : IMyProcessInput
-    {
-        private readonly IJob _job;
-
-        public MyProcessInput(IJob job)
-        {
-            _job = job;
-        }
-
-        public int x
-        {
-            get { return _job.InputTracker.GetInput<int>(_job); }
-        }
-
-        public int y
-        {
-            get { return _job.InputTracker.GetInput<int>(_job); }
-        }
-    }
-
-
-    public interface IMyProcessOutput
+    public interface IAddOutput
     {
         int Result { get; set; }
     }
 
-    public sealed class MyProcessOutput : IMyProcessOutput
+    public sealed class AddIntegerInput : IAddInput
+    {
+        private readonly IJob _job;
+        
+        public AddIntegerInput(IJob job)
+        {
+            _job = job;
+        }
+
+        public int X
+        {
+            get { return _job.InputTracker.GetInput<int>(_job); }
+        }
+
+        public int Y
+        {
+            get { return _job.InputTracker.GetInput<int>(_job); }
+        }
+    }
+
+    public sealed class AddIntegerOutput : IAddOutput
     {
         private readonly IJob _job;
 
-        public MyProcessOutput(IJob job)
+        public AddIntegerOutput(IJob job)
         {
             _job = job;
         }
@@ -121,128 +120,4 @@ namespace TestLibrary
     }
 
 
-    [DistribProcessPlugin("invalid process",
-        "An invalid process",
-        1.0,
-        "Clint Pearson",
-        "invalid")]
-    public class InvalidProcess : IPlugin
-    {
-
-        public void InitialisePlugin(IPluginInteractionLink interactionLink)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UninitialisePlugin(IPluginInteractionLink interactionLink)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    [DistribProcessPlugin("New test process",
-        "new process for the new plugin system",
-        1.0,
-        "Clint Pearson",
-        "identifier")]
-    public class NewTestProcess : CrossAppDomainObject, IPlugin, IProcess
-    {
-        void IPlugin.InitialisePlugin(IPluginInteractionLink interactionLink)
-        {
-        }
-
-        void IPlugin.UninitialisePlugin(IPluginInteractionLink interactionLink)
-        {
-            
-        }
-
-        void IProcess.InitProcess()
-        {
-            // The process has been loaded into a host and is to initialise
-            
-        }
-
-        void IProcess.UninitProcess()
-        {
-            // The process is about to be unloaded by a host and is to unitialise
-        }
-
-        private ProcessJobDefinition<IInput, IOutput> _def;
-        IJobDefinition IProcess.JobDefinition
-        {
-            get
-            {
-                if (_def == null)
-                {
-                    _def = new ProcessJobDefinition<IInput, IOutput>("New test process job");
-
-                    _def.ConfigInput(i => i.SayHelloTo).DefaultValue = "Bob";
-                }
-
-                return _def;
-            }
-        }
-
-        public void ProcessJob(IJob job)
-        {
-            var input = new NewTestProcessInput(job);
-
-            var output = new NewTestProcessOutput(job);
-
-            output.Message = string.Format("Hello, {0}!", input.SayHelloTo);
-        }
-    }
-
-    [Serializable()]
-    public sealed class NewTestProcessInput : IInput
-    {
-        private readonly IJob _job;
-
-        public NewTestProcessInput(IJob job)
-        {
-            _job = job;
-        }
-
-        public string SayHelloTo
-        {
-            get
-            {
-                return _job.InputTracker.GetInput<string>(_job);
-            }
-        }
-    }
-
-    [Serializable()]
-    public sealed class NewTestProcessOutput : IOutput
-    {
-        private readonly IJob _job;
-
-        public NewTestProcessOutput(IJob job)
-        {
-            _job = job;
-        }
-
-        public string Message
-        {
-            get
-            {
-                return _job.OutputTracker.GetOutput<string>(_job);
-            }
-
-            set
-            {
-                _job.OutputTracker.SetOutput<string>(_job, value);
-            }
-        }
-    }
-
-    public interface IInput
-    {
-        string SayHelloTo { get; }
-    }
-
-    public interface IOutput
-    {
-        string Message { get; set; }
-    }
 }

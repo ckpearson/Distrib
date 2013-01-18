@@ -27,10 +27,14 @@ namespace Distrib.Processes
 
         private IProcess _processInstance;
 
-        public ProcessHost([IOC(false)] IPluginDescriptor descriptor, [IOC(true)] IPluginAssemblyFactory assemblyFactory)
+        private readonly IJobFactory _jobFactory;
+
+        public ProcessHost([IOC(false)] IPluginDescriptor descriptor, [IOC(true)] IPluginAssemblyFactory assemblyFactory,
+            [IOC(true)] IJobFactory jobFactory)
         {
             if (descriptor == null) throw new ArgumentNullException("Descriptor must be supplied");
             if (assemblyFactory == null) throw new ArgumentNullException("Assembly factory must be supplied");
+            if (jobFactory == null) throw Ex.ArgNull(() => jobFactory);
 
             try
             {
@@ -46,6 +50,7 @@ namespace Distrib.Processes
 
                 _descriptor = descriptor;
                 _assemblyFactory = assemblyFactory;
+                _jobFactory = jobFactory;
             }
             catch (Exception ex)
             {
@@ -145,20 +150,14 @@ namespace Distrib.Processes
         {
             get
             {
-                try
+                lock (_lock)
                 {
-                    lock (_lock)
-                    {
-                        return _isInitialised;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new ApplicationException("Failed to determine if initialised", ex);
+                    return _isInitialised;
                 }
             }
         }
 
+        [DebuggerHidden()]
         T IJobInputTracker.GetInput<T>(IJob forJob, string prop)
         {
             if (string.IsNullOrEmpty(prop))
@@ -295,9 +294,9 @@ namespace Distrib.Processes
         }
 
 
-        public IEnumerable<ProcessJobField> ProcessJob(IEnumerable<ProcessJobField> inputFields = null)
+        public IEnumerable<IProcessJobField> ProcessJob(IEnumerable<IProcessJobField> inputFields = null)
         {
-            IJob job = new ProcessJob(this, this, _processInstance.JobDefinition);
+            IJob job = _jobFactory.CreateJob(this, this, _processInstance.JobDefinition);
             var jobInternal = ((IJob_Internal)job);
 
             if (inputFields != null)
@@ -310,13 +309,11 @@ namespace Distrib.Processes
 
             _processInstance.ProcessJob(job);
 
-           
-
             var outValues = jobInternal.OutputValueFields;
 
             if (outValues == null)
             {
-                outValues = new List<ProcessJobField>();
+                outValues = new List<IProcessJobField>();
             }
 
             foreach (var defOutField in jobInternal.JobDefinition.OutputFields)
@@ -347,12 +344,21 @@ namespace Distrib.Processes
             return jobInternal.OutputValueFields;
         }
 
-
-        public IReadOnlyList<ProcessJobField> GetInputFields()
+        public IReadOnlyList<IProcessJobField> InputFields
         {
-            return _processInstance.JobDefinition.InputFields;
-        }
+            get
+            {
+                lock (_lock)
+                {
+                    if (!_isInitialised)
+                    {
+                        return null;
+                    }
 
+                    return _processInstance.JobDefinition.InputFields;
+                }
+            }
+        }
 
         public IPluginDescriptor PluginDescriptor
         {

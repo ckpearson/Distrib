@@ -65,7 +65,7 @@ namespace ConsoleApplication1
 
                 procHost.Initialise();
 
-                var inputFields = procHost.GetInputFields();
+                var inputFields = procHost.InputFields;
 
                 inputFields[0].Value = "Clint";
 

@@ -147,8 +147,8 @@ namespace ProcessTester.Model
             }
         }
 
-        private IReadOnlyList<ProcessJobField> _processInputs;
-        public IReadOnlyList<ProcessJobField> ProcessInputs
+        private IReadOnlyList<IProcessJobField> _processInputs;
+        public IReadOnlyList<IProcessJobField> ProcessInputs
         {
             get
             {
@@ -165,7 +165,7 @@ namespace ProcessTester.Model
                         return null;
                     }
 
-                    _processInputs = ProcessHost.GetInputFields();
+                    _processInputs = ProcessHost.InputFields;
                     foreach (var input in _processInputs)
                     {
                         if (input.Config.HasDefaultValue)
@@ -179,8 +179,8 @@ namespace ProcessTester.Model
             }
         }
 
-        private IReadOnlyList<ProcessJobField> _processOutputs;
-        public IReadOnlyList<ProcessJobField> ProcessOutputs
+        private IReadOnlyList<IProcessJobField> _processOutputs;
+        public IReadOnlyList<IProcessJobField> ProcessOutputs
         {
             get { return _processOutputs; }
             set

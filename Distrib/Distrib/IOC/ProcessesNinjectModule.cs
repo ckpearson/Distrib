@@ -16,6 +16,12 @@ namespace Distrib.IOC
 
             Bind<Distrib.Processes.IProcessHost>()
                 .To<Distrib.Processes.ProcessHost>();
+
+            Bind<Distrib.Processes.IJobFactory>()
+                .To<Distrib.Processes.JobFactory>().InSingletonScope();
+
+            Bind<Distrib.Processes.IJob>()
+                .To<Distrib.Processes.StandardProcessJob>();
         }
     }
 }

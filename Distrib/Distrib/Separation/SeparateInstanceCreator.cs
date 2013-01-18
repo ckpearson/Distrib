@@ -176,6 +176,34 @@ namespace Distrib.Separation
             }
         }
 
+        public object CreateInstanceSeparatedWithLoadedAssembly(Type type, string assemblyPath, KeyValuePair<string, object>[] args)
+        {
+            if (type == null) throw new ArgumentNullException("Type must be supplied");
+
+            if (args == null)
+            {
+                args = new KeyValuePair<string, object>[] { };
+            }
+
+            try
+            {
+                return _CreateInstance(type, args,
+                        (t, a) =>
+                        {
+                            var domain = AppDomain.CreateDomain(Guid.NewGuid().ToString());
+                            var bridge = _bridgeFactory.ForAppDomain(domain);
+                            bridge.LoadAssembly(assemblyPath);
+                            bridge.LoadAssembly(type.Assembly.Location);
+                            domain.InitializeLifetimeService();
+                            return bridge.CreateInstance(t.FullName, a);
+                        });
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to create separated instance", ex);
+            }
+        }
+
         public object CreateInstanceWithSeparation(Type type, KeyValuePair<string, object>[] args)
         {
             if (type == null) throw new ArgumentNullException("Type must be supplied");

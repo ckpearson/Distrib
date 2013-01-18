@@ -26,5 +26,7 @@ namespace Distrib.Separation
         /// <param name="args">The constructor arguments required, those bound with IOC will be provided automatically.</param>
         /// <returns>The instance</returns>
         object CreateInstanceWithoutSeparation(Type type, KeyValuePair<string, object>[] args);
+
+        object CreateInstanceSeparatedWithLoadedAssembly(Type type, string assemblyPath, KeyValuePair<string, object>[] args);
     }
 }

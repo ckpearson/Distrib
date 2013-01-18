@@ -76,16 +76,7 @@ namespace Distrib.Utils
         /// <returns>The value</returns>
         public static implicit operator T(WriteOnce<T> writeOnce)
         {
-            if (writeOnce == null) throw new ArgumentNullException("WriteOnce must be supplied");
-
-            try
-            {
-                return writeOnce.Value;
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Failed to get writeOnce value", ex);
-            }
+            return writeOnce.Value;
         }
     }
 }
