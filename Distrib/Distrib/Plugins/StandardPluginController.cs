@@ -80,6 +80,22 @@ namespace Distrib.Plugins
             }
         }
 
+        public IPluginInteractionLink InteractionLink
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    if (!_pluginInteractionLink.IsWritten)
+                    {
+                        return null;
+                    }
+
+                    return _pluginInteractionLink.Value;
+                }
+            }
+        }
+
         public void InitController()
         {
             // Controller initialisation

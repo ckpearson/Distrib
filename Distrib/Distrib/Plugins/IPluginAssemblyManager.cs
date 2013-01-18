@@ -10,7 +10,6 @@ namespace Distrib.Plugins
     public interface IPluginAssemblyManager
     {
         void LoadPluginAssemblyIntoDomain();
-        object CreateInstanceFromPluginAssembly();
 
         IReadOnlyList<IPluginDescriptor> GetPluginDescriptors();
 

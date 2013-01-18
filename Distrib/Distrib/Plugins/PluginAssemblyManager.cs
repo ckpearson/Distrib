@@ -46,11 +46,6 @@ namespace Distrib.Plugins
             }
         }
 
-        public object CreateInstanceFromPluginAssembly()
-        {
-            throw new NotImplementedException();
-        }
-
         public IReadOnlyList<IPluginDescriptor> GetPluginDescriptors()
         {
             bool needToCreate = false;

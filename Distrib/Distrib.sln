@@ -16,9 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessTester", "ProcessTester\ProcessTester.csproj", "{700D7FD4-7E11-4EC9-831A-5E163D3EAA92}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLibrary.Dependance", "TestLibrary.Dependance\TestLibrary.Dependance.csproj", "{E087A5BC-8F87-4C63-A7C4-B96E3559A2F0}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
+		SccNumberOfProjects = 6
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
 		SccLocalPath0 = .
@@ -34,6 +36,9 @@ Global
 		SccProjectUniqueName4 = ProcessTester\\ProcessTester.csproj
 		SccProjectName4 = ProcessTester
 		SccLocalPath4 = ProcessTester
+		SccProjectUniqueName5 = TestLibrary.Dependance\\TestLibrary.Dependance.csproj
+		SccProjectName5 = TestLibrary.Dependance
+		SccLocalPath5 = TestLibrary.Dependance
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +61,10 @@ Global
 		{700D7FD4-7E11-4EC9-831A-5E163D3EAA92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{700D7FD4-7E11-4EC9-831A-5E163D3EAA92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{700D7FD4-7E11-4EC9-831A-5E163D3EAA92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E087A5BC-8F87-4C63-A7C4-B96E3559A2F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E087A5BC-8F87-4C63-A7C4-B96E3559A2F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E087A5BC-8F87-4C63-A7C4-B96E3559A2F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E087A5BC-8F87-4C63-A7C4-B96E3559A2F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -28,6 +28,8 @@ namespace Distrib.Plugins
 
         private readonly IPluginInteractionLinkFactory _pluginInteractionLinkFactory;
 
+        private IPluginInteractionLink_internal _pluginInteractionLink;
+
         public PluginInstance(IPluginDescriptor descriptor, IPluginAssembly pluginAssembly, IPluginInteractionLinkFactory
             pluginInteractionLinkFactory)
         {
@@ -129,6 +131,8 @@ namespace Distrib.Plugins
 
                         // Get the controller to initialise the plugin instance
                         _pluginController.Value.InitialiseInstance();
+
+                        _pluginInteractionLink = (IPluginInteractionLink_internal)_pluginController.Value.InteractionLink;
                     }
 
                     return (T)_underlyingInstance.Value;
@@ -237,6 +241,23 @@ namespace Distrib.Plugins
             catch (Exception ex)
             {
                 throw new ApplicationException("Failed to uninitialise plugin instance", ex);
+            }
+        }
+
+
+        public IReadOnlyList<string> DeclaredAssemblyDependencies
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    if (!_underlyingInstance.IsWritten)
+                    {
+                        return null;
+                    }
+
+                    return _pluginInteractionLink.RegisteredDependentAssemblies;
+                }
             }
         }
     }

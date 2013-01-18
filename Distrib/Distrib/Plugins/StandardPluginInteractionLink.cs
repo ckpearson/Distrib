@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Distrib.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Distrib.Plugins
 {
-    internal sealed class StandardPluginInteractionLink : CrossAppDomainObject, IPluginInteractionLink
+    public sealed class StandardPluginInteractionLink : CrossAppDomainObject, IPluginInteractionLink
+        , IPluginInteractionLink_internal
     {
         private readonly IPluginDescriptor _pluginDescriptor;
         private readonly IPlugin _pluginRawInstance;
@@ -56,6 +58,28 @@ namespace Distrib.Plugins
                     return _pluginDescriptor.Metadata;
                 }
             }
+        }
+
+
+        private WriteOnce<List<string>> _lstDependantAssemblies =
+            new WriteOnce<List<string>>(new List<string>());
+
+        public void RegisterDependentAssembly(string location)
+        {
+            lock (_lock)
+            {
+                if (_lstDependantAssemblies.Value.Contains(location))
+                {
+                    throw new InvalidOperationException("Already registered");
+                }
+
+                _lstDependantAssemblies.Value.Add(location);
+            }
+        }
+
+        public IReadOnlyList<string> RegisteredDependentAssemblies
+        {
+            get { return _lstDependantAssemblies.Value.AsReadOnly(); }
         }
     }
 }

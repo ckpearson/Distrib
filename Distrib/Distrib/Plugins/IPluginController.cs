@@ -19,5 +19,7 @@ namespace Distrib.Plugins
 
         void InitialiseInstance();
         void UnitialiseInstance();
+
+        IPluginInteractionLink InteractionLink { get; }
     }
 }

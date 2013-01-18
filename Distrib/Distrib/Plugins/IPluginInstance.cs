@@ -43,5 +43,7 @@ namespace Distrib.Plugins
         IPluginDescriptor PluginDescriptor { get; }
 
         IPluginAssembly SpawningAssembly { get; }
+
+        IReadOnlyList<string> DeclaredAssemblyDependencies { get; }
     }
 }

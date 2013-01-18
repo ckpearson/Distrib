@@ -54,6 +54,7 @@
     <Compile Include="Plugins\IPluginInstanceFactory.cs" />
     <Compile Include="Plugins\IPluginInteractionLink.cs" />
     <Compile Include="Plugins\IPluginInteractionLinkFactory.cs" />
+    <Compile Include="Plugins\IPluginInteractionLink_internal.cs" />
     <Compile Include="Plugins\IPluginMetadataBundleCheckService.cs" />
     <Compile Include="Plugins\IPluginAssembly.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Plugins\IPluginMetadataBundleFactory.cs" />
     <Compile Include="Plugins\IPluginMetadataFactory.cs" />
     <Compile Include="Plugins\IPluginUsabilityChecker.cs" />
+    <Compile Include="Plugins\PluginAdditionalMetadataAttribute.cs" />
     <Compile Include="Plugins\PluginInstance.cs" />
     <Compile Include="Plugins\PluginInstanceFactory.cs" />
     <Compile Include="Plugins\PluginInteractionLinkFactory.cs" />

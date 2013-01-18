@@ -106,7 +106,6 @@ namespace Distrib.Processes
                     _pluginInstance.Initialise();
 
                     _processInstance = _pluginInstance.GetUnderlyingInstance<IProcess>();
-
                     _processInstance.InitProcess();
 
                     _isInitialised = true;

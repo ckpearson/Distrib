@@ -40,9 +40,11 @@ namespace ConsoleApplication1
         {
             var kernel = kernelGet();
 
-            var asmFile = Directory.EnumerateFiles(dir, "*.dll").DefaultIfEmpty(null).FirstOrDefault();
-            if (asmFile == null)
-                throw new InvalidOperationException("No assemblies found in directory");
+            //var asmFile = Directory.EnumerateFiles(dir, "*.dll").DefaultIfEmpty(null).FirstOrDefault();
+            //if (asmFile == null)
+            //    throw new InvalidOperationException("No assemblies found in directory");
+
+            var asmFile = Path.Combine(dir, "TestLibrary.dll");
 
 
             var pluginAsm = kernel.Get<IPluginAssemblyFactory>().CreatePluginAssemblyFromPath(asmFile);

@@ -11,5 +11,6 @@ namespace Distrib.Plugins
         IPluginMetadata PluginMetadata { get; }
         IReadOnlyList<IPluginMetadataBundle> AdditionalMetadataBundles { get; }
         DateTime PluginCreationStamp { get; }
+        void RegisterDependentAssembly(string location);
     }
 }

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TestLibrary.Dependance;
 
 namespace TestLibrary
 {
@@ -22,10 +23,7 @@ namespace TestLibrary
     {
         void IPlugin.InitialisePlugin(IPluginInteractionLink interactionLink)
         {
-            AppDomain.CurrentDomain.AssemblyResolve += (s, e) =>
-                {
-                    return null;
-                };
+            interactionLink.RegisterDependentAssembly(typeof(MathLib).Assembly.Location);
         }
 
         void IPlugin.UninitialisePlugin(IPluginInteractionLink interactionLink)
@@ -62,7 +60,7 @@ namespace TestLibrary
             var input = new AddIntegerInput(job);
             var output = new AddIntegerOutput(job);
 
-            output.Result = input.X + input.Y;
+            output.Result = MathLib.Add(input.X, input.Y);
         }
     }
 
