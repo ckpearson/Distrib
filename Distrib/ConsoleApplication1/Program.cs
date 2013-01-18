@@ -65,9 +65,10 @@ namespace ConsoleApplication1
 
                 procHost.Initialise();
 
-                var inputFields = procHost.InputFields;
+                var inputFields = procHost.JobDescriptor.OutputFields;
 
                 inputFields[0].Value = "Clint";
+
 
                 var outputs = procHost.ProcessJob(inputFields);
 

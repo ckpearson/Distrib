@@ -22,6 +22,12 @@ namespace Distrib.IOC
 
             Bind<Distrib.Processes.IJob>()
                 .To<Distrib.Processes.StandardProcessJob>();
+
+            Bind<Distrib.Processes.IJobDescriptorFactory>()
+                .To<Distrib.Processes.JobDescriptorFactory>().InSingletonScope();
+
+            Bind<Distrib.Processes.IJobDescriptor>()
+                .To<Distrib.Processes.JobDescriptor>();
         }
     }
 }

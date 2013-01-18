@@ -165,7 +165,7 @@ namespace ProcessTester.Model
                         return null;
                     }
 
-                    _processInputs = ProcessHost.InputFields;
+                    _processInputs = ProcessHost.JobDescriptor.InputFields;
                     foreach (var input in _processInputs)
                     {
                         if (input.Config.HasDefaultValue)

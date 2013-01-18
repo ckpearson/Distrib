@@ -116,6 +116,8 @@
     <Compile Include="Processes\FieldMode.cs" />
     <Compile Include="Processes\IJob.cs" />
     <Compile Include="Processes\IJobDefinition.cs" />
+    <Compile Include="Processes\IJobDescriptor.cs" />
+    <Compile Include="Processes\IJobDescriptorFactory.cs" />
     <Compile Include="Processes\IJobFactory.cs" />
     <Compile Include="Processes\IJobInputTracker.cs" />
     <Compile Include="Processes\IJobOutputTracker.cs" />
@@ -124,6 +126,8 @@
     <Compile Include="Processes\IProcessHostFactory.cs" />
     <Compile Include="Processes\IProcessJobField.cs" />
     <Compile Include="Processes\IProcessJobFieldConfig.cs" />
+    <Compile Include="Processes\JobDescriptor.cs" />
+    <Compile Include="Processes\JobDescriptorFactory.cs" />
     <Compile Include="Processes\JobFactory.cs" />
     <Compile Include="Processes\Plugin\DistribProcessPluginAttribute.cs" />
     <Compile Include="Processes\Plugin\IDistribProcessDetailsMetadata.cs" />

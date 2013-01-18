@@ -42,9 +42,9 @@ namespace Distrib.Processes
         Task<IEnumerable<IProcessJobField>> ProcessJobAsync(IEnumerable<IProcessJobField> inputValues = null);
 
         /// <summary>
-        /// Gets the input definition fields of the job
+        /// Gets the descriptor that holds the core details of the job
         /// </summary>
-        IReadOnlyList<IProcessJobField> InputFields { get; }
+        IJobDescriptor JobDescriptor { get; }
 
         /// <summary>
         /// Gets the plugin descriptor for the process

@@ -29,8 +29,12 @@ namespace Distrib.Processes
 
         private readonly IJobFactory _jobFactory;
 
+        private WriteOnce<IJobDescriptor> _jobDescriptor = new WriteOnce<IJobDescriptor>(null);
+        private readonly IJobDescriptorFactory _jobDescriptorFactory;
+
         public ProcessHost([IOC(false)] IPluginDescriptor descriptor, [IOC(true)] IPluginAssemblyFactory assemblyFactory,
-            [IOC(true)] IJobFactory jobFactory)
+            [IOC(true)] IJobFactory jobFactory,
+            [IOC(true)] IJobDescriptorFactory jobDescriptorFactory)
         {
             if (descriptor == null) throw new ArgumentNullException("Descriptor must be supplied");
             if (assemblyFactory == null) throw new ArgumentNullException("Assembly factory must be supplied");
@@ -51,6 +55,7 @@ namespace Distrib.Processes
                 _descriptor = descriptor;
                 _assemblyFactory = assemblyFactory;
                 _jobFactory = jobFactory;
+                _jobDescriptorFactory = jobDescriptorFactory;
             }
             catch (Exception ex)
             {
@@ -344,7 +349,7 @@ namespace Distrib.Processes
             return jobInternal.OutputValueFields;
         }
 
-        public IReadOnlyList<IProcessJobField> InputFields
+        public IJobDescriptor JobDescriptor
         {
             get
             {
@@ -355,7 +360,12 @@ namespace Distrib.Processes
                         return null;
                     }
 
-                    return _processInstance.JobDefinition.InputFields;
+                    if (!_jobDescriptor.IsWritten)
+                    {
+                        _jobDescriptor.Value = _jobDescriptorFactory.Create(_processInstance.JobDefinition);
+                    }
+
+                    return _jobDescriptor.Value;
                 }
             }
         }
