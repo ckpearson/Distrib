@@ -182,7 +182,7 @@ namespace Distrib.Processes
             }
 
             // Check to see if the input has already been bundled with the job definition / already asked for and cached
-            var inputValueField = internalJob.InputValueFields.SingleOrDefault(f => f.Name == prop);
+            var inputValueField = internalJob.InputValueFields.SingleOrDefault(f => f.Definition.Name ==  prop);
 
             if (inputValueField != null && inputValueField.Value != null)
             {
@@ -240,7 +240,7 @@ namespace Distrib.Processes
             }
 
             // Check to see if the input has already been bundled with the job definition / already asked for and cached
-            var outputValueField = internalJob.OutputValueFields.SingleOrDefault(f => f.Name == prop);
+            var outputValueField = internalJob.OutputValueFields.SingleOrDefault(f => f.Definition.Name == prop);
 
             if (outputValueField != null)
             {
@@ -290,7 +290,7 @@ namespace Distrib.Processes
             }
 
             // Check to see if the input has already been bundled with the job definition / already asked for and cached
-            var outputValueField = internalJob.OutputValueFields.SingleOrDefault(f => f.Name == prop);
+            var outputValueField = internalJob.OutputValueFields.SingleOrDefault(f => f.Definition.Name == prop);
 
             if (outputValueField != null)
             {
@@ -303,55 +303,61 @@ namespace Distrib.Processes
             }
         }
 
-
-        public IEnumerable<IProcessJobField> ProcessJob(IEnumerable<IProcessJobField> inputFields = null)
+        public IEnumerable<IProcessJobValueField> ProcessJob(IEnumerable<IProcessJobValueField> inputFields = null)
         {
-            IJob job = _jobFactory.CreateJob(this, this, _processInstance.JobDefinition);
-            var jobInternal = ((IJob_Internal)job);
-
-            if (inputFields != null)
+            try
             {
-                foreach (var infield in inputFields)
+                IJob job = _jobFactory.CreateJob(this, this, _processInstance.JobDefinition);
+                var jobInternal = ((IJob_Internal)job);
+
+                if (inputFields != null)
                 {
-                    jobInternal.SetInputValue(infield, infield.Value);
-                }
-            }
-
-            _processInstance.ProcessJob(job);
-
-            var outValues = jobInternal.OutputValueFields;
-
-            if (outValues == null)
-            {
-                outValues = new List<IProcessJobField>();
-            }
-
-            foreach (var defOutField in jobInternal.JobDefinition.OutputFields)
-            {
-                var matchValField = outValues.SingleOrDefault(f => f.Name == defOutField.Name);
-
-                if (matchValField != null)
-                {
-                    // The value field was found, so it's been set by the process
-                    continue;
-                }
-                else
-                {
-                    // The output hasn't been set, it may have a default value
-                    if (defOutField.Config.HasDefaultValue)
+                    foreach (var infield in inputFields)
                     {
-                        jobInternal.SetOutputValue(defOutField, defOutField.Config.DefaultValue);
+                        jobInternal.SetInputValue(infield.Definition, infield.Value);
+                    }
+                }
+
+                _processInstance.ProcessJob(job);
+
+                var outValues = jobInternal.OutputValueFields;
+
+                if (outValues == null)
+                {
+                    outValues = new List<IProcessJobValueField>();
+                }
+
+                foreach (var defOutField in jobInternal.JobDefinition.OutputFields)
+                {
+                    var matchValField = outValues.SingleOrDefault(f => f.Definition.Name == defOutField.Name);
+
+                    if (matchValField != null)
+                    {
+                        // The value field was found, so it's been set by the process
                         continue;
                     }
                     else
                     {
-                        throw new InvalidOperationException(string.Format("The process didn't set the output '{0}' and no default is configured",
-                            defOutField.Name));
+                        // The output hasn't been set, it may have a default value
+                        if (defOutField.Config.HasDefaultValue)
+                        {
+                            jobInternal.SetOutputValue(defOutField, defOutField.Config.DefaultValue);
+                            continue;
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException(string.Format("The process didn't set the output '{0}' and no default is configured",
+                                defOutField.Name));
+                        }
                     }
                 }
-            }
 
-            return jobInternal.OutputValueFields;
+                return jobInternal.OutputValueFields;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to process job", ex);
+            }
         }
 
         public IJobDescriptor JobDescriptor
@@ -381,9 +387,9 @@ namespace Distrib.Processes
         }
 
 
-        public Task<IEnumerable<IProcessJobField>> ProcessJobAsync(IEnumerable<IProcessJobField> inputValues = null)
+        public Task<IEnumerable<IProcessJobValueField>> ProcessJobAsync(IEnumerable<IProcessJobValueField> inputValues = null)
         {
-            return Task<IEnumerable<IProcessJobField>>.Factory.StartNew(() =>
+            return Task<IEnumerable<IProcessJobValueField>>.Factory.StartNew(() =>
                 {
                     return ProcessJob(inputValues);
                 });

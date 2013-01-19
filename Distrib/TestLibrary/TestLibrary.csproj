@@ -51,10 +51,6 @@
       <Project>{e7593b79-d107-4595-9b04-c4fff42f035a}</Project>
       <Name>Distrib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TestLibrary.Dependance\TestLibrary.Dependance.csproj">
-      <Project>{e087a5bc-8f87-4c63-a7c4-b96e3559a2f0}</Project>
-      <Name>TestLibrary.Dependance</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

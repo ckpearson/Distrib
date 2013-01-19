@@ -14,14 +14,14 @@ namespace Distrib.Processes
     public sealed class JobDescriptor : IJobDescriptor
     {
         private readonly string _name;
-        private readonly IReadOnlyList<IProcessJobField> _inputFields;
-        private readonly IReadOnlyList<IProcessJobField> _outputFields;
+        private readonly IReadOnlyList<IProcessJobDefinitionField> _inputFields;
+        private readonly IReadOnlyList<IProcessJobDefinitionField> _outputFields;
 
         private JobDescriptor() { }
 
         public JobDescriptor(string jobName,
-            IReadOnlyList<IProcessJobField> inputFields,
-            IReadOnlyList<IProcessJobField> outputFields)
+            IReadOnlyList<IProcessJobDefinitionField> inputFields,
+            IReadOnlyList<IProcessJobDefinitionField> outputFields)
         {
             _name = jobName;
             _inputFields = inputFields;
@@ -33,12 +33,12 @@ namespace Distrib.Processes
             get { return _name; }
         }
 
-        public IReadOnlyList<IProcessJobField> InputFields
+        public IReadOnlyList<IProcessJobDefinitionField> InputFields
         {
             get { return _inputFields; }
         }
 
-        public IReadOnlyList<IProcessJobField> OutputFields
+        public IReadOnlyList<IProcessJobDefinitionField> OutputFields
         {
             get { return _outputFields; }
         }

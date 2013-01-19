@@ -32,14 +32,14 @@ namespace Distrib.Processes
         /// </summary>
         /// <param name="inputValues">The input values to give to the job</param>
         /// <returns>The output values</returns>
-        IEnumerable<IProcessJobField> ProcessJob(IEnumerable<IProcessJobField> inputValues = null);
+        IEnumerable<IProcessJobValueField> ProcessJob(IEnumerable<IProcessJobValueField> inputValues = null);
 
         /// <summary>
         /// Create and process a job using the given input values asynchronously
         /// </summary>
         /// <param name="inputValues">The input values to give to the job</param>
         /// <returns>The task to invoke</returns>
-        Task<IEnumerable<IProcessJobField>> ProcessJobAsync(IEnumerable<IProcessJobField> inputValues = null);
+        Task<IEnumerable<IProcessJobValueField>> ProcessJobAsync(IEnumerable<IProcessJobValueField> inputValues = null);
 
         /// <summary>
         /// Gets the descriptor that holds the core details of the job

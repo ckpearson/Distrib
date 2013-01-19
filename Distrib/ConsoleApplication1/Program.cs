@@ -70,11 +70,9 @@ namespace ConsoleApplication1
 
                 var inputFields = procHost.JobDescriptor.OutputFields;
 
-                inputFields[0].Value = "Clint";
-
                 var sw = new Stopwatch();
                 sw.Start();
-                var outputs = procHost.ProcessJob(inputFields);
+                var outputs = procHost.ProcessJob(null);
                 sw.Stop();
 
                 Console.WriteLine("Process took '{0}' to execute", sw.Elapsed);

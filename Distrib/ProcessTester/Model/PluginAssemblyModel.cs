@@ -147,8 +147,8 @@ namespace ProcessTester.Model
             }
         }
 
-        private IReadOnlyList<IProcessJobField> _processInputs;
-        public IReadOnlyList<IProcessJobField> ProcessInputs
+        private IReadOnlyList<IProcessJobValueField> _processInputs;
+        public IReadOnlyList<IProcessJobValueField> ProcessInputs
         {
             get
             {
@@ -165,12 +165,12 @@ namespace ProcessTester.Model
                         return null;
                     }
 
-                    _processInputs = ProcessHost.JobDescriptor.InputFields;
+                    _processInputs = ProcessHost.JobDescriptor.InputFields.Select(f => ProcessJobFieldFactory.CreateValueField(f)).ToList().AsReadOnly();
                     foreach (var input in _processInputs)
                     {
-                        if (input.Config.HasDefaultValue)
+                        if (input.Definition.Config.HasDefaultValue)
                         {
-                            input.Value = input.Config.DefaultValue;
+                            input.Value = input.Definition.Config.DefaultValue;
                         }
                     }
                 }
@@ -179,8 +179,8 @@ namespace ProcessTester.Model
             }
         }
 
-        private IReadOnlyList<IProcessJobField> _processOutputs;
-        public IReadOnlyList<IProcessJobField> ProcessOutputs
+        private IReadOnlyList<IProcessJobValueField> _processOutputs;
+        public IReadOnlyList<IProcessJobValueField> ProcessOutputs
         {
             get { return _processOutputs; }
             set
@@ -226,15 +226,15 @@ namespace ProcessTester.Model
                                                     {
                                                         try
                                                         {
-                                                            input.Value = Convert.ChangeType(input.Value, input.Type);
+                                                            input.Value = Convert.ChangeType(input.Value, input.Definition.Type);
                                                         }
                                                         catch (Exception)
                                                         {
                                                             ProcessExecutionError =
                                                                 string.Format("Could not convert '{0}' to '{1}' for input '{2}'",
                                                                 input.Value,
-                                                                input.Type.Name,
-                                                                input.Name);
+                                                                input.Definition.Type,
+                                                                input.Definition.Name);
                                                             return;
                                                         }
                                                     }

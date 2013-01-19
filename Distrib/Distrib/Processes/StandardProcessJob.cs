@@ -18,11 +18,11 @@ namespace Distrib.Processes
         private readonly IJobOutputTracker _outputTracker;
         private readonly IJobDefinition _jobDefinition;
 
-        private readonly LockValue<List<IProcessJobField>> _inputValueFields =
-            new LockValue<List<IProcessJobField>>(new List<IProcessJobField>());
+        private readonly LockValue<List<IProcessJobValueField>> _inputValueFields =
+            new LockValue<List<IProcessJobValueField>>(new List<IProcessJobValueField>());
 
-        private readonly LockValue<List<IProcessJobField>> _outputValueFields =
-            new LockValue<List<IProcessJobField>>(new List<IProcessJobField>());
+        private readonly LockValue<List<IProcessJobValueField>> _outputValueFields =
+            new LockValue<List<IProcessJobValueField>>(new List<IProcessJobValueField>());
 
         public StandardProcessJob(
             [IOC(false)] IJobInputTracker inputTracker,
@@ -48,7 +48,7 @@ namespace Distrib.Processes
             get { return _outputTracker; }
         }
 
-        List<IProcessJobField> IJob_Internal.InputValueFields
+        List<IProcessJobValueField> IJob_Internal.InputValueFields
         {
             get
             {
@@ -56,7 +56,7 @@ namespace Distrib.Processes
             }
         }
 
-        List<IProcessJobField> IJob_Internal.OutputValueFields
+        List<IProcessJobValueField> IJob_Internal.OutputValueFields
         {
             get
             {
@@ -64,7 +64,7 @@ namespace Distrib.Processes
             }
         }
 
-        void IJob_Internal.SetInputValue(IProcessJobField defField, object value)
+        void IJob_Internal.SetInputValue(IProcessJobDefinitionField defField, object value)
         {
             if (defField == null) throw Ex.ArgNull(() => defField);
 
@@ -72,7 +72,7 @@ namespace Distrib.Processes
             {
                 _inputValueFields.ReadWrite((inFields) =>
                     {
-                        var vField = inFields.SingleOrDefault(f => f.Name == defField.Name);
+                        var vField = inFields.SingleOrDefault(f => f.Definition.Name == defField.Name);
 
                         if (vField != null)
                         {
@@ -80,8 +80,8 @@ namespace Distrib.Processes
                         }
                         else
                         {
-                            var pf = ProcessJobFieldFactory.CreateField(defField.Type, defField.Name, defField.Mode);
-                            ((IProcessJobFieldConfig_Internal)pf.Config).Adopt(defField.Config);
+                            var pf = ProcessJobFieldFactory.CreateValueField(defField);
+                            ((IProcessJobFieldConfig_Internal)pf.Definition.Config).Adopt(defField.Config);
                             pf.Value = value;
                             inFields.Add(pf);
                         }
@@ -95,7 +95,7 @@ namespace Distrib.Processes
             }
         }
 
-        void IJob_Internal.SetOutputValue(IProcessJobField defField, object value)
+        void IJob_Internal.SetOutputValue(IProcessJobDefinitionField defField, object value)
         {
             if (defField == null) throw Ex.ArgNull(() => defField);
 
@@ -103,7 +103,7 @@ namespace Distrib.Processes
             {
                 _outputValueFields.ReadWrite((outFields) =>
                 {
-                    var vField = outFields.SingleOrDefault(f => f.Name == defField.Name);
+                    var vField = outFields.SingleOrDefault(f => f.Definition.Name == defField.Name);
 
                     if (vField != null)
                     {
@@ -111,8 +111,8 @@ namespace Distrib.Processes
                     }
                     else
                     {
-                        var pf = ProcessJobFieldFactory.CreateField(defField.Type, defField.Name, defField.Mode);
-                        ((IProcessJobFieldConfig_Internal)pf.Config).Adopt(defField.Config);
+                        var pf = ProcessJobFieldFactory.CreateValueField(defField);
+                        ((IProcessJobFieldConfig_Internal)pf.Definition.Config).Adopt(defField.Config);
                         pf.Value = value;
                         outFields.Add(pf);
                     }

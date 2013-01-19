@@ -6,19 +6,29 @@ using System.Threading.Tasks;
 
 namespace Distrib.Processes
 {
-    public interface IProcessJobField
+    public interface IProcessJobDefinitionField
     {
         Type Type { get; }
         string Name { get; }
         FieldMode Mode { get; }
-        object Value { get; set; }
 
         IProcessJobFieldConfig Config { get; }
     }
 
-    public interface IProcessJobField<T> : IProcessJobField
+    public interface IProcessJobDefinitionField<T> : IProcessJobDefinitionField
     {
-        new T Value { get; set; }
         new IProcessJobFieldConfig<T> Config { get; }
+    }
+
+    public interface IProcessJobValueField
+    {
+        IProcessJobDefinitionField Definition { get; }
+        object Value { get; set; }
+    }
+
+    public interface IProcessJobValueField<T> : IProcessJobValueField
+    {
+        new IProcessJobDefinitionField<T> Definition { get; }
+        new T Value { get; set; }
     }
 }

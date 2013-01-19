@@ -2,6 +2,7 @@
 using Distrib.Plugins;
 using Distrib.Processes;
 using Distrib.Processes.Plugin;
+using Distrib.Processes.Stock;
 using Distrib.Utils;
 using System;
 using System.Collections.Generic;
@@ -10,25 +11,18 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using TestLibrary.Dependance;
 
 namespace TestLibrary
 {
-    [DistribProcessPlugin("Add integer process",
-        "Adds two integers together",
-        1.0,
-        "Clint Pearson",
-        "AddIntProc")]
-    public sealed class AddIntegerProcess : CrossAppDomainObject, IPlugin, IProcess
+    [DistribProcessPlugin("AddIntProcess", "Adds two integers together", 1.0, "Clint Pearson", "{CBE47BC5-9350-4CB1-938B-69A0E07037E5}")]
+    public sealed class AddIntProc : CrossAppDomainObject, IPlugin, IProcess
     {
         void IPlugin.InitialisePlugin(IPluginInteractionLink interactionLink)
         {
-            interactionLink.RegisterDependentAssembly(typeof(MathLib).Assembly.Location);
         }
 
         void IPlugin.UninitialisePlugin(IPluginInteractionLink interactionLink)
         {
-
         }
 
         void IProcess.InitProcess()
@@ -39,17 +33,14 @@ namespace TestLibrary
         {
         }
 
-        private IJobDefinition<IAddInput, IAddOutput> _def;
+        private IJobDefinition<IStockInput<int, int>, IStockOutput<int>> _def;
         IJobDefinition IProcess.JobDefinition
         {
             get
             {
                 if (_def == null)
                 {
-                    _def = new ProcessJobDefinition<IAddInput, IAddOutput>("Add int job");
-                    _def.ConfigInput(i => i.X)
-                        .DeferredValueProvider = new DeferredValueProvider<int, XInputProvider>(DeferredValueCacheMode.ReadOnceAndCache);
-                    _def.ConfigInput(i => i.Y).DefaultValue = 0;
+                    _def = new ProcessJobDefinition<IStockInput<int, int>, IStockOutput<int>>("AddInt");
                 }
 
                 return _def;
@@ -58,80 +49,6 @@ namespace TestLibrary
 
         void IProcess.ProcessJob(IJob job)
         {
-            var input = new AddIntegerInput(job);
-            var output = new AddIntegerOutput(job);
-
-            var a = input.X;
-            a = input.X;
-            a = input.X;
-
-            output.Result = MathLib.Add(input.X, input.Y);
         }
     }
-
-    public sealed class XInputProvider : CrossAppDomainObject, IDeferredValueSource<int>
-    {
-        public XInputProvider() { }
-
-        public int ProvideValue()
-        {
-            Thread.Sleep(3000);
-            return 5;
-        }
-    }
-
-    public interface IAddInput
-    {
-        int X { get; }
-        int Y { get; }
-    }
-
-    public interface IAddOutput
-    {
-        int Result { get; set; }
-    }
-
-    public sealed class AddIntegerInput : IAddInput
-    {
-        private readonly IJob _job;
-        
-        public AddIntegerInput(IJob job)
-        {
-            _job = job;
-        }
-
-        public int X
-        {
-            get { return _job.InputTracker.GetInput<int>(_job); }
-        }
-
-        public int Y
-        {
-            get { return _job.InputTracker.GetInput<int>(_job); }
-        }
-    }
-
-    public sealed class AddIntegerOutput : IAddOutput
-    {
-        private readonly IJob _job;
-
-        public AddIntegerOutput(IJob job)
-        {
-            _job = job;
-        }
-
-        public int Result
-        {
-            get
-            {
-                return _job.OutputTracker.GetOutput<int>(_job);
-            }
-            set
-            {
-                _job.OutputTracker.SetOutput<int>(_job, value);
-            }
-        }
-    }
-
-
 }

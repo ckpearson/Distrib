@@ -9,7 +9,7 @@ namespace Distrib.Processes
     /// <summary>
     /// Factory for creating process job fields
     /// </summary>
-    internal static class ProcessJobFieldFactory
+    public static class ProcessJobFieldFactory
     {
         /// <summary>
         /// Create a non-generic field
@@ -18,9 +18,9 @@ namespace Distrib.Processes
         /// <param name="name">The field name</param>
         /// <param name="mode">The field mode</param>
         /// <returns>The field</returns>
-        public static IProcessJobField CreateField(Type type, string name, FieldMode mode)
+        public static IProcessJobDefinitionField CreateDefinitionField(Type type, string name, FieldMode mode)
         {
-            return new ProcessJobField(type, name, mode);
+            return new ProcessJobFieldDefinition(type, name, mode);
         }
 
         /// <summary>
@@ -30,9 +30,19 @@ namespace Distrib.Processes
         /// <param name="name">The field name</param>
         /// <param name="mode">The field mode</param>
         /// <returns>The field</returns>
-        public static IProcessJobField<T> CreateField<T>(string name, FieldMode mode)
+        public static IProcessJobDefinitionField<T> CreateDefinitionField<T>(string name, FieldMode mode)
         {
-            return new ProcessJobField<T>(name, mode);
+            return new ProcessJobFieldDefinition<T>(name, mode);
+        }
+
+        public static IProcessJobValueField CreateValueField(IProcessJobDefinitionField definition)
+        {
+            return new ProcessJobFieldValue(definition);
+        }
+
+        public static IProcessJobValueField<T> CreateValueField<T>(IProcessJobDefinitionField<T> definition)
+        {
+            return new ProcessJobFieldValue<T>(definition);
         }
     }
 }

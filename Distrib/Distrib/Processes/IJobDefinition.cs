@@ -15,12 +15,12 @@ namespace Distrib.Processes
         /// <summary>
         /// Gets the input definition fields
         /// </summary>
-        IReadOnlyList<IProcessJobField> InputFields { get; }
+        IReadOnlyList<IProcessJobDefinitionField> InputFields { get; }
 
         /// <summary>
         /// Gets the output definition fields
         /// </summary>
-        IReadOnlyList<IProcessJobField> OutputFields { get; }
+        IReadOnlyList<IProcessJobDefinitionField> OutputFields { get; }
 
         /// <summary>
         /// Gets the name of the job definition

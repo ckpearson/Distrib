@@ -14,26 +14,26 @@ namespace Distrib.Processes
         /// <summary>
         /// Gets the input value fields
         /// </summary>
-        List<IProcessJobField> InputValueFields { get; }
+        List<IProcessJobValueField> InputValueFields { get; }
 
         /// <summary>
         /// Gets the output value fields
         /// </summary>
-        List<IProcessJobField> OutputValueFields { get; }
+        List<IProcessJobValueField> OutputValueFields { get; }
 
         /// <summary>
         /// Sets the value for the given input definition field
         /// </summary>
         /// <param name="defField">The definition field to use</param>
         /// <param name="value">The value to set</param>
-        void SetInputValue(IProcessJobField defField, object value);
+        void SetInputValue(IProcessJobDefinitionField defField, object value);
 
         /// <summary>
         /// Sets the value for the given output definition field
         /// </summary>
         /// <param name="defField">The definition field to use</param>
         /// <param name="value">The value to set</param>
-        void SetOutputValue(IProcessJobField defField, object value);
+        void SetOutputValue(IProcessJobDefinitionField defField, object value);
 
         /// <summary>
         /// Gets the job definition

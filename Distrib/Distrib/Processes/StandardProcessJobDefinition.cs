@@ -28,7 +28,7 @@ namespace Distrib.Processes
             if (!field.GetType().ContainsGenericParameters)
             {
                 var oc = field.Config;
-                var pjf = ProcessJobFieldFactory.CreateField<TProp>(field.Name, field.Mode);
+                var pjf = ProcessJobFieldFactory.CreateDefinitionField<TProp>(field.Name, field.Mode);
                 base.ReplaceField(field, pjf);
                 field = pjf;
                 ((IProcessJobFieldConfig_Internal)field.Config).Adopt(oc);
@@ -44,7 +44,7 @@ namespace Distrib.Processes
             if (!field.GetType().ContainsGenericParameters)
             {
                 var oc = field.Config;
-                var pjf = ProcessJobFieldFactory.CreateField<TProp>(field.Name, field.Mode);
+                var pjf = ProcessJobFieldFactory.CreateDefinitionField<TProp>(field.Name, field.Mode);
                 base.ReplaceField(field, pjf);
                 field = pjf;
                 ((IProcessJobFieldConfig_Internal)field.Config).Adopt(oc);

@@ -16,8 +16,8 @@ namespace Distrib.Processes
         private readonly Type _outputInterfaceType;
         private readonly string _jobName;
 
-        private readonly LockValue<List<IProcessJobField>> _fields =
-            new LockValue<List<IProcessJobField>>(new List<IProcessJobField>());
+        private readonly LockValue<List<IProcessJobDefinitionField>> _fields =
+            new LockValue<List<IProcessJobDefinitionField>>(new List<IProcessJobDefinitionField>());
 
         public ProcessJobDefinitionBase(
             [IOC(false)] string jobName,
@@ -51,18 +51,18 @@ namespace Distrib.Processes
                         var foundFields =
                             (_inputInterfaceType.GetProperties()
                                 .Where(p => p.CanRead && (p.PropertyType.IsClass || p.PropertyType.IsValueType) && p.PropertyType.IsSerializable))
-                                .Select(p => ProcessJobFieldFactory.CreateField(p.PropertyType, p.Name, FieldMode.Input))
+                                .Select(p => ProcessJobFieldFactory.CreateDefinitionField(p.PropertyType, p.Name, FieldMode.Input))
                             .Concat(
                                 _outputInterfaceType.GetProperties()
                                 .Where(p => (p.CanRead && p.CanWrite) && (p.PropertyType.IsClass || p.PropertyType.IsValueType) && p.PropertyType.IsSerializable)
-                                .Select(p => ProcessJobFieldFactory.CreateField(p.PropertyType, p.Name, FieldMode.Output))).ToList();
+                                .Select(p => ProcessJobFieldFactory.CreateDefinitionField(p.PropertyType, p.Name, FieldMode.Output))).ToList();
 
                         if (foundFields == null || foundFields.Count == 0)
                         {
                             throw new ApplicationException("No fields could be found on either the input or output types");
                         }
 
-                        return new List<IProcessJobField>(foundFields);
+                        return new List<IProcessJobDefinitionField>(foundFields);
                     });
             }
             catch (Exception ex)
@@ -71,7 +71,7 @@ namespace Distrib.Processes
             }
         }
 
-        public IReadOnlyList<IProcessJobField> InputFields
+        public IReadOnlyList<IProcessJobDefinitionField> InputFields
         {
             get
             {
@@ -81,7 +81,7 @@ namespace Distrib.Processes
             }
         }
 
-        public IReadOnlyList<IProcessJobField> OutputFields
+        public IReadOnlyList<IProcessJobDefinitionField> OutputFields
         {
             get
             {
@@ -96,7 +96,7 @@ namespace Distrib.Processes
             get { return _jobName; }
         }
 
-        protected IProcessJobField GetField(PropertyInfo pi)
+        protected IProcessJobDefinitionField GetField(PropertyInfo pi)
         {
             if (pi == null) throw Ex.ArgNull(() => pi);
 
@@ -110,7 +110,7 @@ namespace Distrib.Processes
             }
         }
 
-        protected void ReplaceField(IProcessJobField field, IProcessJobField replacement)
+        protected void ReplaceField(IProcessJobDefinitionField field, IProcessJobDefinitionField replacement)
         {
             if (field == null) throw Ex.ArgNull(() => field);
             if (replacement == null) throw Ex.ArgNull(() => replacement);
