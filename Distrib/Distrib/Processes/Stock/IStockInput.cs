@@ -16,4 +16,63 @@ namespace Distrib.Processes.Stock
         T1 FirstInput { get; }
         T2 SecondInput { get; }
     }
+
+    public sealed class StockInput<T> : IStockInput<T>
+    {
+        private readonly IJob _job;
+        private readonly object _lock = new object();
+
+        public StockInput(IJob job)
+        {
+            if (job == null) throw Ex.ArgNull(() => job);
+
+            _job = job;
+        }
+
+        public T Input
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _job.InputTracker.GetInput<T>(_job); 
+                }
+            }
+        }
+    }
+
+    public sealed class StockInput<T1, T2> : IStockInput<T1, T2>
+    {
+        private readonly IJob _job;
+        private readonly object _lock = new object();
+
+        public StockInput(IJob job)
+        {
+            if (job == null) throw Ex.ArgNull(() => job);
+
+            _job = job;
+        }
+
+        public T1 FirstInput
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _job.InputTracker.GetInput<T1>(_job); 
+                }
+            }
+        }
+
+        public T2 SecondInput
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _job.InputTracker.GetInput<T2>(_job); 
+                }
+            }
+        }
+    }
 }

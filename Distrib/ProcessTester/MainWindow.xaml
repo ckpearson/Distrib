@@ -390,7 +390,7 @@
                                                 <RowDefinition Height="*" />
                                             </Grid.RowDefinitions>
                                             
-                                            <Label Content="{Binding Name}" Grid.Column="0" Grid.Row="0" />
+                                            <Label Content="{Binding Definition.DisplayName}" Grid.Column="0" Grid.Row="0" />
                                             <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="0">
                                             </TextBox>
                                             
@@ -407,10 +407,10 @@
                                                     </Grid.RowDefinitions>
                                                     
                                                     <Label Content="Default Value:" Grid.Column="0" Grid.Row="0" />
-                                                    <Label Content="{Binding Config.DefaultValue}" Grid.Column="1" Grid.Row="0" />
+                                                    <Label Content="{Binding Definition.Config.DefaultValue}" Grid.Column="1" Grid.Row="0" />
 
                                                     <Label Content="Deferred Provider:" Grid.Column="0" Grid.Row="1" />
-                                                    <Label Content="{Binding Config.DeferredValueProvider}" Grid.Column="1" Grid.Row="1" />
+                                                    <Label Content="{Binding Definition.Config.DeferredValueProvider}" Grid.Column="1" Grid.Row="1" />
 
                                                 </Grid>
                                             </GroupBox>
@@ -441,7 +441,7 @@
                                             <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
 
-                                        <Label Content="{Binding Name}" Grid.Column="0" Grid.Row="0" />
+                                        <Label Content="{Binding Definition.DisplayName}" Grid.Column="0" Grid.Row="0" />
                                         <Label Content="{Binding Value}" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="0" />
 
                                         <GroupBox Header="Config" Margin="5" Grid.ColumnSpan="2" Grid.Row="1">
@@ -457,7 +457,7 @@
                                                 </Grid.RowDefinitions>
 
                                                 <Label Content="Default Value:" Grid.Column="0" Grid.Row="0" />
-                                                <Label Content="{Binding Config.DefaultValue}" Grid.Column="1" Grid.Row="0" />
+                                                <Label Content="{Binding Definition.Config.DefaultValue}" Grid.Column="1" Grid.Row="0" />
 
                                             </Grid>
                                         </GroupBox>

@@ -12,6 +12,8 @@ namespace Distrib.Processes
         string Name { get; }
         FieldMode Mode { get; }
 
+        string DisplayName { get; }
+
         IProcessJobFieldConfig Config { get; }
     }
 

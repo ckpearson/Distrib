@@ -52,6 +52,27 @@ namespace Distrib.Processes
         {
             get { return _deferredValueProvider.Value != null; }
         }
+
+        private LockValue<string> _displayName = new LockValue<string>(null);
+        public string DisplayName
+        {
+            get
+            {
+                return _displayName.Value;
+            }
+            set
+            {
+                _displayName.Value = value;
+            }
+        }
+
+        public bool HasDisplayName
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(_displayName.Value);
+            }
+        }
     }
 
     [Serializable()]

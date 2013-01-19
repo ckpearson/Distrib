@@ -14,6 +14,9 @@ namespace Distrib.Processes
 
         IDeferredValueProvider DeferredValueProvider { get; set; }
         bool HasDeferredValueProvider { get; }
+
+        string DisplayName { get; set; }
+        bool HasDisplayName { get; }
     }
 
     public interface IProcessJobFieldConfig<T> : IProcessJobFieldConfig

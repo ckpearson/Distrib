@@ -41,6 +41,10 @@ namespace TestLibrary
                 if (_def == null)
                 {
                     _def = new ProcessJobDefinition<IStockInput<int, int>, IStockOutput<int>>("AddInt");
+                    _def.ConfigInput(i => i.FirstInput).DisplayName = "x";
+                    _def.ConfigInput(i => i.SecondInput).DisplayName = "y";
+
+                    _def.ConfigOutput(i => i.Output).DisplayName = "Result";
                 }
 
                 return _def;
@@ -49,6 +53,10 @@ namespace TestLibrary
 
         void IProcess.ProcessJob(IJob job)
         {
+            var input = new StockInput<int, int>(job);
+            var output = new StockOutput<int>(job);
+
+            output.Output = input.FirstInput + input.SecondInput;
         }
     }
 }

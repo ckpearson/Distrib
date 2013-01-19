@@ -60,6 +60,24 @@ namespace Distrib.Processes
                 }
             }
         }
+
+        public string DisplayName
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    if (_config.HasDisplayName)
+                    {
+                        return _config.DisplayName;
+                    }
+                    else
+                    {
+                        return _name;
+                    }
+                }
+            }
+        }
     }
 
     [Serializable()]
