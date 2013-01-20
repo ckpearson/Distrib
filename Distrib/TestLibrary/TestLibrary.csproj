@@ -52,6 +52,11 @@
       <Name>Distrib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Distrib\Distrib.licenseheader">
+      <Link>Distrib.licenseheader</Link>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "C:\Users\Clint\Desktop\distrib plugins\$(TargetFileName)"</PostBuildEvent>

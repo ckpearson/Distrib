@@ -175,6 +175,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Distrib.licenseheader" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

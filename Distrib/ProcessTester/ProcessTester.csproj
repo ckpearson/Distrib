@@ -98,6 +98,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="..\Distrib\Distrib.licenseheader">
+      <Link>Distrib.licenseheader</Link>
+    </None>
     <None Include="en\Elysium.chm" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
