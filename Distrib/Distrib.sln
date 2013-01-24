@@ -13,24 +13,32 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{978F4E0F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Process Node", "Process Node", "{0A530703-D4D3-409E-9002-032DBD921C90}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Process Runner", "Process Runner", "{59867D26-40D8-4545-A5CD-5E121E602FAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessRunner", "ProcessRunner\ProcessRunner.csproj", "{CBC0BBE0-5DAD-4E5B-BBD1-3918575399F0}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
+		SccNumberOfProjects = 6
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = ConsoleApplication1\\ConsoleApplication1.csproj
-		SccProjectName1 = ConsoleApplication1
-		SccLocalPath1 = ConsoleApplication1
-		SccProjectUniqueName2 = Distrib\\Distrib.csproj
-		SccProjectName2 = Distrib
-		SccLocalPath2 = Distrib
-		SccProjectUniqueName3 = ProcessTester\\ProcessTester.csproj
-		SccProjectName3 = ProcessTester
-		SccLocalPath3 = ProcessTester
-		SccProjectUniqueName4 = TestLibrary\\TestLibrary.csproj
-		SccProjectName4 = TestLibrary
-		SccLocalPath4 = TestLibrary
+		SccProjectUniqueName0 = ConsoleApplication1\\ConsoleApplication1.csproj
+		SccProjectName0 = ConsoleApplication1
+		SccLocalPath0 = ConsoleApplication1
+		SccProjectUniqueName1 = ProcessTester\\ProcessTester.csproj
+		SccProjectName1 = ProcessTester
+		SccLocalPath1 = ProcessTester
+		SccProjectUniqueName2 = TestLibrary\\TestLibrary.csproj
+		SccProjectName2 = TestLibrary
+		SccLocalPath2 = TestLibrary
+		SccProjectUniqueName3 = ProcessRunner\\ProcessRunner.csproj
+		SccProjectTopLevelParentUniqueName3 = Distrib.sln
+		SccProjectName3 = ProcessRunner
+		SccLocalPath3 = ProcessRunner
+		SccLocalPath4 = .
+		SccProjectUniqueName5 = Distrib\\Distrib.csproj
+		SccProjectName5 = Distrib
+		SccLocalPath5 = Distrib
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,11 +61,17 @@ Global
 		{700D7FD4-7E11-4EC9-831A-5E163D3EAA92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{700D7FD4-7E11-4EC9-831A-5E163D3EAA92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{700D7FD4-7E11-4EC9-831A-5E163D3EAA92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBC0BBE0-5DAD-4E5B-BBD1-3918575399F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBC0BBE0-5DAD-4E5B-BBD1-3918575399F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBC0BBE0-5DAD-4E5B-BBD1-3918575399F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBC0BBE0-5DAD-4E5B-BBD1-3918575399F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0A530703-D4D3-409E-9002-032DBD921C90} = {978F4E0F-E9FF-4048-AFA2-D06980DD412B}
+		{59867D26-40D8-4545-A5CD-5E121E602FAD} = {978F4E0F-E9FF-4048-AFA2-D06980DD412B}
+		{CBC0BBE0-5DAD-4E5B-BBD1-3918575399F0} = {59867D26-40D8-4545-A5CD-5E121E602FAD}
 	EndGlobalSection
 EndGlobal

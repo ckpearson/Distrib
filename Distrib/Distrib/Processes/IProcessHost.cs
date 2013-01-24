@@ -58,12 +58,14 @@ namespace Distrib.Processes
         /// </summary>
         bool IsInitialised { get; }
 
+        IReadOnlyList<IJobDefinition> JobDefinitions { get; }
+
         /// <summary>
         /// Create and process a job using the given input values
         /// </summary>
         /// <param name="inputValues">The input values to give to the job</param>
         /// <returns>The output values</returns>
-        IEnumerable<IProcessJobValueField> ProcessJob(IEnumerable<IProcessJobValueField> inputValues = null);
+        IEnumerable<IProcessJobValueField> ProcessJob(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues = null);
 
         /// <summary>
         /// Create and process a job using the given input values asynchronously
@@ -71,11 +73,6 @@ namespace Distrib.Processes
         /// <param name="inputValues">The input values to give to the job</param>
         /// <returns>The task to invoke</returns>
         Task<IEnumerable<IProcessJobValueField>> ProcessJobAsync(IEnumerable<IProcessJobValueField> inputValues = null);
-
-        /// <summary>
-        /// Gets the descriptor that holds the core details of the job
-        /// </summary>
-        IJobDescriptor JobDescriptor { get; }
 
         /// <summary>
         /// Gets the plugin descriptor for the process

@@ -157,7 +157,7 @@ namespace Distrib.Processes
             }
         }
 
-        IJobDefinition IJob_Internal.JobDefinition
+        IJobDefinition IJob.Definition
         {
             get { return _jobDefinition; }
         }

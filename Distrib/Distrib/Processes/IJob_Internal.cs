@@ -65,10 +65,5 @@ namespace Distrib.Processes
         /// <param name="defField">The definition field to use</param>
         /// <param name="value">The value to set</param>
         void SetOutputValue(IProcessJobDefinitionField defField, object value);
-
-        /// <summary>
-        /// Gets the job definition
-        /// </summary>
-        IJobDefinition JobDefinition { get; }
     }
 }

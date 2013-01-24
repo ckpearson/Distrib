@@ -201,7 +201,7 @@ namespace Distrib.Processes
 
             var internalJob = forJob as IJob_Internal;
 
-            var jd = _processInstance.JobDefinition;
+            var jd = internalJob.Definition;
 
 
             // Check the definition contains an input field by that name
@@ -259,7 +259,7 @@ namespace Distrib.Processes
 
             var internalJob = forJob as IJob_Internal;
 
-            var jd = _processInstance.JobDefinition;
+            var jd = internalJob.Definition;
 
 
             // Check the definition contains an input field by that name
@@ -309,7 +309,7 @@ namespace Distrib.Processes
 
             var internalJob = forJob as IJob_Internal;
 
-            var jd = _processInstance.JobDefinition;
+            var jd = forJob.Definition;
 
 
             // Check the definition contains an input field by that name
@@ -334,11 +334,11 @@ namespace Distrib.Processes
             }
         }
 
-        public IEnumerable<IProcessJobValueField> ProcessJob(IEnumerable<IProcessJobValueField> inputFields = null)
+        public IEnumerable<IProcessJobValueField> ProcessJob(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputFields = null)
         {
             try
             {
-                IJob job = _jobFactory.CreateJob(this, this, _processInstance.JobDefinition);
+                IJob job = _jobFactory.CreateJob(this, this, definition);
                 var jobInternal = ((IJob_Internal)job);
 
                 if (inputFields != null)
@@ -358,7 +358,7 @@ namespace Distrib.Processes
                     outValues = new List<IProcessJobValueField>();
                 }
 
-                foreach (var defOutField in jobInternal.JobDefinition.OutputFields)
+                foreach (var defOutField in jobInternal.Definition.OutputFields)
                 {
                     var matchValField = outValues.SingleOrDefault(f => f.Definition.Name == defOutField.Name);
 
@@ -404,7 +404,7 @@ namespace Distrib.Processes
 
                     if (!_jobDescriptor.IsWritten)
                     {
-                        _jobDescriptor.Value = _jobDescriptorFactory.Create(_processInstance.JobDefinition);
+                        //_jobDescriptor.Value = _jobDescriptorFactory.Create(_processInstance.JobDefinition);
                     }
 
                     return _jobDescriptor.Value;
@@ -420,10 +420,12 @@ namespace Distrib.Processes
 
         public Task<IEnumerable<IProcessJobValueField>> ProcessJobAsync(IEnumerable<IProcessJobValueField> inputValues = null)
         {
-            return Task<IEnumerable<IProcessJobValueField>>.Factory.StartNew(() =>
-                {
-                    return ProcessJob(inputValues);
-                });
+            //return Task<IEnumerable<IProcessJobValueField>>.Factory.StartNew(() =>
+            //    {
+            //        return ProcessJob(inputValues);
+            //    });
+
+            throw new NotImplementedException();
         }
 
 
@@ -440,6 +442,15 @@ namespace Distrib.Processes
 
                     return _pluginInstance.DeclaredAssemblyDependencies;
                 }
+            }
+        }
+
+
+        public IReadOnlyList<IJobDefinition> JobDefinitions
+        {
+            get
+            {
+                return _processInstance.JobDefinitions;
             }
         }
     }

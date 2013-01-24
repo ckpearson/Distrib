@@ -51,7 +51,9 @@ namespace Distrib.Processes
     {
         void InitProcess();
         void UninitProcess();
-        IJobDefinition JobDefinition { get; }
+        //IJobDefinition JobDefinition { get; }
+
+        IReadOnlyList<IJobDefinition> JobDefinitions { get; }
 
         void ProcessJob(IJob job);
     }
