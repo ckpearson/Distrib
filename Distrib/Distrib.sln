@@ -7,14 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "Cons
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLibrary", "TestLibrary\TestLibrary.csproj", "{54B74BF1-09ED-4A92-88DA-1C66FF458531}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{2F6FE43B-8F75-4470-B47A-08685BABD081}"
-	ProjectSection(SolutionItems) = preProject
-		A note on plugin implementation.txt = A note on plugin implementation.txt
-		A note on separation.txt = A note on separation.txt
-		Process System Design.txt = Process System Design.txt
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessTester", "ProcessTester\ProcessTester.csproj", "{700D7FD4-7E11-4EC9-831A-5E163D3EAA92}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{978F4E0F-E9FF-4048-AFA2-D06980DD412B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Process Node", "Process Node", "{0A530703-D4D3-409E-9002-032DBD921C90}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -59,5 +56,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0A530703-D4D3-409E-9002-032DBD921C90} = {978F4E0F-E9FF-4048-AFA2-D06980DD412B}
 	EndGlobalSection
 EndGlobal
