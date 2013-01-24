@@ -1,9 +1,8 @@
-﻿using ProcessRunner.ViewModels;
-using ProcessRunner.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,24 +14,32 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ProcessRunner
+namespace ProcessRunner.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for StartView.xaml
     /// </summary>
-    public partial class MainWindow : Elysium.Controls.Window
+    public partial class StartView : UserControl, IView
     {
-        public MainWindow()
+        public StartView()
         {
-            this.DataContext = AppViews.PrimaryViewModel;
             InitializeComponent();
-
-            this.Loaded += MainWindow_Loaded;
         }
 
-        void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        public void NavigatingTo()
         {
-            AppViews.PrimaryViewModel.Navigate(AppViews.StartView);
+        }
+
+        public void NavigatedTo()
+        {
+        }
+
+        public void NavigatingFrom()
+        {
+        }
+
+        public void NavigatedFrom()
+        {
         }
     }
 }

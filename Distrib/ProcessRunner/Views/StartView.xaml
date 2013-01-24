@@ -1,0 +1,115 @@
+﻿<UserControl x:Class="ProcessRunner.Views.StartView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:metro="http://schemas.codeplex.com/elysium"
+             xmlns:conv="clr-namespace:ProcessRunner.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="boolVisConv" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="225*" />
+            <RowDefinition Height="211*" />
+            <RowDefinition Height="164*" />
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="187*" />
+            <ColumnDefinition Width="442*" />
+            <ColumnDefinition Width="171*" />
+        </Grid.ColumnDefinitions>
+        
+        <Grid Grid.Row="1" Grid.Column="1">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding PluginAssemblyLoaded}" Value="False">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding PluginAssemblyLoaded}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                
+                <TextBlock TextAlignment="Center" TextWrapping="WrapWithOverflow" TextTrimming="None"
+                           FontSize="42" Text="No Assembly Loaded" HorizontalAlignment="Center" />
+                
+                <Button Command="{Binding LoadAssemblyCommand}" Content="Choose Assembly" Width="150" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,20,0,0" />
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Visibility" Value="Visible" />
+
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding PluginAssemblyLoaded}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding PluginAssemblyLoaded}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Visible" />
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding PluginAssemblyInitialised}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding PluginAssemblyInitialised}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+
+                    <TextBlock TextWrapping="WrapWithOverflow" TextTrimming="None"
+                           FontSize="42" Text="Assembly Not Initialised" TextAlignment="Center" HorizontalAlignment="Center" />
+                    
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                        <Button Command="{Binding InitialiseAssemblyCommand}" Content="Initialise" Width="150" Height="Auto"/>
+                        <Button Command="{Binding ChooseAnotherAssemblyCommand}" Content="Choose Another" Width="150" Height="Auto" Margin="15,0,0,0" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!--<StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed" />
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding PluginAssemblyInitialised}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding PluginAssemblyInitialised}" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+
+                    <TextBlock TextWrapping="WrapWithOverflow" TextTrimming="None"
+                           FontSize="42" Text="Assembly Initialised" TextAlignment="Center" HorizontalAlignment="Center" />
+                </StackPanel>-->
+
+                <!--<TextBlock TextWrapping="WrapWithOverflow" TextTrimming="None"
+                           FontSize="42" Text="Assembly Loaded" HorizontalAlignment="Center" />-->
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>
