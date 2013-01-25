@@ -52,6 +52,9 @@ namespace Distrib.Processes
         /// </summary>
         IJobOutputTracker OutputTracker { get; }
 
+        /// <summary>
+        /// Gets the job definition
+        /// </summary>
         IJobDefinition Definition { get; }
     }
 }

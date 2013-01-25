@@ -133,6 +133,7 @@
     <Compile Include="Processes\IProcessJobFieldConfig.cs" />
     <Compile Include="Processes\JobDescriptor.cs" />
     <Compile Include="Processes\JobDescriptorFactory.cs" />
+    <Compile Include="Processes\JobExecutionHelper.cs" />
     <Compile Include="Processes\JobFactory.cs" />
     <Compile Include="Processes\Plugin\DistribProcessPluginAttribute.cs" />
     <Compile Include="Processes\Plugin\IDistribProcessDetailsMetadata.cs" />

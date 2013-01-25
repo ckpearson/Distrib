@@ -72,7 +72,7 @@ namespace Distrib.Utils
         /// <param name="func">The conditional function to perform</param>
         /// <param name="result">The result in case of conditional truth</param>
         /// <returns>The stage in the conditional chain</returns>
-        public static CChain<T> If(Func<bool> func, T result)
+        public static CChain<T> If(Func<bool> func, T result, T failResult = default(T))
         {
             //return new CChain<T>(func() ? result : default(T), null, true);
             var res = func();
@@ -83,7 +83,7 @@ namespace Distrib.Utils
             }
             else
             {
-                return new CChain<T>(default(T), null, false);
+                return new CChain<T>(failResult, null, false);
             }
         }
 
