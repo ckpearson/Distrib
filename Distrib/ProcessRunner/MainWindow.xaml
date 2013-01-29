@@ -4,33 +4,10 @@
         xmlns:metro="http://schemas.codeplex.com/elysium"
         xmlns:mpara="http://schemas.codeplex.com/elysium/params"
         mpara:Manager.Theme="Light"
-        mpara:Manager.AccentBrush="{x:Static metro:AccentBrushes.Blue}"
+        mpara:Manager.AccentBrush="{x:Static metro:AccentBrushes.Sky}"
         mpara:Manager.ContrastBrush="White"
-        xmlns:conv="clr-namespace:ProcessRunner.Converters"
         Title="Process Runner" Height="768" Width="1024" WindowStartupLocation="CenterScreen">
-    <metro:Window.Resources>
-        <conv:BoolToVisibilityConverter x:Key="boolVisConv" />
-        <conv:BoolToBusyProgressStateConverter x:Key="boolProgConv" />
-    </metro:Window.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
-        <Grid Grid.Row="0">
-            <ContentControl Margin="20" Content="{Binding CurrentView}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-        </Grid>
         
-        <metro:ProgressBar Grid.Row="1" State="{Binding IsBusy, Converter={StaticResource boolProgConv}, Mode=OneWay}" Visibility="Visible">
-            <metro:ProgressBar.OpacityMask>
-                <LinearGradientBrush StartPoint="0,.5" EndPoint="1,.5">
-                    <GradientStop Offset="0" Color="Transparent" />
-                    <GradientStop Offset=".2" Color="Black" />
-                    <GradientStop Offset=".8" Color="Black" />
-                    <GradientStop Offset="1" Color="Transparent" />
-                </LinearGradientBrush>
-            </metro:ProgressBar.OpacityMask>
-        </metro:ProgressBar>
     </Grid>
 </metro:Window>

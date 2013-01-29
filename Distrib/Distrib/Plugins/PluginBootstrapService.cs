@@ -30,7 +30,6 @@
 	the copyright holder to negotiate a new license.
 */
 using Distrib.Utils;
-using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Linq;

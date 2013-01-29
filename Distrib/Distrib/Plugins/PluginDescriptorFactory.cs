@@ -30,8 +30,6 @@
 	the copyright holder to negotiate a new license.
 */
 using Distrib.IOC;
-using Ninject;
-using Ninject.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,21 +40,21 @@ namespace Distrib.Plugins
 {
     public sealed class PluginDescriptorFactory : CrossAppDomainObject, IPluginDescriptorFactory
     {
-        private readonly IKernel _kernel;
+        private readonly IIOC _ioc;
 
-        public PluginDescriptorFactory(IKernel kernel)
+        public PluginDescriptorFactory(IIOC ioc)
         {
-            _kernel = kernel;
+            _ioc = ioc;
         }
 
         public IPluginDescriptor GetDescriptor(string typeFullName, IPluginMetadata pluginMetadata, 
             string assemblyPath)
         {
-            return _kernel.Get<IPluginDescriptor>(new[]
+            return _ioc.Get<IPluginDescriptor>(new[]
             {
-                new ConstructorArgument("typeFullName", typeFullName),
-                new ConstructorArgument("metadata", pluginMetadata),
-                new ConstructorArgument("assemblyPath", assemblyPath),
+                new IOCConstructorArgument("typeFullName", typeFullName),
+                new IOCConstructorArgument("metadata", pluginMetadata),
+                new IOCConstructorArgument("assemblyPath", assemblyPath),
             });
         }
     }

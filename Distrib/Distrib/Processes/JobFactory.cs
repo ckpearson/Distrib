@@ -29,33 +29,31 @@
 	the terms of the original license and you wish to obtain a different license to cover your use of the software, then you may contact
 	the copyright holder to negotiate a new license.
 */
-using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Distrib.IOC;
-using Ninject.Parameters;
 
 namespace Distrib.Processes
 {
     public sealed class JobFactory : CrossAppDomainObject, IJobFactory
     {
-        private readonly IKernel _kernel;
+        private readonly IIOC _ioc;
         
-        public JobFactory([IOC(true)] IKernel kernel)
+        public JobFactory([IOC(true)] IIOC ioc)
         {
-            _kernel = kernel;
+            _ioc = ioc;
         }
 
         public IJob CreateJob(IJobInputTracker inputTracker, IJobOutputTracker outputTracker, IJobDefinition jobDefinition)
         {
-            return _kernel.Get<IJob>(new ConstructorArgument[]
+            return _ioc.Get<IJob>(new []
             {
-                new ConstructorArgument("inputTracker", inputTracker),
-                new ConstructorArgument("outputTracker", outputTracker),
-                new ConstructorArgument("jobDefinition", jobDefinition),
+                new IOCConstructorArgument("inputTracker", inputTracker),
+                new IOCConstructorArgument("outputTracker", outputTracker),
+                new IOCConstructorArgument("jobDefinition", jobDefinition),
             });
         }
     }

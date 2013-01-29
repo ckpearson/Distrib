@@ -30,8 +30,6 @@
 	the copyright holder to negotiate a new license.
 */
 using Distrib.IOC;
-using Ninject;
-using Ninject.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,11 +40,11 @@ namespace Distrib.Plugins
 {
     public sealed class PluginMetadataBundleFactory : CrossAppDomainObject, IPluginMetadataBundleFactory
     {
-        private IKernel _kernel;
+        private IIOC _ioc;
 
-        public PluginMetadataBundleFactory(IKernel kernel)
+        public PluginMetadataBundleFactory(IIOC ioc)
         {
-            _kernel = kernel;
+            _ioc = ioc;
         }
 
         public IPluginMetadataBundle CreateBundle(Type interfaceType,
@@ -55,13 +53,13 @@ namespace Distrib.Plugins
             string identity, 
             PluginMetadataBundleExistencePolicy existencePolicy)
         {
-            return _kernel.Get<IPluginMetadataBundle>(new[]
+            return _ioc.Get<IPluginMetadataBundle>(new[]
             {
-                new ConstructorArgument("interfaceType", interfaceType),
-                new ConstructorArgument("instance", instance),
-                new ConstructorArgument("kvps", kvps),
-                new ConstructorArgument("identity", identity),
-                new ConstructorArgument("existencePolicy", existencePolicy),
+                new IOCConstructorArgument("interfaceType", interfaceType),
+                new IOCConstructorArgument("instance", instance),
+                new IOCConstructorArgument("kvps", kvps),
+                new IOCConstructorArgument("identity", identity),
+                new IOCConstructorArgument("existencePolicy", existencePolicy),
             });
         }
 

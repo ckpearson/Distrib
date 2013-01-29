@@ -1,6 +1,4 @@
-﻿using ProcessRunner.ViewModels;
-using ProcessRunner.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,15 +22,7 @@ namespace ProcessRunner
     {
         public MainWindow()
         {
-            this.DataContext = AppViews.PrimaryViewModel;
             InitializeComponent();
-
-            this.Loaded += MainWindow_Loaded;
-        }
-
-        void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            AppViews.PrimaryViewModel.Navigate(AppViews.StartView);
         }
     }
 }

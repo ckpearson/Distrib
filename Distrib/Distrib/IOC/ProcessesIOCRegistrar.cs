@@ -29,7 +29,7 @@
 	the terms of the original license and you wish to obtain a different license to cover your use of the software, then you may contact
 	the copyright holder to negotiate a new license.
 */
-using Ninject.Modules;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,27 +38,18 @@ using System.Threading.Tasks;
 
 namespace Distrib.IOC
 {
-    public sealed class ProcessesNinjectModule : NinjectModule
+    public sealed class ProcessesIOCRegistrar : IOCRegistrar
     {
-        public override void Load()
+        public override void PerformBindings()
         {
-            Bind<Distrib.Processes.IProcessHostFactory>()
-                .To<Distrib.Processes.ProcessHostFactory>().InSingletonScope();
+            BindSingleton<Processes.IProcessHostFactory, Processes.ProcessHostFactory>();
+            Bind<Processes.IProcessHost, Processes.ProcessHost>();
 
-            Bind<Distrib.Processes.IProcessHost>()
-                .To<Distrib.Processes.ProcessHost>();
+            BindSingleton<Processes.IJobFactory, Processes.JobFactory>();
+            Bind<Processes.IJob, Processes.StandardProcessJob>();
 
-            Bind<Distrib.Processes.IJobFactory>()
-                .To<Distrib.Processes.JobFactory>().InSingletonScope();
-
-            Bind<Distrib.Processes.IJob>()
-                .To<Distrib.Processes.StandardProcessJob>();
-
-            Bind<Distrib.Processes.IJobDescriptorFactory>()
-                .To<Distrib.Processes.JobDescriptorFactory>().InSingletonScope();
-
-            Bind<Distrib.Processes.IJobDescriptor>()
-                .To<Distrib.Processes.JobDescriptor>();
+            BindSingleton<Processes.IJobDescriptorFactory, Processes.JobDescriptorFactory>();
+            Bind<Processes.IJobDescriptor, Processes.JobDescriptor>();
         }
     }
 }

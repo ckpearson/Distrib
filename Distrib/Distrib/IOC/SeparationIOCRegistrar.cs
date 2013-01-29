@@ -1,6 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-
-<!--
+﻿/*
 	This software known as 'Distrib' at time of creation is under the GNU GPL v2. License
 		This license can be found at: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,8 +28,24 @@
 	If you have received this software from the original copyright holder (Clint Pearson) and it has been made available to you under
 	the terms of the original license and you wish to obtain a different license to cover your use of the software, then you may contact
 	the copyright holder to negotiate a new license.
--->
+*/
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-<packages>
-  <package id="Ninject" version="3.0.1.10" targetFramework="net45" />
-</packages>
+namespace Distrib.IOC
+{
+    public sealed class SeparationIOCRegistrar : IOCRegistrar
+    {
+        public override void PerformBindings()
+        {
+            BindSingleton<Separation.IRemoteDomainBridgeFactory, Separation.RemoteDomainBridgeFactory>();
+            Bind<Separation.IRemoteDomainBridge, Separation.RemoteDomainBridge>();
+
+            BindSingleton<Separation.ISeparateInstanceCreatorFactory, Separation.SeparateInstanceCreatorFactory>();
+            Bind<Separation.ISeparateInstanceCreator, Separation.SeparateInstanceCreator>();
+        }
+    }
+}

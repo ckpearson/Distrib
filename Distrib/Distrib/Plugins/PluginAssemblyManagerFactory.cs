@@ -30,8 +30,6 @@
 	the copyright holder to negotiate a new license.
 */
 using Distrib.IOC;
-using Ninject;
-using Ninject.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,18 +40,18 @@ namespace Distrib.Plugins
 {
     public sealed class PluginAssemblyManagerFactory : IPluginAssemblyManagerFactory
     {
-        private readonly IKernel _kernel;
+        private readonly IIOC _ioc;
 
-        public PluginAssemblyManagerFactory(IKernel kernel)
+        public PluginAssemblyManagerFactory(IIOC ioc)
         {
-            _kernel = kernel;
+            _ioc = ioc;
         }
 
         public IPluginAssemblyManager CreateManagerForAssembly(string assemblyPath)
         {
-            return _kernel.Get<IPluginAssemblyManager>(new[]
+            return _ioc.Get<IPluginAssemblyManager>(new[]
             {
-                new ConstructorArgument("assemblyPath", assemblyPath),
+                new IOCConstructorArgument("assemblyPath", assemblyPath),
             });
         }
 
@@ -67,8 +65,8 @@ namespace Distrib.Plugins
                 true,
                 System.Reflection.BindingFlags.CreateInstance,
                 null,
-                new object[] { _kernel.Get<IPluginDescriptorFactory>(), _kernel.Get<IPluginMetadataFactory>(),
-                    _kernel.Get<IPluginMetadataBundleFactory>(), assemblyPath },
+                new object[] { _ioc.Get<IPluginDescriptorFactory>(), _ioc.Get<IPluginMetadataFactory>(),
+                    _ioc.Get<IPluginMetadataBundleFactory>(), assemblyPath },
                 null,
                 null);
         }
