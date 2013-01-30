@@ -5,13 +5,45 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:metro="http://schemas.codeplex.com/elysium"
              xmlns:conv="clr-namespace:ProcessRunner.Converters"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             mc:Ignorable="d">
     <Grid>
         <Grid.Resources>
             <conv:BoolToProgressStateConverter x:Key="boolProgConv" />
         </Grid.Resources>
         
-        <metro:ProgressBar State="{Binding Path=IsBusy, Converter={StaticResource ResourceKey=boolProgConv}}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Label FontSize="14" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Content="{Binding StatusText, FallbackValue='', TargetNullValue=''}" />
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,10,0" Grid.Column="1">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding TasksWaiting}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding TasksWaiting}" Value="False">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+
+                <Label Content="{Binding TotalTasksWaiting}" FontWeight="Bold" FontStyle="Italic"/>
+                <Label Content="Task(s) waiting in queue" />
+            </StackPanel>
+        </Grid>
+        
+        <metro:ProgressBar Grid.Row="1" State="{Binding Path=IsBusy, Converter={StaticResource ResourceKey=boolProgConv}}" />
     </Grid>
 </UserControl>

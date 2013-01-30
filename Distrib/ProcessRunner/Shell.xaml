@@ -15,7 +15,14 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
-        <ContentControl Margin="3" prism:RegionManager.RegionName="AssemblyStateRegion" Grid.Row="0" />
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+            <ContentControl Margin="0,15,0,0" prism:RegionManager.RegionName="AssemblyStateRegion" Grid.Column="1" />
+        </Grid>
         <ContentControl Margin="3" prism:RegionManager.RegionName="MainRegion" Grid.Row="1" />
         <ContentControl prism:RegionManager.RegionName="BusyIndicatorRegion" Grid.Row="2" />
     </Grid>

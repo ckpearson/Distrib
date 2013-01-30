@@ -87,11 +87,20 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Converters\BoolToProgressStateConverter.cs" />
+    <Compile Include="Converters\BoolToVisConverter.cs" />
     <Compile Include="Events\ApplicationBusyEvent.cs" />
+    <Compile Include="Events\ApplicationTaskFinishedEvent.cs" />
+    <Compile Include="Events\ApplicationTaskQueuedEvent.cs" />
+    <Compile Include="Events\ApplicationTaskRunningEvent.cs" />
+    <Compile Include="Events\AppStatusTextChangedEvent.cs" />
+    <Compile Include="Events\PluginAssemblyStateChangeEvent.cs" />
+    <Compile Include="Models\PluginAssembly.cs" />
     <Compile Include="Modules\AssemblyPickerStateModule.cs" />
     <Compile Include="Modules\BusyIndicatorModule.cs" />
     <Compile Include="Services\AppStateService.cs" />
+    <Compile Include="Services\DistribInteractionService.cs" />
     <Compile Include="Services\IAppStateService.cs" />
+    <Compile Include="Services\IDistribInteractionService.cs" />
     <Compile Include="Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
@@ -136,6 +145,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Distrib.Ninject\Distrib.Ninject.csproj">
+      <Project>{55d1064b-f22e-4862-be0a-36ece03d1420}</Project>
+      <Name>Distrib.Ninject</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Distrib\Distrib.csproj">
       <Project>{e7593b79-d107-4595-9b04-c4fff42f035a}</Project>
       <Name>Distrib</Name>

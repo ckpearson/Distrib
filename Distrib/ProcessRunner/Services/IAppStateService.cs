@@ -10,5 +10,10 @@ namespace ProcessRunner.Services
     {
         bool AppBusy { get; }
         void DoAsBusy(Action act, Action actFinished = null);
+
+        void PerformVisibleTask(Action<Action<string>> taskAction,
+            Func<string> finishedAction = null);
+
+        string StatusText { get; }
     }
 }
