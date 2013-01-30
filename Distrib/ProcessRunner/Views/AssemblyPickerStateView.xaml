@@ -35,7 +35,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     
-                    <Label Grid.Row="0" Content="No Assembly Loaded" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="14" />
+                    <TextBlock Grid.Row="0" Text="No Assembly Loaded" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="14" />
                     <Button Margin="5" Content="Load" Width="70" Grid.Row="1" Command="{Binding LoadAssemblyCommand}" />
                 </Grid>
                 
@@ -62,7 +62,7 @@
                     </Grid.RowDefinitions>
 
 
-                    <Label Grid.Row="0" Content="{Binding Path=AssemblyFileName}" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="14" />
+                    <TextBlock Grid.Row="0" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding Path=AssemblyFileName}" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="14" />
                     <Button Margin="5" Content="Unload" Width="70" Grid.Row="1" Command="{Binding UnloadAssemblyCommand}" />
                 </Grid>
             </Grid>

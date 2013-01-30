@@ -97,6 +97,7 @@
     <Compile Include="Models\PluginAssembly.cs" />
     <Compile Include="Modules\AssemblyPickerStateModule.cs" />
     <Compile Include="Modules\BusyIndicatorModule.cs" />
+    <Compile Include="Modules\ProcessRunnerMainModule.cs" />
     <Compile Include="Services\AppStateService.cs" />
     <Compile Include="Services\DistribInteractionService.cs" />
     <Compile Include="Services\IAppStateService.cs" />
@@ -106,12 +107,16 @@
     </Compile>
     <Compile Include="ViewModels\AssemblyPickerStateViewModel.cs" />
     <Compile Include="ViewModels\BusyIndicatorViewModel.cs" />
+    <Compile Include="ViewModels\ProcessRunnerMainViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\AssemblyPickerStateView.xaml.cs">
       <DependentUpon>AssemblyPickerStateView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BusyIndicatorView.xaml.cs">
       <DependentUpon>BusyIndicatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProcessRunnerMainView.xaml.cs">
+      <DependentUpon>ProcessRunnerMainView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +184,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BusyIndicatorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProcessRunnerMainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
