@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,16 +14,20 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ProcessRunner
+namespace ProcessRunner.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for BusyIndicatorView.xaml
     /// </summary>
-    public partial class MainWindow : Elysium.Controls.Window
+    [Export()]
+    public partial class BusyIndicatorView : UserControl
     {
-        public MainWindow()
+        [ImportingConstructor()]
+        public BusyIndicatorView(ViewModels.BusyIndicatorViewModel viewModel)
         {
             InitializeComponent();
+
+            this.DataContext = viewModel;
         }
     }
 }
