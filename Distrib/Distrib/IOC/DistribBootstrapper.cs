@@ -38,20 +38,17 @@ using System.Threading.Tasks;
 
 namespace Distrib.IOC
 {
+    /// <summary>
+    /// Base class for an IOC bootstrapper for utilisation by Distrib
+    /// </summary>
     public abstract class DistribBootstrapper : CrossAppDomainObject, IIOC
     {
-        protected virtual void Initialise() { }
-        protected abstract object GetInstance(Type serviceType, params IOCConstructorArgument[] args);
-        protected abstract IEnumerable<object> GetAllInstances(Type serviceType);
-        protected abstract void Inject(object instance);
-
-        protected abstract void Bind(Type serviceType, Type concreteType, bool singleton = false);
-        protected abstract void BindToConstant(Type serviceType, object instance);
-
-        protected abstract bool IsTypeRegistered(Type serviceType);
-
         private static DistribBootstrapper _currentBootstrapper = null;
         private static object _lock = new object();
+
+        /// <summary>
+        /// Gets or sets the current active bootstrapper being used by Distrib
+        /// </summary>
         internal static DistribBootstrapper CurrentBoostrapper
         {
             get
@@ -69,6 +66,57 @@ namespace Distrib.IOC
                 }
             }
         }
+
+        /// <summary>
+        /// When overriden in a derived class performs any initialisation prior to IOC bootstrapping 
+        /// being performed
+        /// </summary>
+        protected virtual void Initialise() { }
+
+        /// <summary>
+        /// When overridden in a derived class gets an instance of the given service type
+        /// </summary>
+        /// <param name="serviceType">The service type to return an instance of</param>
+        /// <param name="args">The constructor arguments to use</param>
+        /// <returns>The instance</returns>
+        protected abstract object GetInstance(Type serviceType, params IOCConstructorArgument[] args);
+
+        /// <summary>
+        /// When overridden in a derived class gets all the instances of the given service type
+        /// </summary>
+        /// <param name="serviceType">The servive type to return all the instances of</param>
+        /// <returns>The instances of the given service type</returns>
+        protected abstract IEnumerable<object> GetAllInstances(Type serviceType);
+
+        /// <summary>
+        /// When overridden in a derived class performs injection upon the given instance
+        /// </summary>
+        /// <param name="instance">The instance to perform injection upon</param>
+        protected abstract void Inject(object instance);
+
+        /// <summary>
+        /// When overridden in a derived class binds the given service type to an implementation type
+        /// </summary>
+        /// <param name="serviceType">The service type</param>
+        /// <param name="concreteType">The implementation type</param>
+        /// <param name="singleton">Whether to bind the implementation as a singleton</param>
+        protected abstract void Bind(Type serviceType, Type concreteType, bool singleton = false);
+
+        /// <summary>
+        /// When overridden in a derived class binds the given service type to a constant
+        /// </summary>
+        /// <param name="serviceType">The service type</param>
+        /// <param name="instance">The constant to bind the service type to</param>
+        protected abstract void BindToConstant(Type serviceType, object instance);
+
+        /// <summary>
+        /// When overridden in a derived class determines whether the given service type has been registered
+        /// with the container
+        /// </summary>
+        /// <param name="serviceType">The service type</param>
+        /// <returns><c>True</c> if the type has been registered, <c>False</c> otherwise</returns>
+        protected abstract bool IsTypeRegistered(Type serviceType);
+
 
         public void Start()
         {
@@ -130,85 +178,6 @@ namespace Distrib.IOC
         public bool IsTypeBound(Type serviceType)
         {
             return this.IsTypeRegistered(serviceType);
-        }
-    }
-
-    public sealed class IOCConstructorArgument
-    {
-        private readonly string _argName;
-        private readonly object _value;
-
-        public IOCConstructorArgument(string name, object value)
-        {
-            _argName = name;
-            _value = value;
-        }
-
-        public string Name { get { return _argName; } }
-        public object Value { get { return _value; } }
-    }
-
-    public interface IIOC
-    {
-        T Get<T>(params IOCConstructorArgument[] args);
-        object Get(Type serviceType, params IOCConstructorArgument[] args);
-        bool IsTypeBound<T>();
-        bool IsTypeBound(Type serviceType);
-        void Start();
-    }
-
-    public abstract class IOCRegistrar
-    {
-        public abstract void PerformBindings();
-
-        protected void Bind(Type serviceType, Type concreteType)
-        {
-            Ex.ArgNull(() => serviceType);
-            Ex.ArgNull(() => concreteType);
-
-            try
-            {
-                if (DistribBootstrapper.CurrentBoostrapper == null)
-                {
-                    throw new InvalidOperationException("No bootstrapper has been started");
-                }
-
-                DistribBootstrapper.CurrentBoostrapper.DoBind(serviceType, concreteType, false);
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Failed to perform binding", ex);
-            }
-        }
-
-        protected void Bind<TFrom, TTO>() where TFrom : class where TTO: class
-        {
-            Bind(typeof(TFrom), typeof(TTO));
-        }
-
-        protected void BindSingleton(Type serviceType, Type concreteType)
-        {
-            Ex.ArgNull(() => serviceType);
-            Ex.ArgNull(() => concreteType);
-
-            try
-            {
-                if (DistribBootstrapper.CurrentBoostrapper == null)
-                {
-                    throw new InvalidOperationException("No bootstrapper has been started");
-                }
-
-                DistribBootstrapper.CurrentBoostrapper.DoBind(serviceType, concreteType, true);
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Failed to perform binding for singleton", ex);
-            }
-        }
-
-        protected void BindSingleton<TFrom, TTO>() where TFrom : class where TTO: class
-        {
-            BindSingleton(typeof(TFrom), typeof(TTO));
         }
     }
 }

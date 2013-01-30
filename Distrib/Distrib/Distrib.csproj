@@ -45,7 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IOC\DistribBootstrapper.cs" />
+    <Compile Include="IOC\IIOC.cs" />
     <Compile Include="IOC\IOCAttribute.cs" />
+    <Compile Include="IOC\IOCConstructorArgument.cs" />
+    <Compile Include="IOC\IOCRegistrar.cs" />
     <Compile Include="IOC\PluginsIOCRegistrar.cs" />
     <Compile Include="IOC\ProcessesIOCRegistrar.cs" />
     <Compile Include="IOC\SeparationIOCRegistrar.cs" />
