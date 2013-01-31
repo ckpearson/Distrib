@@ -88,15 +88,18 @@
     </Compile>
     <Compile Include="Converters\BoolToProgressStateConverter.cs" />
     <Compile Include="Converters\BoolToVisConverter.cs" />
+    <Compile Include="Converters\StringPrependConverter.cs" />
     <Compile Include="Events\ApplicationBusyEvent.cs" />
     <Compile Include="Events\ApplicationTaskFinishedEvent.cs" />
     <Compile Include="Events\ApplicationTaskQueuedEvent.cs" />
     <Compile Include="Events\ApplicationTaskRunningEvent.cs" />
     <Compile Include="Events\AppStatusTextChangedEvent.cs" />
     <Compile Include="Events\PluginAssemblyStateChangeEvent.cs" />
+    <Compile Include="Models\DistribPlugin.cs" />
     <Compile Include="Models\PluginAssembly.cs" />
     <Compile Include="Modules\AssemblyPickerStateModule.cs" />
     <Compile Include="Modules\BusyIndicatorModule.cs" />
+    <Compile Include="Modules\PluginsInvestigatorModule.cs" />
     <Compile Include="Modules\ProcessRunnerMainModule.cs" />
     <Compile Include="Services\AppStateService.cs" />
     <Compile Include="Services\DistribInteractionService.cs" />
@@ -107,6 +110,7 @@
     </Compile>
     <Compile Include="ViewModels\AssemblyPickerStateViewModel.cs" />
     <Compile Include="ViewModels\BusyIndicatorViewModel.cs" />
+    <Compile Include="ViewModels\PluginsInvestigatorViewModel.cs" />
     <Compile Include="ViewModels\ProcessRunnerMainViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\AssemblyPickerStateView.xaml.cs">
@@ -114,6 +118,9 @@
     </Compile>
     <Compile Include="Views\BusyIndicatorView.xaml.cs">
       <DependentUpon>BusyIndicatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PluginsInvestigatorView.xaml.cs">
+      <DependentUpon>PluginsInvestigatorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProcessRunnerMainView.xaml.cs">
       <DependentUpon>ProcessRunnerMainView.xaml</DependentUpon>
@@ -184,6 +191,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BusyIndicatorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PluginsInvestigatorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

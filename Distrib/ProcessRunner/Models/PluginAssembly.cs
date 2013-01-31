@@ -56,5 +56,25 @@ namespace ProcessRunner.Models
                 return _pluginAssembly != null ? _pluginAssembly.IsInitialised : false;
             }
         }
+
+        private IReadOnlyList<DistribPlugin> _plugins = null;
+        public IReadOnlyList<DistribPlugin> Plugins
+        {
+            get
+            {
+                if (!Initialised)
+                {
+                    _plugins = null;
+                    return null;
+                }
+
+                if (_plugins == null)
+                {
+                    _plugins = _initResult.Plugins.Select(p => new DistribPlugin(p)).ToList().AsReadOnly();
+                }
+
+                return _plugins;
+            }
+        }
     }
 }

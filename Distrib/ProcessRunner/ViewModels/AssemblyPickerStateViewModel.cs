@@ -112,7 +112,6 @@ namespace ProcessRunner.ViewModels
                                     {
                                         updateStatus("Loading assembly...");
                                         _distribInteraction.LoadAssembly(ofd.FileName);
-                                        _distribInteraction.CurrentAssembly.Init();
                                         updateStatus("Assembly loaded");
                                     }
                                     else

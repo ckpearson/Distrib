@@ -24,6 +24,19 @@ namespace ProcessRunner.ViewModels
             _appState = appState;
             _distribService = distribService;
             _eventAgg = eventAggregator;
+
+            _eventAgg.GetEvent<Events.PluginAssemblyStateChangeEvent>()
+                .Subscribe(OnPluginAssemblyStateChange);
+        }
+
+        private void OnPluginAssemblyStateChange(Events.PluginAssemblyStateChange state)
+        {
+            OnPropertyChanged("AssemblyLoadedAndInitialised");
+        }
+
+        public bool AssemblyLoadedAndInitialised
+        {
+            get { return _distribService.CurrentAssembly != null && _distribService.CurrentAssembly.Initialised; }
         }
     }
 }

@@ -2,10 +2,59 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:metro="http://schemas.codeplex.com/elysium"
+             xmlns:prism="http://www.codeplex.com/prism"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="600" d:DesignWidth="800">
     <Grid>
-        <TextBlock>This is the main section y'all</TextBlock>
+        <Grid x:Name="mainGrid">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="IsHitTestVisible" Value="True" />
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding AssemblyLoadedAndInitialised}" Value="False">
+                            <Setter Property="IsHitTestVisible" Value="False" />
+                            <Setter Property="Visibility" Value="Hidden" />
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding AssemblyLoadedAndInitialised}" Value="True">
+                            <Setter Property="IsHitTestVisible" Value="True" />
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <TabControl Background="Transparent" TabStripPlacement="Bottom">
+                <TabItem Header="Plugins">
+                    <ContentControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="3" prism:RegionManager.RegionName="PluginsInvestigatorRegion" />
+                </TabItem>
+                
+                <TabItem Header="Processes">
+                    <ContentControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="3" prism:RegionManager.RegionName="ProcessesInvestigatorRegion" />
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <!-- Assembly not loaded grid -->
+        <Grid>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding AssemblyLoadedAndInitialised}" Value="False">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        
+                        <DataTrigger Binding="{Binding AssemblyLoadedAndInitialised}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            <TextBlock Text="An assembly must be loaded and initialised" HorizontalAlignment="Center"
+                       VerticalAlignment="Center" FontSize="72" TextAlignment="Center" TextWrapping="Wrap" />
+        </Grid>
     </Grid>
 </UserControl>

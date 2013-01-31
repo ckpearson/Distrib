@@ -41,6 +41,11 @@ namespace ProcessRunner.Services
                 _distribIOC.Get<IPluginAssemblyFactory>());
             _eventAggregator.GetEvent<Events.PluginAssemblyStateChangeEvent>()
                 .Publish(Events.PluginAssemblyStateChange.AssemblyLoaded);
+
+            // Now initialise the assembly
+            _currentPluginAssembly.Init();
+            _eventAggregator.GetEvent<Events.PluginAssemblyStateChangeEvent>()
+                .Publish(Events.PluginAssemblyStateChange.AssemblyInitialised);
         }
 
 
@@ -60,6 +65,8 @@ namespace ProcessRunner.Services
             if (_currentPluginAssembly.Initialised)
             {
                 _currentPluginAssembly.Uninit();
+                _eventAggregator.GetEvent<Events.PluginAssemblyStateChangeEvent>()
+                    .Publish(Events.PluginAssemblyStateChange.AssemblyUninitialised);
             }
 
             // Remove reference

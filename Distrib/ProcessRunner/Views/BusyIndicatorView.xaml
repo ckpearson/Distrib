@@ -40,7 +40,7 @@
                 </StackPanel.Style>
 
                 <Label Content="{Binding TotalTasksWaiting}" FontWeight="Bold" FontStyle="Italic"/>
-                <Label Content="Task(s) waiting in queue" />
+                <Label Content="Application task(s) waiting in queue" />
             </StackPanel>
         </Grid>
         

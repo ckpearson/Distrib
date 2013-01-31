@@ -7,7 +7,7 @@
         mpara:Manager.Theme="Light"
         mpara:Manager.AccentBrush="{x:Static metro:AccentBrushes.Blue}"
         mpara:Manager.ContrastBrush="White"
-        Title="Process Runner" Height="768" Width="1024" WindowStartupLocation="CenterScreen">
+        Title="Process Runner" Height="800" Width="1024" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -21,9 +21,9 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             
-            <ContentControl Margin="0,15,0,0" prism:RegionManager.RegionName="AssemblyStateRegion" Grid.Column="1" />
+            <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="0,15,0,0" prism:RegionManager.RegionName="AssemblyStateRegion" Grid.Column="1" />
         </Grid>
-        <ContentControl Margin="3" prism:RegionManager.RegionName="MainRegion" Grid.Row="1" />
-        <ContentControl prism:RegionManager.RegionName="BusyIndicatorRegion" Grid.Row="2" />
+        <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="10" prism:RegionManager.RegionName="MainRegion" Grid.Row="1" />
+        <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" prism:RegionManager.RegionName="BusyIndicatorRegion" Grid.Row="2" />
     </Grid>
 </metro:Window>
