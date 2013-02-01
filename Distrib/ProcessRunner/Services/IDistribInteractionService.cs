@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Distrib.Processes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,7 @@ namespace ProcessRunner.Services
         void LoadAssembly(string assemblyPath);
         void UnloadAssembly();
         Models.PluginAssembly CurrentAssembly { get; }
+
+        IProcessHost CreateProcessHost(Models.DistribProcess process);
     }
 }

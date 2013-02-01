@@ -80,5 +80,9 @@ namespace Distrib.Processes
         IPluginDescriptor PluginDescriptor { get; }
 
         IReadOnlyList<string> RegisteredPluginDependencyAssemblies { get; }
+
+        DateTime InstanceCreationStamp { get; }
+
+        string InstanceID { get; }
     }
 }

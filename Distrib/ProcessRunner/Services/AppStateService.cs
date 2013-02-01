@@ -69,50 +69,50 @@ namespace ProcessRunner.Services
 
         private volatile bool _visibleTaskExecuting = false;
 
-        public void PerformVisibleTask(Action<Action<string>> taskAction, 
-            Func<string> finishedAction = null)
+        public void PerformVisibleTask(Action<Action<string>> taskAction, Func<string> finishedAction = null)
         {
             if (_visibleTaskRunner == null)
             {
                 _visibleTaskRunner = Task.Factory.StartNew(() =>
+                {
+                    while (true)
                     {
-                        while (true)
+                        Thread.Sleep(300);
+                        if (_visibleTasks.Count == 0)
                         {
-                            Thread.Sleep(300);
-                            if (_visibleTasks.Count == 0)
-                            {
-                                continue;
-                            }
-
-                            KeyValuePair<Action<Action<string>>, Func<string>> tskDetails;
-                            if (_visibleTasks.TryDequeue(out tskDetails))
-                            {
-                                _visibleTaskExecuting = true;
-                                _eventAggregator.GetEvent<Events.ApplicationTaskRunningEvent>()
-                                    .Publish(_visibleTasks.Count);
-                                BusyInProgress();
-                                this.StatusText = null;
-
-                                tskDetails.Key((s) => this.StatusText = s);
-                                BusyFinished();
-                                if (tskDetails.Value != null)
-                                {
-                                    this.StatusText = tskDetails.Value();
-                                }
-
-                                Thread.Sleep(1500);
-                                this.StatusText = null;
-
-                                _visibleTaskExecuting = false;
-                                _eventAggregator.GetEvent<Events.ApplicationTaskFinishedEvent>()
-                                    .Publish(_visibleTasks.Count);
-                            }
-                            else
-                            {
-                                throw new InvalidOperationException();
-                            }
+                            continue;
                         }
-                    });
+
+                        KeyValuePair<Action<Action<string>>, Func<string>> tskDetails;
+                        if (_visibleTasks.TryDequeue(out tskDetails))
+                        {
+                            _visibleTaskExecuting = true;
+                            _eventAggregator.GetEvent<Events.ApplicationTaskRunningEvent>()
+                                .Publish(_visibleTasks.Count);
+                            BusyInProgress();
+                            this.StatusText = null;
+
+                            tskDetails.Key((s) => this.StatusText = s);
+
+                            BusyFinished();
+                            if (tskDetails.Value != null)
+                            {
+                                this.StatusText = tskDetails.Value();
+                            }
+
+                            Thread.Sleep(1500);
+                            this.StatusText = null;
+
+                            _visibleTaskExecuting = false;
+                            _eventAggregator.GetEvent<Events.ApplicationTaskFinishedEvent>()
+                                .Publish(_visibleTasks.Count);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException();
+                        }
+                    }
+                });
             }
 
             _eventAggregator.GetEvent<Events.ApplicationTaskQueuedEvent>()
@@ -131,5 +131,8 @@ namespace ProcessRunner.Services
                     .Publish(_statusText);
             }
         }
+
+
+       
     }
 }

@@ -1,0 +1,14 @@
+﻿<metro:Window x:Class="ProcessRunner.Views.ProcessHostInteractionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:metro="http://schemas.codeplex.com/elysium"
+        xmlns:mpara="http://schemas.codeplex.com/elysium/params"
+        xmlns:prism="http://www.codeplex.com/prism"
+        mpara:Manager.Theme="Light"
+        mpara:Manager.AccentBrush="{x:Static metro:AccentBrushes.Lime}"
+        mpara:Manager.ContrastBrush="White"
+        Title="" Height="600" Width="800">
+    <Grid>
+        
+    </Grid>
+</metro:Window>

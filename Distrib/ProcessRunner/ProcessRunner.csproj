@@ -88,6 +88,7 @@
     </Compile>
     <Compile Include="Converters\BoolToProgressStateConverter.cs" />
     <Compile Include="Converters\BoolToVisConverter.cs" />
+    <Compile Include="Converters\InvertBoolConverter.cs" />
     <Compile Include="Converters\StringPrependConverter.cs" />
     <Compile Include="Events\ApplicationBusyEvent.cs" />
     <Compile Include="Events\ApplicationTaskFinishedEvent.cs" />
@@ -96,10 +97,13 @@
     <Compile Include="Events\AppStatusTextChangedEvent.cs" />
     <Compile Include="Events\PluginAssemblyStateChangeEvent.cs" />
     <Compile Include="Models\DistribPlugin.cs" />
+    <Compile Include="Models\DistribProcess.cs" />
+    <Compile Include="Models\DistribProcessHost.cs" />
     <Compile Include="Models\PluginAssembly.cs" />
     <Compile Include="Modules\AssemblyPickerStateModule.cs" />
     <Compile Include="Modules\BusyIndicatorModule.cs" />
     <Compile Include="Modules\PluginsInvestigatorModule.cs" />
+    <Compile Include="Modules\ProcessesInvestigatorModule.cs" />
     <Compile Include="Modules\ProcessRunnerMainModule.cs" />
     <Compile Include="Services\AppStateService.cs" />
     <Compile Include="Services\DistribInteractionService.cs" />
@@ -111,6 +115,7 @@
     <Compile Include="ViewModels\AssemblyPickerStateViewModel.cs" />
     <Compile Include="ViewModels\BusyIndicatorViewModel.cs" />
     <Compile Include="ViewModels\PluginsInvestigatorViewModel.cs" />
+    <Compile Include="ViewModels\ProcessesInvestigatorViewModel.cs" />
     <Compile Include="ViewModels\ProcessRunnerMainViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\AssemblyPickerStateView.xaml.cs">
@@ -121,6 +126,12 @@
     </Compile>
     <Compile Include="Views\PluginsInvestigatorView.xaml.cs">
       <DependentUpon>PluginsInvestigatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProcessesInvestigatorView.xaml.cs">
+      <DependentUpon>ProcessesInvestigatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProcessHostInteractionWindow.xaml.cs">
+      <DependentUpon>ProcessHostInteractionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProcessRunnerMainView.xaml.cs">
       <DependentUpon>ProcessRunnerMainView.xaml</DependentUpon>
@@ -195,6 +206,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PluginsInvestigatorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProcessesInvestigatorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProcessHostInteractionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

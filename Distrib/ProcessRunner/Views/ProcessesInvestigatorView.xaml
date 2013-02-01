@@ -1,0 +1,219 @@
+﻿<UserControl x:Class="ProcessRunner.Views.ProcessesInvestigatorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:metro="http://schemas.codeplex.com/elysium"
+             xmlns:vmod="clr-namespace:ProcessRunner.ViewModels"
+             xmlns:conv="clr-namespace:ProcessRunner.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.Resources>
+        <conv:InvertBoolConverter x:Key="invBoolConv" />
+    </UserControl.Resources>
+    <Grid x:Name="rootGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width=".6*" />
+        </Grid.ColumnDefinitions>
+        <GroupBox Header="Usable Processes in Assembly" Grid.Column="0" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch">
+            <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" Padding="10" ItemsSource="{Binding UsableProcesses}" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch">
+                <ListBox.Resources>
+                    <DataTemplate x:Key="itemTemplate">
+                        <Grid Margin="5">
+                            <Grid.Resources>
+                                <Style x:Key="propertyLabel" TargetType="Label">
+                                    <Setter Property="FontSize" Value="14" />
+                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                </Style>
+
+                                <Style x:Key="boundPropertyLabel" TargetType="Label">
+                                    <Setter Property="FontSize" Value="14" />
+                                    <Setter Property="FontStyle" Value="Italic" />
+                                    <Setter Property="HorizontalAlignment" Value="Left" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Column="0" Grid.Row="0" Content="Name:" />
+                            <Label Grid.Column="1" Grid.Row="0">
+                                <TextBlock TextWrapping="Wrap" Text="{Binding Plugin.PluginName}" />
+                            </Label>
+
+                            <Label Grid.Column="0" Grid.Row="1" Content="Description:" />
+                            <Label Grid.Column="1" Grid.Row="1">
+                                <TextBlock TextWrapping="Wrap" Text="{Binding Plugin.PluginDescription}" />
+                            </Label>
+
+                            <Label Grid.Column="0" Grid.Row="2" Content="Author:" />
+                            <Label Grid.Column="1" Grid.Row="2">
+                                <TextBlock TextWrapping="Wrap" Text="{Binding Plugin.PluginAuthor}" />
+                            </Label>
+
+                            <Label Grid.Column="0" Grid.Row="3" Content="Version:" />
+                            <Label Grid.Column="1" Grid.Row="3">
+                                <TextBlock TextWrapping="Wrap" Text="{Binding Plugin.PluginVersion}" />
+                            </Label>
+
+                            <Label Grid.Column="0" Grid.Row="4" Content="Identifier:" />
+                            <Label Grid.Column="1" Grid.Row="4">
+                                <TextBlock TextWrapping="Wrap" Text="{Binding Plugin.PluginIdentifier}" />
+                            </Label>
+
+                            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.Row="5" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}"
+                                                         Value="True">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+
+                                <metro:DropDownCommandButton Content="Hosts" DropDownDirection="Down" Margin="5,0,0,5">
+                                    <metro:DropDownCommandButton.Submenu>
+                                        <metro:Submenu>
+                                            <MenuItem Header="Spawn Host" 
+                                                      ToolTip="Creates a new process host for this process"
+                                                      Command="{Binding SpawnHostCommand}" />
+                                            <Separator />
+                                            <MenuItem Header="Kill Hosts" 
+                                                      IsEnabled="{Binding HasHosts}"
+                                                      ToolTip="Kills all the process hosts for this process"/>
+                                        </metro:Submenu>
+                                    </metro:DropDownCommandButton.Submenu>
+                                </metro:DropDownCommandButton>
+
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.Resources>
+
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="ContentTemplate" Value="{StaticResource itemTemplate}" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </GroupBox>
+
+        <GroupBox Header="Active Process Hosts" Grid.Column="1">
+            <GroupBox.Resources>
+                <CollectionViewSource x:Key="cvs" Source="{Binding ProcessHosts}">
+                    <CollectionViewSource.GroupDescriptions>
+                        <PropertyGroupDescription PropertyName="Process.Plugin.PluginName" />
+                    </CollectionViewSource.GroupDescriptions>
+                </CollectionViewSource>
+            </GroupBox.Resources>
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Source={StaticResource ResourceKey=cvs}}">
+                    <ItemsControl.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.ContainerStyle>
+                                <Style TargetType="GroupItem">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="GroupItem">
+                                                <GroupBox Header="{Binding Name}" Margin="5" Padding="5">
+                                                    <ItemsPresenter />
+                                                </GroupBox>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </GroupStyle.ContainerStyle>
+                        </GroupStyle>
+                    </ItemsControl.GroupStyle>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <GroupBox Header="{Binding InstanceID}" Margin="5,0,0,5">
+                                <Grid>
+                                    <Grid.Resources>
+                                        <Style x:Key="propertyLabel" TargetType="Label">
+                                            <Setter Property="FontSize" Value="14" />
+                                            <Setter Property="HorizontalAlignment" Value="Right" />
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                        </Style>
+
+                                        <Style x:Key="boundPropertyLabel" TargetType="Label">
+                                            <Setter Property="FontSize" Value="14" />
+                                            <Setter Property="FontStyle" Value="Italic" />
+                                            <Setter Property="HorizontalAlignment" Value="Left" />
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                        </Style>
+                                    </Grid.Resources>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Label Grid.Column="0" Grid.Row="0" Style="{StaticResource propertyLabel}"
+                                   Content="Created:" />
+                                    <Label Grid.Column="1" Grid.Row="0" Style="{StaticResource boundPropertyLabel}">
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding CreationStamp}" />
+                                    </Label>
+
+                                    <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource propertyLabel}"
+                                       Content="Processing:" />
+
+                                    <metro:ProgressRing Margin="5,0,0,0" Width="25" Height="25" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                        <metro:ProgressRing.Style>
+                                            <Style TargetType="metro:ProgressRing">
+                                                <Setter Property="State" Value="Normal" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsProcessing}" Value="True">
+                                                        <Setter Property="State" Value="Indeterminate" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </metro:ProgressRing.Style>
+                                    </metro:ProgressRing>
+
+                                    <StackPanel Grid.ColumnSpan="2" Grid.Row="2" Orientation="Horizontal" Margin="0,5,0,0" HorizontalAlignment="Center">
+                                        <Button Content="Kill" Command="{Binding KillCommand}" Margin="3,0,0,3" />
+                                        <Button Content="Interact" Command="{Binding InteractCommand}" Margin="3,0,0,3" />
+                                    </StackPanel>
+                                </Grid>
+                            </GroupBox>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </GroupBox>
+    </Grid>
+</UserControl>

@@ -69,6 +69,14 @@ namespace ProcessRunner.Models
             }
         }
 
+        public IPluginDescriptor RawDescriptor
+        {
+            get
+            {
+                return _pluginDescriptor;
+            }
+        }
+
         public string PluginIdentifier
         {
             get

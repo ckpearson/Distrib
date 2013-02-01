@@ -1,5 +1,6 @@
 ﻿using Distrib.IOC;
 using Distrib.Plugins;
+using Distrib.Processes;
 using Microsoft.Practices.Prism.Events;
 using System;
 using System.Collections.Generic;
@@ -74,6 +75,26 @@ namespace ProcessRunner.Services
 
             _eventAggregator.GetEvent<Events.PluginAssemblyStateChangeEvent>()
                 .Publish(Events.PluginAssemblyStateChange.AssemblyUnloaded);
+        }
+
+
+        public Distrib.Processes.IProcessHost CreateProcessHost(Models.DistribProcess process)
+        {
+            if (CurrentAssembly == null || !CurrentAssembly.Initialised)
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (!process.Plugin.IsUsable)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var procHost = _distribIOC.Get<IProcessHostFactory>()
+                .CreateHostFromPluginSeparated(process.Plugin.RawDescriptor);
+            procHost.Initialise();
+
+            return procHost;
         }
     }
 }

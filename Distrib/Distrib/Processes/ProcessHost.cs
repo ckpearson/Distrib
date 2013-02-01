@@ -213,7 +213,7 @@ namespace Distrib.Processes
             }
 
             // Check to see if the input has already been bundled with the job definition / already asked for and cached
-            var inputValueField = internalJob.InputValueFields.SingleOrDefault(f => f.Definition.Name ==  prop);
+            var inputValueField = internalJob.InputValueFields.SingleOrDefault(f => f.Definition.Name == prop);
 
             if (inputValueField != null && inputValueField.Value != null)
             {
@@ -451,6 +451,40 @@ namespace Distrib.Processes
             get
             {
                 return _processInstance.JobDefinitions;
+            }
+        }
+
+
+        public DateTime InstanceCreationStamp
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    if (!IsInitialised)
+                    {
+                        return DateTime.MinValue;
+                    }
+
+                    return _pluginInstance.InstanceCreationStamp;
+                }
+            }
+        }
+
+
+        public string InstanceID
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    if (!IsInitialised)
+                    {
+                        return null;
+                    }
+
+                    return _pluginInstance.InstanceID;
+                }
             }
         }
     }
