@@ -46,12 +46,14 @@ namespace Distrib.Processes
         private readonly Type _inputInterfaceType;
         private readonly Type _outputInterfaceType;
         private readonly string _jobName;
+        private readonly string _jobDescription;
 
         private readonly LockValue<List<IProcessJobDefinitionField>> _fields =
             new LockValue<List<IProcessJobDefinitionField>>(new List<IProcessJobDefinitionField>());
 
         public ProcessJobDefinitionBase(
             [IOC(false)] string jobName,
+            [IOC(false)] string jobDescription,
             [IOC(false)] Type inputInterfaceType,
             [IOC(false)] Type outputInterfaceType)
         {
@@ -66,6 +68,7 @@ namespace Distrib.Processes
                 "Must be an interface");
 
             _jobName = jobName;
+            _jobDescription = jobDescription;
             _inputInterfaceType = inputInterfaceType;
             _outputInterfaceType = outputInterfaceType;
 
@@ -165,6 +168,12 @@ namespace Distrib.Processes
             {
                 throw new ApplicationException("Failed to replace field", ex);
             }
+        }
+
+
+        public string Description
+        {
+            get { return _jobDescription; }
         }
     }
 }

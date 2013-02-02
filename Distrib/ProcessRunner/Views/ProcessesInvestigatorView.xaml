@@ -98,6 +98,7 @@
                                             <Separator />
                                             <MenuItem Header="Kill Hosts" 
                                                       IsEnabled="{Binding HasHosts}"
+                                                      Command="{Binding KillAllHostsCommand}"
                                                       ToolTip="Kills all the process hosts for this process"/>
                                         </metro:Submenu>
                                     </metro:DropDownCommandButton.Submenu>

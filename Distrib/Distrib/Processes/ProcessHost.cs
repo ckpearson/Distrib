@@ -391,27 +391,6 @@ namespace Distrib.Processes
             }
         }
 
-        public IJobDescriptor JobDescriptor
-        {
-            get
-            {
-                lock (_lock)
-                {
-                    if (!_isInitialised)
-                    {
-                        return null;
-                    }
-
-                    if (!_jobDescriptor.IsWritten)
-                    {
-                        //_jobDescriptor.Value = _jobDescriptorFactory.Create(_processInstance.JobDefinition);
-                    }
-
-                    return _jobDescriptor.Value;
-                }
-            }
-        }
-
         public IPluginDescriptor PluginDescriptor
         {
             get { return _descriptor; }

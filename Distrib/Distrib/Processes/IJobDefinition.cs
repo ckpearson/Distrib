@@ -57,6 +57,11 @@ namespace Distrib.Processes
         /// Gets the name of the job definition
         /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// Gets the description of the job definition
+        /// </summary>
+        string Description { get; }
     }
 
     /// <summary>

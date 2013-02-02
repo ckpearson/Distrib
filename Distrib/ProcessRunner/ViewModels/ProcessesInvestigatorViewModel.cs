@@ -104,7 +104,19 @@ namespace ProcessRunner.ViewModels
                                                             else
                                                             {
 
-                                                                _interactionWindows[h] = new Views.ProcessHostInteractionWindow(h);
+                                                                _interactionWindows[h] = new Views.ProcessHostInteractionWindow(
+                                                                    new ProcessHostInteractionViewModel(
+                                                                        _appState,
+                                                                        _distrib,
+                                                                        _eventAggregator,
+                                                                        h));
+                                                                _interactionWindows[h].Closing += (s, e) =>
+                                                                    {
+                                                                        if (h.IsProcessing)
+                                                                        {
+                                                                            e.Cancel = true;
+                                                                        }
+                                                                    };
                                                                 _interactionWindows[h].Closed += (s, e) =>
                                                                     {
                                                                         _interactionWindows[h] = null;

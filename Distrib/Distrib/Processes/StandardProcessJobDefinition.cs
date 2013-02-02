@@ -46,8 +46,8 @@ namespace Distrib.Processes
     public sealed class ProcessJobDefinition<TInput, TOutput> : ProcessJobDefinitionBase
         , IJobDefinition<TInput, TOutput>
     {
-        public ProcessJobDefinition(string jobName)
-            : base(jobName, typeof(TInput), typeof(TOutput))
+        public ProcessJobDefinition(string jobName, string jobDescription)
+            : base(jobName, jobDescription, typeof(TInput), typeof(TOutput))
         {
 
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProcessRunner.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,12 +20,11 @@ namespace ProcessRunner.Views
     /// </summary>
     public partial class ProcessHostInteractionWindow : Elysium.Controls.Window
     {
-        private Models.DistribProcessHost _processHost;
-        public ProcessHostInteractionWindow(Models.DistribProcessHost processHost)
+        public ProcessHostInteractionWindow(ViewModels.ProcessHostInteractionViewModel viewModel)
         {
             InitializeComponent();
 
-            _processHost = processHost;
+            this.DataContext = viewModel;
         }
     }
 }

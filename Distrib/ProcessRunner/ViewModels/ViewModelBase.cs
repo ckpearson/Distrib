@@ -13,10 +13,13 @@ namespace ProcessRunner.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string property = "")
         {
-            if (this.PropertyChanged != null)
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(property));
-            }
+            App.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    if (this.PropertyChanged != null)
+                    {
+                        this.PropertyChanged(this, new PropertyChangedEventArgs(property));
+                    }
+                }));
         }
     }
 }

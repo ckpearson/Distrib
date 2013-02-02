@@ -96,9 +96,11 @@
     <Compile Include="Events\ApplicationTaskRunningEvent.cs" />
     <Compile Include="Events\AppStatusTextChangedEvent.cs" />
     <Compile Include="Events\PluginAssemblyStateChangeEvent.cs" />
+    <Compile Include="Models\DistribJobDefinition.cs" />
     <Compile Include="Models\DistribPlugin.cs" />
     <Compile Include="Models\DistribProcess.cs" />
     <Compile Include="Models\DistribProcessHost.cs" />
+    <Compile Include="Models\DistribProcessInputField.cs" />
     <Compile Include="Models\PluginAssembly.cs" />
     <Compile Include="Modules\AssemblyPickerStateModule.cs" />
     <Compile Include="Modules\BusyIndicatorModule.cs" />
@@ -116,6 +118,7 @@
     <Compile Include="ViewModels\BusyIndicatorViewModel.cs" />
     <Compile Include="ViewModels\PluginsInvestigatorViewModel.cs" />
     <Compile Include="ViewModels\ProcessesInvestigatorViewModel.cs" />
+    <Compile Include="ViewModels\ProcessHostInteractionViewModel.cs" />
     <Compile Include="ViewModels\ProcessRunnerMainViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\AssemblyPickerStateView.xaml.cs">

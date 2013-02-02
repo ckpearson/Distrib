@@ -71,6 +71,27 @@ namespace ProcessRunner.Models
             }
         }
 
+        private DelegateCommand _killAllHostsCommand;
+        public ICommand KillAllHostsCommand
+        {
+            get
+            {
+                if (_killAllHostsCommand == null)
+                {
+                    _killAllHostsCommand = new DelegateCommand(() =>
+                        {
+                            var hosts = ProcessHosts.ToList().AsReadOnly();
+                            foreach (var h in hosts)
+                            {
+                                h.KillCommand.Execute(null);
+                            }
+                        });
+                }
+
+                return _killAllHostsCommand;
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropChange([CallerMemberName] string property = "")
         {
@@ -80,6 +101,10 @@ namespace ProcessRunner.Models
             }
         }
 
+        /// <summary>
+        /// Called to kill a given host
+        /// </summary>
+        /// <param name="host"></param>
         public void KillHost(DistribProcessHost host)
         {
             host.Uninitialise();
@@ -90,6 +115,16 @@ namespace ProcessRunner.Models
         internal void InteractWithHost(DistribProcessHost host)
         {
             _interactWithHostAction(host);
+        }
+
+        /// <summary>
+        /// Called to inform the process that a host is uninitialising
+        /// </summary>
+        /// <param name="host"></param>
+        public void HostUninitialising(DistribProcessHost host)
+        {
+            ProcessHosts.Remove(host);
+            _hostTerminatedAction(host);
         }
     }
 }
