@@ -218,7 +218,7 @@ namespace TestLibrary
                     _subJobDef.ConfigInput(i => i.FirstInput).DisplayName = "X";
                     _subJobDef.ConfigInput(i => i.SecondInput).DisplayName = "Y";
 
-                    _subJobDef.ConfigOutput(o => o.Output).DisplayName = "Result (X - Y)";
+                    _subJobDef.ConfigOutput(o => o.Output).DisplayName = "Result (X - Y)"; 
                 }
 
                 return _subJobDef;
