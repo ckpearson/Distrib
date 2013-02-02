@@ -73,5 +73,25 @@ namespace ProcessRunner.Models
                 this.PropertyChanged(this, new PropertyChangedEventArgs(prop));
             }
         }
+
+        private string _executionError;
+        public string ExecutionError
+        {
+            get { return _executionError; }
+            set
+            {
+                _executionError = value;
+                OnPropChange();
+                OnPropChange("HasExecutionError");
+            }
+        }
+
+        public bool HasExecutionError
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(ExecutionError);
+            }
+        }
     }
 }

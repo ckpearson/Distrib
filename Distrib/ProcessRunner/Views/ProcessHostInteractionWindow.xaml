@@ -103,7 +103,7 @@
                                                                 <Setter Property="Content" Value="No Display Name Set" />
                                                                 <Style.Triggers>
                                                                     <DataTrigger Binding="{Binding Definition.Config.HasDisplayName}" Value="True">
-                                                                        <Setter Property="Content" Value="{Binding Definition.Content.DisplayName}" />
+                                                                        <Setter Property="Content" Value="{Binding Definition.Config.DisplayName}" />
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
@@ -170,73 +170,74 @@
             </Grid>
 
             <GroupBox Grid.Row="1" Header="Ouputs">
-                <ItemsControl Padding="10" ItemsSource="{Binding Path=SelectedJob.OutputFields}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <GroupBox Header="{Binding Definition.Name}" Margin="5">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    
-                                    <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                <StackPanel Orientation="Vertical">
+                    <ItemsControl Padding="10" ItemsSource="{Binding Path=SelectedJob.OutputFields}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <GroupBox Header="{Binding Definition.Name}" Margin="5">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center"
                                            Content="Value:" />
-                                    <Label Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                        <Label Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                                            Content="{Binding Value}" />
 
-                                    <GroupBox Header="Config" Grid.ColumnSpan="2" Grid.Row="1">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
+                                        <GroupBox Header="Config" Grid.ColumnSpan="2" Grid.Row="1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
 
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
 
-                                            <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center"
                                                        Content="Display Name:" />
-                                            <Label Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                                <Label.Style>
-                                                    <Style TargetType="Label">
-                                                        <Setter Property="Content" Value="No Display Name Set" />
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding Definition.Config.HasDisplayName}" Value="True">
-                                                                <Setter Property="Content" Value="{Binding Definition.DisplayName}" />
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Label.Style>
-                                            </Label>
+                                                <Label Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                    <Label.Style>
+                                                        <Style TargetType="Label">
+                                                            <Setter Property="Content" Value="No Display Name Set" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Definition.Config.HasDisplayName}" Value="True">
+                                                                    <Setter Property="Content" Value="{Binding Definition.DisplayName}" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Label.Style>
+                                                </Label>
 
-                                            <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center"
                                                        Content="Default Value:" />
-                                            <Label Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                                <Label.Style>
-                                                    <Style TargetType="Label">
-                                                        <Setter Property="Content" Value="No Default Value Set" />
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding Definition.Config.HasDefaultValue}" Value="True">
-                                                                <Setter Property="Content" Value="{Binding Definition.Config.DefaultValue}" />
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Label.Style>
-                                            </Label>
+                                                <Label Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                    <Label.Style>
+                                                        <Style TargetType="Label">
+                                                            <Setter Property="Content" Value="No Default Value Set" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Definition.Config.HasDefaultValue}" Value="True">
+                                                                    <Setter Property="Content" Value="{Binding Definition.Config.DefaultValue}" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Label.Style>
+                                                </Label>
 
-                                            <!--<Label Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                <!--<Label Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center"
                                                        Content="Deferred Value Provider:" />
                                             <Label Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center">
                                                 <Label.Style>
@@ -250,13 +251,28 @@
                                                     </Style>
                                                 </Label.Style>
                                             </Label>-->
-                                        </Grid>
-                                    </GroupBox>
-                                </Grid>
-                            </GroupBox>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                                            </Grid>
+                                        </GroupBox>
+                                    </Grid>
+                                </GroupBox>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    
+                    <TextBlock Text="{Binding SelectedJob.ExecutionError}" FontSize="13" FontWeight="Bold" Foreground="Red" TextAlignment="Center"
+                               TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedJob.HasExecutionError}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
             </GroupBox>
         </Grid>
     </Grid>

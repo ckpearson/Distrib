@@ -52,6 +52,7 @@ namespace ProcessRunner.ViewModels
                         {
                             _processHost.ProcessJob(def, () =>
                                 {
+                                    SelectedJob.ExecutionError = null;
                                     SelectedJob.OutputFields = def.UnderlyingJobDefinition.OutputFields.Select(f =>
                                         {
                                             var field = Distrib.Processes.ProcessJobFieldFactory.CreateValueField(f);
@@ -67,7 +68,26 @@ namespace ProcessRunner.ViewModels
                                 })
                                 .ContinueWith(t =>
                                     {
-                                        SelectedJob.OutputFields = t.Result;
+                                        if (t.Exception != null)
+                                        {
+                                            var baseExcep = t.Exception.GetBaseException();
+                                            SelectedJob.ExecutionError = string.Format("An error occurred: '{0}' ({1}) {2}",
+                                                baseExcep.Message,
+                                                baseExcep.Source,
+                                                baseExcep.InnerException != null ?
+                                                " - \"" + baseExcep.GetBaseException().Message + "\" (" + 
+                                                    baseExcep.GetBaseException().Source + ")" : "");
+
+                                            foreach (var of in SelectedJob.OutputFields)
+                                            {
+                                                of.Value = "EXECUTION ERROR";
+                                            }
+                                        }
+                                        else
+                                        {
+                                            SelectedJob.OutputFields = t.Result;
+                                        }
+
 
                                         OnPropertyChanged("CanExecuteJob");
                                         OnPropertyChanged("CanEnterInputs");
