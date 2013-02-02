@@ -60,6 +60,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Distrib.Ninject\Distrib.Ninject.csproj">
+      <Project>{55d1064b-f22e-4862-be0a-36ece03d1420}</Project>
+      <Name>Distrib.Ninject</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Distrib\Distrib.csproj">
       <Project>{e7593b79-d107-4595-9b04-c4fff42f035a}</Project>
       <Name>Distrib</Name>

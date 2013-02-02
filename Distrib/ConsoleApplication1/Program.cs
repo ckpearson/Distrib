@@ -52,120 +52,19 @@ namespace ConsoleApplication1
     class Program
     {
         private string dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "distrib plugins");
-        private Func<StandardKernel> kernelGet = new Func<StandardKernel>(() =>
-            {
-                return new StandardKernel(
-                    typeof(PluginsNinjectModule).Assembly.GetTypes()
-                    .Where(t => t.BaseType != null && t.BaseType.Equals(typeof(NinjectModule)))
-                    .Select(t => Activator.CreateInstance(t) as INinjectModule)
-                    .ToArray());
-            });
 
         static void Main(string[] args)
         {
             var p = new Program();
             //p.RunProcessSubsystemTest();
-            p.RunProcessHostTest();
+            p.RunNewIOCTest();
         }
 
-        private void RunProcessHostTest()
+        private void RunNewIOCTest()
         {
-            var kernel = kernelGet();
-
-            //var asmFile = Directory.EnumerateFiles(dir, "*.dll").DefaultIfEmpty(null).FirstOrDefault();
-            //if (asmFile == null)
-            //    throw new InvalidOperationException("No assemblies found in directory");
-
-            var asmFile = Path.Combine(dir, "TestLibrary.dll");
-
-
-            var pluginAsm = kernel.Get<IPluginAssemblyFactory>().CreatePluginAssemblyFromPath(asmFile);
-
-
-            var initRes = pluginAsm.Initialise();
-
-            try
-            {
-                if (!initRes.HasUsablePlugins) throw new ApplicationException();
-
-                var fpp = initRes.UsablePlugins
-                    .DefaultIfEmpty(null)
-                    .FirstOrDefault(p => p.Metadata.InterfaceType.Equals(typeof(IProcess)));
-
-                if (fpp == null) throw new ArgumentNullException();
-
-                var procHost = kernel.Get<IProcessHostFactory>()
-                    .CreateHostFromPlugin(fpp);
-
-                procHost.Initialise();
-
-                var inputFields = procHost.JobDescriptor.OutputFields;
-
-                var sw = new Stopwatch();
-                sw.Start();
-                var outputs = procHost.ProcessJob(null);
-                sw.Stop();
-
-                Console.WriteLine("Process took '{0}' to execute", sw.Elapsed);
-
-
-                procHost.Unitialise();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            Console.ReadLine();
-        }
-
-        private void RunProcessTest()
-        {
-            var kernel = kernelGet();
-
-            var asmFile = Directory.EnumerateFiles(dir, "*.dll").DefaultIfEmpty(null).FirstOrDefault();
-            if (asmFile == null)
-                throw new InvalidOperationException("No assemblies found in directory");
-
-
-            var pluginAsm = kernel.Get<IPluginAssemblyFactory>().CreatePluginAssemblyFromPath(asmFile);
-
-
-            var initRes = pluginAsm.Initialise();
-
-            try
-            {
-                if (!initRes.HasUsablePlugins)
-                    throw new InvalidOperationException("Plugin assembly contains no usable plugins");
-
-                var firstProcPlugin = initRes.UsablePlugins
-                    .DefaultIfEmpty(null)
-                    .FirstOrDefault(p => p.Metadata.InterfaceType.Equals(typeof(IProcess)));
-
-                if (firstProcPlugin == null)
-                    throw new InvalidOperationException("No process plugin present in plugin assembly");
-
-
-                var manPluginInst = pluginAsm.CreatePluginInstance(firstProcPlugin);
-
-                manPluginInst.Initialise();
-
-                IProcess procInstance =
-                    manPluginInst.GetUnderlyingInstance<IProcess>();
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Unexpected error", ex);
-            }
-            finally
-            {
-                try
-                {
-                    if (pluginAsm != null && pluginAsm.IsInitialised)
-                        pluginAsm.Unitialise();
-                }
-                catch { }
-            }
+            var kernel = new StandardKernel(new INinjectModule[] { });
+            IIOC nboot = new Distrib.IOC.Ninject.NinjectBootstrapper(kernel);
+            nboot.Start();
         }
 
         private void DashedLine()
