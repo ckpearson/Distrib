@@ -45,8 +45,86 @@ using System.Threading.Tasks;
 
 namespace TestLibrary
 {
-    [DistribProcessPlugin("AddIntProcess", "Adds two integers together", 1.0, "Clint Pearson", "{CBE47BC5-9350-4CB1-938B-69A0E07037E5}")]
-    public sealed class AddIntProc : CrossAppDomainObject, IPlugin, IProcess
+    //[DistribProcessPlugin("CrossDomainExcludedPlugin",
+    //    "Plugin which should be excluded because it isn't a cross domain derivative",
+    //    1.0,
+    //    "Clint Pearson",
+    //    "CROSSDOMAINDERIV")]
+    //public sealed class CrossDomainExcludedProc : IPlugin, IProcess
+    //{
+
+    //    public void InitialisePlugin(IPluginInteractionLink interactionLink)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void UninitialisePlugin(IPluginInteractionLink interactionLink)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void InitProcess()
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void UninitProcess()
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public IReadOnlyList<IJobDefinition> JobDefinitions
+    //    {
+    //        get { throw new NotImplementedException(); }
+    //    }
+
+    //    public void ProcessJob(IJob job)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
+
+    //[DistribProcessPlugin("CrossDomainExcludedPluginA",
+    //"Plugin which should be excluded because it isn't a cross domain derivative",
+    //1.0,
+    //"Clint Pearson",
+    //"CROSSDOMAINDERIVA")]
+    //public sealed class CrossDomainExcludedProcA : IPlugin, IProcess
+    //{
+
+    //    public void InitialisePlugin(IPluginInteractionLink interactionLink)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void UninitialisePlugin(IPluginInteractionLink interactionLink)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void InitProcess()
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void UninitProcess()
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public IReadOnlyList<IJobDefinition> JobDefinitions
+    //    {
+    //        get { throw new NotImplementedException(); }
+    //    }
+
+    //    public void ProcessJob(IJob job)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
+
+    [DistribProcessPlugin("IntOperationsProcess", "Performs mathematical operations on integers", 1.0, "Clint Pearson", "{FE010226-FDF3-4823-A620-4EEB69A3FDBE}")]
+    public sealed class IntOperationsProc : CrossAppDomainObject, IPlugin, IProcess
     {
         void IPlugin.InitialisePlugin(IPluginInteractionLink interactionLink)
         {
@@ -64,30 +142,114 @@ namespace TestLibrary
         {
         }
 
-        private IJobDefinition<IStockInput<int, int>, IStockOutput<int>> _def;
-        IJobDefinition IProcess.JobDefinition
+        private WriteOnce<IReadOnlyList<IJobDefinition>> _definitions = new WriteOnce<IReadOnlyList<IJobDefinition>>(null);
+
+        IReadOnlyList<IJobDefinition> IProcess.JobDefinitions
         {
             get
             {
-                if (_def == null)
+                lock (_definitions)
                 {
-                    _def = new ProcessJobDefinition<IStockInput<int, int>, IStockOutput<int>>("AddInt");
-                    _def.ConfigInput(i => i.FirstInput).DisplayName = "x";
-                    _def.ConfigInput(i => i.SecondInput).DisplayName = "y";
+                    if (!_definitions.IsWritten)
+                    {
+                        _definitions.Value = new List<IJobDefinition>()
+                        {
+                            IntOperationsProcJobs.AddJobDef,
+                            IntOperationsProcJobs.SubJobDef,
+                        }.AsReadOnly();
+                    }
 
-                    _def.ConfigOutput(i => i.Output).DisplayName = "Result";
+                    return _definitions.Value;
                 }
-
-                return _def;
             }
         }
 
         void IProcess.ProcessJob(IJob job)
         {
-            var input = new StockInput<int, int>(job);
-            var output = new StockOutput<int>(job);
+            JobExecutionHelper.New()
+                .AddHandler(() => IntOperationsProcJobs.AddJobDef, () =>
+                    {
+                        // Perform add int job
+                        var inp = new AddInput(job);
+                        var outp = new StockOutput<int>(job);
 
-            output.Output = input.FirstInput + input.SecondInput;
+                        outp.Output = inp.X + inp.Y;
+                    })
+                .AddHandler(() => IntOperationsProcJobs.SubJobDef, () =>
+                    {
+                        var inp = new StockInput<int, int>(job);
+                        var outp = new StockOutput<int>(job);
+
+                        outp.Output = inp.FirstInput - inp.SecondInput;
+                    })
+                .Execute(job.Definition);
+        }
+    }
+
+    public static class IntOperationsProcJobs
+    {
+        private static IJobDefinition<IAddInput, IStockOutput<int>> _addJobDef;
+        public static IJobDefinition AddJobDef
+        {
+            get
+            {
+                if (_addJobDef == null)
+                {
+                    _addJobDef = new ProcessJobDefinition<IAddInput, IStockOutput<int>>("Add",
+                        "Adds two integers together");
+
+                    _addJobDef.ConfigOutput(o => o.Output).DisplayName = "Result (X + Y)";
+                }
+
+                return _addJobDef;
+            }
+        }
+
+        private static IJobDefinition<IStockInput<int, int>, IStockOutput<int>> _subJobDef;
+        public static IJobDefinition SubJobDef
+        {
+            get
+            {
+                if (_subJobDef == null)
+                {
+                    _subJobDef = new ProcessJobDefinition<IStockInput<int, int>, IStockOutput<int>>("Subtract",
+                        "Subtracts two integers");
+
+                    _subJobDef.ConfigInput(i => i.FirstInput).DisplayName = "X";
+                    _subJobDef.ConfigInput(i => i.SecondInput).DisplayName = "Y";
+
+                    _subJobDef.ConfigOutput(o => o.Output).DisplayName = "Result (X - Y)";
+                }
+
+                return _subJobDef;
+            }
+        }
+    }
+
+
+    public interface IAddInput
+    {
+        int X { get; }
+        int Y { get; }
+    }
+
+    public sealed class AddInput : IAddInput
+    {
+        private readonly IJob _job;
+
+        public AddInput(IJob job)
+        {
+            _job = job;
+        }
+
+        public int X
+        {
+            get { return _job.InputTracker.GetInput<int>(_job); }
+        }
+
+        public int Y
+        {
+            get { return _job.InputTracker.GetInput<int>(_job); }
         }
     }
 }

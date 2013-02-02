@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "Cons
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLibrary", "TestLibrary\TestLibrary.csproj", "{54B74BF1-09ED-4A92-88DA-1C66FF458531}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessTester", "ProcessTester\ProcessTester.csproj", "{700D7FD4-7E11-4EC9-831A-5E163D3EAA92}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{978F4E0F-E9FF-4048-AFA2-D06980DD412B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Process Node", "Process Node", "{0A530703-D4D3-409E-9002-032DBD921C90}"
@@ -23,30 +21,27 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Distrib.Ninject", "Distrib.
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 6
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = ConsoleApplication1\\ConsoleApplication1.csproj
 		SccProjectName1 = ConsoleApplication1
 		SccLocalPath1 = ConsoleApplication1
-		SccProjectUniqueName2 = ProcessTester\\ProcessTester.csproj
-		SccProjectName2 = ProcessTester
-		SccLocalPath2 = ProcessTester
-		SccProjectUniqueName3 = TestLibrary\\TestLibrary.csproj
-		SccProjectName3 = TestLibrary
-		SccLocalPath3 = TestLibrary
-		SccProjectUniqueName4 = Distrib\\Distrib.csproj
-		SccProjectName4 = Distrib
-		SccLocalPath4 = Distrib
-		SccProjectUniqueName5 = ProcessRunner\\ProcessRunner.csproj
+		SccProjectUniqueName2 = TestLibrary\\TestLibrary.csproj
+		SccProjectName2 = TestLibrary
+		SccLocalPath2 = TestLibrary
+		SccProjectUniqueName3 = Distrib\\Distrib.csproj
+		SccProjectName3 = Distrib
+		SccLocalPath3 = Distrib
+		SccProjectUniqueName4 = ProcessRunner\\ProcessRunner.csproj
+		SccProjectTopLevelParentUniqueName4 = Distrib.sln
+		SccProjectName4 = ProcessRunner
+		SccLocalPath4 = ProcessRunner
+		SccProjectUniqueName5 = Distrib.Ninject\\Distrib.Ninject.csproj
 		SccProjectTopLevelParentUniqueName5 = Distrib.sln
-		SccProjectName5 = ProcessRunner
-		SccLocalPath5 = ProcessRunner
-		SccProjectUniqueName6 = Distrib.Ninject\\Distrib.Ninject.csproj
-		SccProjectTopLevelParentUniqueName6 = Distrib.sln
-		SccProjectName6 = Distrib.Ninject
-		SccLocalPath6 = Distrib.Ninject
+		SccProjectName5 = Distrib.Ninject
+		SccLocalPath5 = Distrib.Ninject
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,10 +60,6 @@ Global
 		{54B74BF1-09ED-4A92-88DA-1C66FF458531}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54B74BF1-09ED-4A92-88DA-1C66FF458531}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54B74BF1-09ED-4A92-88DA-1C66FF458531}.Release|Any CPU.Build.0 = Release|Any CPU
-		{700D7FD4-7E11-4EC9-831A-5E163D3EAA92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{700D7FD4-7E11-4EC9-831A-5E163D3EAA92}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{700D7FD4-7E11-4EC9-831A-5E163D3EAA92}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{700D7FD4-7E11-4EC9-831A-5E163D3EAA92}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3C942342-E79D-438F-942E-7CF4FCA040E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3C942342-E79D-438F-942E-7CF4FCA040E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C942342-E79D-438F-942E-7CF4FCA040E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
