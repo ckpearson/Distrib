@@ -129,7 +129,7 @@ namespace ProcessRunner.Services
                                 this.StatusText = tskDetails.Value();
                             }
 
-                            Thread.Sleep(1500);
+                            Thread.Sleep(2500);
                             this.StatusText = null;
 
                             _eventAggregator.GetEvent<Events.ApplicationTaskFinishedEvent>()

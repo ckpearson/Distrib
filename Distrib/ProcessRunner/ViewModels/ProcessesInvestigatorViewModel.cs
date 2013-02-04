@@ -84,17 +84,23 @@ namespace ProcessRunner.ViewModels
                                                 _appState.PerformVisibleTask((statUpdate) =>
                                                     {
                                                         statUpdate(string.Format("Creating process host for process '{0}'", proc.Plugin.PluginName));
-                                                        var host = _distrib.CreateProcessHost(proc);
-                                                        // I am thoroughly aware that this is nasty and shouldn't be here at all
-                                                        // but it works and it's only a tiny whoops (I'm sure there are worse in here)
-                                                        Application.Current.Dispatcher.BeginInvoke(new Action<IProcessHost>((h) =>
-                                                            {
-                                                                ProcessHosts.Add(callback(h));
-                                                            }), host);
-                                                    }, () =>
-                                                    {
+                                                        try
+                                                        {
+                                                            var host = _distrib.CreateProcessHost(proc);
+                                                            // I am thoroughly aware that this is nasty and shouldn't be here at all
+                                                            // but it works and it's only a tiny whoops (I'm sure there are worse in here)
+                                                            Application.Current.Dispatcher.BeginInvoke(new Action<IProcessHost>((h) =>
+                                                                {
+                                                                    ProcessHosts.Add(callback(h));
+                                                                }), host);
 
-                                                        return "Created process host";
+                                                            statUpdate("Created process host");
+                                                        }
+                                                        catch (Exception ex)
+                                                        {
+                                                            statUpdate(string.Format("Failed to create process host: '{0}'",
+                                                                ex.GetBaseException().Message));
+                                                        }
                                                     });
                                             }, (host) =>
                                             {

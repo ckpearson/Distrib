@@ -116,16 +116,23 @@ namespace ProcessRunner.Services
                 throw new InvalidOperationException();
             }
 
-            if (!process.Plugin.IsUsable)
+            try
             {
-                throw new InvalidOperationException();
+                if (!process.Plugin.IsUsable)
+                {
+                    throw new InvalidOperationException("The process isn't usable");
+                }
+
+                var procHost = _distribIOC.Get<IProcessHostFactory>()
+                    .CreateHostFromPluginSeparated(process.Plugin.RawDescriptor);
+                procHost.Initialise();
+
+                return procHost;
             }
-
-            var procHost = _distribIOC.Get<IProcessHostFactory>()
-                .CreateHostFromPluginSeparated(process.Plugin.RawDescriptor);
-            procHost.Initialise();
-
-            return procHost;
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to create process host", ex);
+            }
         }
     }
 }

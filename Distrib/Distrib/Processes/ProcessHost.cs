@@ -139,6 +139,12 @@ namespace Distrib.Processes
                     _processInstance = _pluginInstance.GetUnderlyingInstance<IProcess>();
                     _processInstance.InitProcess();
 
+                    // Ensure the process actually has some jobs
+                    if (_processInstance.JobDefinitions == null || _processInstance.JobDefinitions.Count == 0)
+                    {
+                        throw new ApplicationException("Process doesn't have any job definitions");
+                    }
+
                     _isInitialised = true;
                 }
             }
