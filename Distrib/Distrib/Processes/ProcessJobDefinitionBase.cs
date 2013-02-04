@@ -91,11 +91,6 @@ namespace Distrib.Processes
                                 .Where(p => (p.CanRead && p.CanWrite) && (p.PropertyType.IsClass || p.PropertyType.IsValueType) && p.PropertyType.IsSerializable)
                                 .Select(p => ProcessJobFieldFactory.CreateDefinitionField(p.PropertyType, p.Name, FieldMode.Output))).ToList();
 
-                        if (foundFields == null || foundFields.Count == 0)
-                        {
-                            throw new ApplicationException("No fields could be found on either the input or output types");
-                        }
-
                         return new List<IProcessJobDefinitionField>(foundFields);
                     });
             }
