@@ -8,6 +8,10 @@ using Distrib.Utils;
 
 namespace Distrib.Processes
 {
+    /// <summary>
+    /// Provides helper functions for dealing with job data
+    /// </summary>
+    /// <typeparam name="T">The input or output interface to work with</typeparam>
     public sealed class JobDataHelper<T> where T : class
     {
         private readonly IJobDefinition _definition;
@@ -17,41 +21,85 @@ namespace Distrib.Processes
             _definition = definition;
         }
 
+        /// <summary>
+        /// Creates a new data helper
+        /// </summary>
+        /// <param name="definition">The definition of the job being worked with</param>
+        /// <returns>The data helper</returns>
         public static JobDataHelper<T> New(IJobDefinition definition)
         {
             return new JobDataHelper<T>(definition);
         }
 
+        /// <summary>
+        /// Gets a data helper for setting input data
+        /// </summary>
+        /// <returns>The data helper</returns>
         public IJobInputSetDataHelper<T> ForInputSet()
         {
             return new JobInputSetDataHelper<T>(_definition);
         }
 
+        /// <summary>
+        /// Gets a data helper for getting input data
+        /// </summary>
+        /// <param name="job">The job the data is for</param>
+        /// <returns></returns>
         public IJobInputGetDataHelper<T> ForInputGet(IJob job)
         {
             return new JobInputGetDataHelper<T>(_definition, job);
         }
 
+        /// <summary>
+        /// Gets a data helper for setting output data
+        /// </summary>
+        /// <param name="job">The job the data is for</param>
+        /// <returns>The data helper</returns>
         public IJobOutputSetHelper<T> ForOutputSet(IJob job)
         {
             return new JobOutputSetHelper<T>(_definition, job);
         }
 
+        /// <summary>
+        /// Gets a data helper for getting output data from the value fields
+        /// </summary>
+        /// <param name="valueFields">The value fields</param>
+        /// <returns>The data helper</returns>
         public IJobOutputGetHelper<T> ForOutputGet(IReadOnlyList<IProcessJobValueField> valueFields)
         {
             return new JobOutputGetHelper<T>(_definition, valueFields);
         }
 
+        /// <summary>
+        /// Gets a data helper for getting output data from a given job
+        /// </summary>
+        /// <param name="job">The job the data is on</param>
+        /// <returns>The data helper</returns>
         public IJobOutputGetHelper<T> ForOutputGet(IJob job)
         {
             return new JobOutputGetHelper<T>(_definition, job);
         }
     }
 
+    /// <summary>
+    /// Job data helper for setting inputs
+    /// </summary>
+    /// <typeparam name="T">The input interface</typeparam>
     public interface IJobInputSetDataHelper<T> where T : class
     {
+        /// <summary>
+        /// Set the given input
+        /// </summary>
+        /// <typeparam name="TProp">The input field property type</typeparam>
+        /// <param name="expr">The expression pointing to the input property</param>
+        /// <param name="value">The value to set</param>
+        /// <returns>The data helper</returns>
         IJobInputSetDataHelper<T> Set<TProp>(Expression<Func<T, TProp>> expr, TProp value);
 
+        /// <summary>
+        /// Produces the input value fields
+        /// </summary>
+        /// <returns>The input value fields</returns>
         IReadOnlyList<IProcessJobValueField> ToValueFields();
     }
 
