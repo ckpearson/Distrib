@@ -47,35 +47,4 @@ namespace Distrib.Processes.Stock
         T1 FirstOutput { get; set; }
         T2 SecondOutput { get; set; }
     }
-
-    public sealed class StockOutput<T> : IStockOutput<T>
-    {
-        private readonly IJob _job;
-        private readonly object _lock = new object();
-
-        public StockOutput(IJob job)
-        {
-            if (job == null) throw Ex.ArgNull(() => job);
-
-            _job = job;
-        }
-
-        public T Output
-        {
-            get
-            {
-                lock (_lock)
-                {
-                    return _job.OutputTracker.GetOutput<T>(_job);
-                }
-            }
-            set
-            {
-                lock (_lock)
-                {
-                    _job.OutputTracker.SetOutput<T>(_job, value);
-                }
-            }
-        }
-    }
 }
