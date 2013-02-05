@@ -2,6 +2,7 @@
 using Distrib.Plugins;
 using Distrib.Processes;
 using Distrib.Processes.Plugin;
+using Distrib.Processes.Stock;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +49,15 @@ namespace MathOperationsProcessLibary
                 .AddHandler(() => MathOpsProcess_JobDefinitions.AddIntDef,
                     () =>
                     {
+                        var input = JobDataHelper<IStockInput<int, int>>
+                            .New(job.Definition)
+                            .ForInputGet(job);
 
+                        JobDataHelper<IStockOutput<int>>
+                            .New(job.Definition)
+                            .ForOutputSet(job)
+                            .Set(o => o.Output, 
+                                (input.Get(i => i.FirstInput) + input.Get(i => i.SecondInput)));
                     })
                 .Execute(job.Definition);
         }

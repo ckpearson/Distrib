@@ -20,11 +20,11 @@ namespace MathOperationsProcessLibary
                 {
                     _definitions = new List<IJobDefinition>()
                     {
-                        //MathOpsProcess_JobDefinitions.AddIntDef,
+                        MathOpsProcess_JobDefinitions.AddIntDef,
                     }.AsReadOnly();
                 }
 
-                return null;
+                return _definitions;
             }
         }
 

@@ -132,6 +132,7 @@
     <Compile Include="Processes\IProcessHostFactory.cs" />
     <Compile Include="Processes\IProcessJobField.cs" />
     <Compile Include="Processes\IProcessJobFieldConfig.cs" />
+    <Compile Include="Processes\JobDataHelper.cs" />
     <Compile Include="Processes\JobDescriptor.cs" />
     <Compile Include="Processes\JobDescriptorFactory.cs" />
     <Compile Include="Processes\JobExecutionHelper.cs" />

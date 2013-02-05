@@ -33,6 +33,7 @@
 using Distrib.IOC;
 using Distrib.Plugins;
 using Distrib.Processes;
+using Distrib.Processes.Stock;
 using Ninject;
 using Ninject.Modules;
 using System;
@@ -56,8 +57,20 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
             var p = new Program();
-            //p.RunProcessSubsystemTest();
-            p.RunNewIOCTest();
+            p.InputHelperTest();
+        }
+
+        private void InputHelperTest()
+        {
+            IIOC nboot = new Distrib.IOC.Ninject.NinjectBootstrapper();
+            nboot.Start();
+            var jd = new ProcessJobDefinition<IStockInput<int>, IStockOutput<int>>("a", "b");
+
+            var vf = JobDataHelper<IStockInput<int>>
+                .New(jd)
+                .ForInputSet()
+                .Set(i => i.Input, 12)
+                .ToValueFields();
         }
 
         private void RunNewIOCTest()

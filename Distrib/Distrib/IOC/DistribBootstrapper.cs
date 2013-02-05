@@ -89,12 +89,6 @@ namespace Distrib.IOC
         protected abstract IEnumerable<object> GetAllInstances(Type serviceType);
 
         /// <summary>
-        /// When overridden in a derived class performs injection upon the given instance
-        /// </summary>
-        /// <param name="instance">The instance to perform injection upon</param>
-        protected abstract void Inject(object instance);
-
-        /// <summary>
         /// When overridden in a derived class binds the given service type to an implementation type
         /// </summary>
         /// <param name="serviceType">The service type</param>

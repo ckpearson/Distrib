@@ -45,13 +45,14 @@ namespace Distrib.IOC.Ninject
     /// </summary>
     public class NinjectBootstrapper : Distrib.IOC.DistribBootstrapper
     {
-        private IKernel _kernel;
+        private IKernel _kernel = null;
 
-        public NinjectBootstrapper()
-        {
+        public NinjectBootstrapper() { }
 
-        }
-
+        /// <summary>
+        /// Instantiates a new instance
+        /// </summary>
+        /// <param name="ninjectKernel">The ninject kernel you want distrib to utilise</param>
         public NinjectBootstrapper(IKernel ninjectKernel)
         {
             _kernel = ninjectKernel;
@@ -80,11 +81,6 @@ namespace Distrib.IOC.Ninject
         protected override IEnumerable<object> GetAllInstances(Type serviceType)
         {
             return _kernel.GetAll(serviceType);
-        }
-
-        protected override void Inject(object instance)
-        {
-            _kernel.Inject(instance);
         }
 
         protected override void Bind(Type serviceType, Type concreteType, bool singleton = false)

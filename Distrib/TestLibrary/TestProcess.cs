@@ -45,83 +45,6 @@ using System.Threading.Tasks;
 
 namespace TestLibrary
 {
-    //[DistribProcessPlugin("CrossDomainExcludedPlugin",
-    //    "Plugin which should be excluded because it isn't a cross domain derivative",
-    //    1.0,
-    //    "Clint Pearson",
-    //    "CROSSDOMAINDERIV")]
-    //public sealed class CrossDomainExcludedProc : IPlugin, IProcess
-    //{
-
-    //    public void InitialisePlugin(IPluginInteractionLink interactionLink)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-
-    //    public void UninitialisePlugin(IPluginInteractionLink interactionLink)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-
-    //    public void InitProcess()
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-
-    //    public void UninitProcess()
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-
-    //    public IReadOnlyList<IJobDefinition> JobDefinitions
-    //    {
-    //        get { throw new NotImplementedException(); }
-    //    }
-
-    //    public void ProcessJob(IJob job)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-    //[DistribProcessPlugin("CrossDomainExcludedPluginA",
-    //"Plugin which should be excluded because it isn't a cross domain derivative",
-    //1.0,
-    //"Clint Pearson",
-    //"CROSSDOMAINDERIVA")]
-    //public sealed class CrossDomainExcludedProcA : IPlugin, IProcess
-    //{
-
-    //    public void InitialisePlugin(IPluginInteractionLink interactionLink)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-
-    //    public void UninitialisePlugin(IPluginInteractionLink interactionLink)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-
-    //    public void InitProcess()
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-
-    //    public void UninitProcess()
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-
-    //    public IReadOnlyList<IJobDefinition> JobDefinitions
-    //    {
-    //        get { throw new NotImplementedException(); }
-    //    }
-
-    //    public void ProcessJob(IJob job)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
 
     [DistribProcessPlugin("IntOperationsProcess", "Performs mathematical operations on integers", 1.0, "Clint Pearson", "{FE010226-FDF3-4823-A620-4EEB69A3FDBE}")]
     public sealed class IntOperationsProc : CrossAppDomainObject, IPlugin, IProcess
@@ -156,6 +79,7 @@ namespace TestLibrary
                         {
                             IntOperationsProcJobs.AddJobDef,
                             IntOperationsProcJobs.SubJobDef,
+                            IntOperationsProcJobs.NoFieldsJobDef,
                         }.AsReadOnly();
                     }
 
@@ -181,6 +105,10 @@ namespace TestLibrary
                         var outp = new StockOutput<int>(job);
 
                         outp.Output = inp.FirstInput - inp.SecondInput;
+                    })
+                .AddHandler(() => IntOperationsProcJobs.NoFieldsJobDef, () =>
+                    {
+                        // Do something here that doesn't need inputs or outputs
                     })
                 .Execute(job.Definition);
         }
@@ -224,8 +152,33 @@ namespace TestLibrary
                 return _subJobDef;
             }
         }
+
+        private static IJobDefinition<INoInput, INoOutput> _noFieldsJobDef;
+        public static IJobDefinition NoFieldsJobDef
+        {
+            get
+            {
+                if (_noFieldsJobDef == null)
+                {
+                    _noFieldsJobDef = new ProcessJobDefinition<INoInput, INoOutput>("No Fields Job", "A job that has no inputs or outputs");
+                    
+                }
+
+                return _noFieldsJobDef;
+            }
+        }
     }
 
+    public interface INoInput
+    {
+
+    }
+
+    public interface INoOutput
+    {
+
+
+    }
 
     public interface IAddInput
     {
