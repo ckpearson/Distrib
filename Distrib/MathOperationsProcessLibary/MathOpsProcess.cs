@@ -53,11 +53,12 @@ namespace MathOperationsProcessLibary
                             .New(job.Definition)
                             .ForInputGet(job);
 
-                        JobDataHelper<IStockOutput<int>>
+                        var output = JobDataHelper<IStockOutput<int>>
                             .New(job.Definition)
-                            .ForOutputSet(job)
-                            .Set(o => o.Output, 
-                                (input.Get(i => i.FirstInput) + input.Get(i => i.SecondInput)));
+                            .ForOutputSet(job);
+
+                        output.Set(o => o.Output,
+                            input.Get(i => i.FirstInput) + input.Get(i => i.SecondInput));
                     })
                 .Execute(job.Definition);
         }
