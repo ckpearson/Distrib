@@ -38,51 +38,30 @@ using System.Threading.Tasks;
 
 namespace Distrib.Processes
 {
-    /// <summary>
-    /// Represents a process host
-    /// </summary>
     public interface IProcessHost
     {
-        /// <summary>
-        /// Initialises the process host
-        /// </summary>
         void Initialise();
-
-        /// <summary>
-        /// Unitialises the process host
-        /// </summary>
         void Unitialise();
 
-        /// <summary>
-        /// Gets whether the process host has been initialised
-        /// </summary>
         bool IsInitialised { get; }
 
         IReadOnlyList<IJobDefinition> JobDefinitions { get; }
 
-        /// <summary>
-        /// Create and process a job using the given input values
-        /// </summary>
-        /// <param name="inputValues">The input values to give to the job</param>
-        /// <returns>The output values</returns>
-        IEnumerable<IProcessJobValueField> ProcessJob(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues = null);
-
-        /// <summary>
-        /// Create and process a job using the given input values asynchronously
-        /// </summary>
-        /// <param name="inputValues">The input values to give to the job</param>
-        /// <returns>The task to invoke</returns>
-        Task<IEnumerable<IProcessJobValueField>> ProcessJobAsync(IEnumerable<IProcessJobValueField> inputValues = null);
-
-        /// <summary>
-        /// Gets the plugin descriptor for the process
-        /// </summary>
-        IPluginDescriptor PluginDescriptor { get; }
-
-        IReadOnlyList<string> RegisteredPluginDependencyAssemblies { get; }
+        IReadOnlyList<IProcessJobValueField> ProcessJob(IJobDefinition definition,
+            IEnumerable<IProcessJobValueField> inputValues);
 
         DateTime InstanceCreationStamp { get; }
-
         string InstanceID { get; }
+    }
+
+    public interface IPluginPoweredProcessHost
+    {
+        IPluginDescriptor PluginDescriptor { get; }
+        IReadOnlyList<string> DeclaredDependentAssemblies { get; }
+    }
+
+    public interface IInstancePoweredProcessHost
+    {
+        Type InstanceType { get; }
     }
 }

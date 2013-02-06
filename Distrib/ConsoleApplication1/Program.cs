@@ -64,13 +64,29 @@ namespace ConsoleApplication1
         {
             IIOC nboot = new Distrib.IOC.Ninject.NinjectBootstrapper();
             nboot.Start();
-            var jd = new ProcessJobDefinition<IStockInput<int>, IStockOutput<int>>("a", "b");
 
-            var vf = JobDataHelper<IStockInput<int>>
-                .New(jd)
+            var processHostFactory =
+                nboot.Get<IProcessHostFactory>();
+
+            var procHost =
+                processHostFactory.CreateHostFromTypeSeparated(typeof(SomeProcess));
+
+            procHost.Initialise();
+
+            var result = procHost.ProcessJob(procHost.JobDefinitions[0],
+                JobDataHelper<IStockInput<string>>
+                .New(procHost.JobDefinitions[0])
                 .ForInputSet()
-                .Set(i => i.Input, 12)
-                .ToValueFields();
+                .Set(i => i.Input, "Clint")
+                .ToValueFields());
+
+            var message = JobDataHelper<IStockOutput<string>>
+                .New(procHost.JobDefinitions[0])
+                .ForOutputGet(result)
+                .Get(o => o.Output);
+
+            procHost.Unitialise();
+            procHost = null;
         }
 
         private void RunNewIOCTest()
@@ -86,5 +102,59 @@ namespace ConsoleApplication1
         }
     }
 
+    public sealed class SomeProcess : IProcess
+    {
 
+        public void InitProcess()
+        {
+        }
+
+        public void UninitProcess()
+        {
+        }
+
+        private IJobDefinition<IStockInput<string>, IStockOutput<string>> _sayHelloJob;
+        private IReadOnlyList<IJobDefinition> _jobs = null;
+        public IReadOnlyList<IJobDefinition> JobDefinitions
+        {
+            get
+            {
+                if (_jobs == null)
+                {
+                    if (_sayHelloJob == null)
+                    {
+                        _sayHelloJob = new ProcessJobDefinition<IStockInput<string>, IStockOutput<string>>(
+                            "Say Hello", "Says hello to someone");
+                    }
+
+                    _jobs = new List<IJobDefinition>()
+                    {
+                        _sayHelloJob,
+                    }.AsReadOnly();
+                }
+
+                return _jobs;
+            }
+        }
+
+        public void ProcessJob(IJob job)
+        {
+            JobExecutionHelper.New()
+                .AddHandler(() => _sayHelloJob, () =>
+                    {
+                        var input = JobDataHelper<IStockInput<string>>
+                            .New(job.Definition)
+                            .ForInputGet(job);
+
+                        var output = JobDataHelper<IStockOutput<string>>
+                            .New(job.Definition)
+                            .ForOutputSet(job);
+
+                        output.Set(o => o.Output,
+                            string.Format("Hello, {0}",
+                                input.Get(i => i.Input)));
+                    })
+                .Execute(job.Definition);
+        }
+    }
 }

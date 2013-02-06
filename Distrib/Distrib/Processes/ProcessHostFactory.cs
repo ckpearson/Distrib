@@ -87,7 +87,7 @@ namespace Distrib.Processes
 
         public IProcessHost CreateHostFromPlugin(IPluginDescriptor descriptor)
         {
-            return _ioc.Get<IProcessHost>(new[]
+            return (IProcessHost)_ioc.Get<IPluginPoweredProcessHost>(new[]
             {
                 new IOCConstructorArgument("descriptor", descriptor),
             });
@@ -99,6 +99,24 @@ namespace Distrib.Processes
                 .CreateInstanceWithSeparation(CreateHostFromPlugin(descriptor).GetType(), new[]
                 {
                     new KeyValuePair<string, object>("descriptor", descriptor),
+                }) as IProcessHost;
+        }
+
+
+        public IProcessHost CreateHostFromType(Type type)
+        {
+            return (IProcessHost)_ioc.Get<IInstancePoweredProcessHost>(new[]
+            {
+                new IOCConstructorArgument("instanceType", type),
+            });
+        }
+
+        public IProcessHost CreateHostFromTypeSeparated(Type type)
+        {
+            return _instFactory.CreateCreator()
+                .CreateInstanceWithSeparation(CreateHostFromType(type).GetType(), new[]
+                {
+                    new KeyValuePair<string, object>("instanceType", type),
                 }) as IProcessHost;
         }
     }
