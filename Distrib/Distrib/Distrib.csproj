@@ -44,57 +44,159 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="External\ImpromptuInterface\ActLikeCaster.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\Builder.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\CacheableInvocation.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ExtensionToInstanceProxy.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\FluentRegex.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\FluentStringLookup.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\IActLike.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\IDynamicKnowLike.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuBuilder.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuDictionary.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuDictionaryBase.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuDummy.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuFactory.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuForwarder.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuForwarderAddRemove.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuGet.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuLateLibraryType.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuLazy.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuList.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuMatch.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuObject.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuPropertyDescriptor.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuRecorder.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\InlineLambdas.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\Invocation.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\LinqInstanceProxy.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\Mimic.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\NonRecursiveInterfaceAttribute.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\PartialApplyInvocation.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\ThisFunctions.cs" />
-    <Compile Include="External\ImpromptuInterface\Dynamic\UseNamedArgumentAttribute.cs" />
-    <Compile Include="External\ImpromptuInterface\EmitProxy\ActLikeProxy.cs" />
-    <Compile Include="External\ImpromptuInterface\EmitProxy\ActLikeProxyAttribute.cs" />
-    <Compile Include="External\ImpromptuInterface\EmitProxy\ActLikeProxySerializationHelper.cs" />
-    <Compile Include="External\ImpromptuInterface\EmitProxy\BuildProxy.cs" />
-    <Compile Include="External\ImpromptuInterface\EmitProxy\EmitExtensions.cs" />
-    <Compile Include="External\ImpromptuInterface\EmitProxy\TypeHash.cs" />
-    <Compile Include="External\ImpromptuInterface\IActLikeProxy.cs" />
-    <Compile Include="External\ImpromptuInterface\Impromptu.cs" />
-    <Compile Include="External\ImpromptuInterface\Internal\Curry.cs" />
-    <Compile Include="External\ImpromptuInterface\Internal\InvokeSetters.cs" />
-    <Compile Include="External\ImpromptuInterface\Internal\Support.cs" />
-    <Compile Include="External\ImpromptuInterface\InvokeArg.cs" />
-    <Compile Include="External\ImpromptuInterface\InvokeContext.cs" />
-    <Compile Include="External\ImpromptuInterface\InvokeExt\InvokeExt.cs" />
-    <Compile Include="External\ImpromptuInterface\InvokeMemberName.cs" />
-    <Compile Include="External\ImpromptuInterface\Optimization\BareBonesList.cs" />
-    <Compile Include="External\ImpromptuInterface\Optimization\BinderHash.cs" />
-    <Compile Include="External\ImpromptuInterface\Optimization\InvokeHelper-Regular.cs" />
-    <Compile Include="External\ImpromptuInterface\Optimization\InvokeHelper.cs" />
-    <Compile Include="External\ImpromptuInterface\Optimization\Util.cs" />
+    <Compile Include="..\ImpromptuInterface\ActLikeCaster.cs">
+      <Link>External\ImpromptuInterface\ActLikeCaster.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ActLikeProxy.cs">
+      <Link>External\ImpromptuInterface\ActLikeProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ActLikeProxyAttribute.cs">
+      <Link>External\ImpromptuInterface\ActLikeProxyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ActLikeProxySerializationHelper.cs">
+      <Link>External\ImpromptuInterface\ActLikeProxySerializationHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\BareBonesList.cs">
+      <Link>External\ImpromptuInterface\BareBonesList.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\BinderHash.cs">
+      <Link>External\ImpromptuInterface\BinderHash.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\Builder.cs">
+      <Link>External\ImpromptuInterface\Builder.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\BuildProxy.cs">
+      <Link>External\ImpromptuInterface\BuildProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\CacheableInvocation.cs">
+      <Link>External\ImpromptuInterface\CacheableInvocation.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\Curry.cs">
+      <Link>External\ImpromptuInterface\Curry.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\EmitExtensions.cs">
+      <Link>External\ImpromptuInterface\EmitExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ExtensionToInstanceProxy.cs">
+      <Link>External\ImpromptuInterface\ExtensionToInstanceProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\FluentRegex.cs">
+      <Link>External\ImpromptuInterface\FluentRegex.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\FluentStringLookup.cs">
+      <Link>External\ImpromptuInterface\FluentStringLookup.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\IActLike.cs">
+      <Link>External\ImpromptuInterface\IActLike.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\IActLikeProxy.cs">
+      <Link>External\ImpromptuInterface\IActLikeProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\IDynamicKnowLike.cs">
+      <Link>External\ImpromptuInterface\IDynamicKnowLike.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\Impromptu.cs">
+      <Link>External\ImpromptuInterface\Impromptu.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ImpromptuBuilder.cs">
+      <Link>External\ImpromptuInterface\ImpromptuBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ImpromptuDictionary.cs">
+      <Link>External\ImpromptuInterface\ImpromptuDictionary.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ImpromptuDictionaryBase.cs">
+      <Link>External\ImpromptuInterface\ImpromptuDictionaryBase.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ImpromptuDummy.cs">
+      <Link>External\ImpromptuInterface\ImpromptuDummy.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ImpromptuFactory.cs">
+      <Link>External\ImpromptuInterface\ImpromptuFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ImpromptuForwarder.cs">
+      <Link>External\ImpromptuInterface\ImpromptuForwarder.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ImpromptuForwarderAddRemove.cs">
+      <Link>External\ImpromptuInterface\ImpromptuForwarderAddRemove.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ImpromptuGet.cs">
+      <Link>External\ImpromptuInterface\ImpromptuGet.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ImpromptuLateLibraryType.cs">
+      <Link>External\ImpromptuInterface\ImpromptuLateLibraryType.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ImpromptuLazy.cs">
+      <Link>External\ImpromptuInterface\ImpromptuLazy.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ImpromptuList.cs">
+      <Link>External\ImpromptuInterface\ImpromptuList.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ImpromptuMatch.cs">
+      <Link>External\ImpromptuInterface\ImpromptuMatch.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ImpromptuObject.cs">
+      <Link>External\ImpromptuInterface\ImpromptuObject.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ImpromptuPropertyDescriptor.cs">
+      <Link>External\ImpromptuInterface\ImpromptuPropertyDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ImpromptuRecorder.cs">
+      <Link>External\ImpromptuInterface\ImpromptuRecorder.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\InlineLambdas.cs">
+      <Link>External\ImpromptuInterface\InlineLambdas.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\Invocation.cs">
+      <Link>External\ImpromptuInterface\Invocation.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\InvokeArg.cs">
+      <Link>External\ImpromptuInterface\InvokeArg.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\InvokeContext.cs">
+      <Link>External\ImpromptuInterface\InvokeContext.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\InvokeExt.cs">
+      <Link>External\ImpromptuInterface\InvokeExt.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\InvokeHelper-Regular.cs">
+      <Link>External\ImpromptuInterface\InvokeHelper-Regular.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\InvokeHelper.cs">
+      <Link>External\ImpromptuInterface\InvokeHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\InvokeMemberName.cs">
+      <Link>External\ImpromptuInterface\InvokeMemberName.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\InvokeSetters.cs">
+      <Link>External\ImpromptuInterface\InvokeSetters.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\LinqInstanceProxy.cs">
+      <Link>External\ImpromptuInterface\LinqInstanceProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\Mimic.cs">
+      <Link>External\ImpromptuInterface\Mimic.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\NonRecursiveInterfaceAttribute.cs">
+      <Link>External\ImpromptuInterface\NonRecursiveInterfaceAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\PartialApplyInvocation.cs">
+      <Link>External\ImpromptuInterface\PartialApplyInvocation.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\Support.cs">
+      <Link>External\ImpromptuInterface\Support.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\ThisFunctions.cs">
+      <Link>External\ImpromptuInterface\ThisFunctions.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\TypeHash.cs">
+      <Link>External\ImpromptuInterface\TypeHash.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\UseNamedArgumentAttribute.cs">
+      <Link>External\ImpromptuInterface\UseNamedArgumentAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\ImpromptuInterface\Util.cs">
+      <Link>External\ImpromptuInterface\Util.cs</Link>
+    </Compile>
     <Compile Include="IOC\DistribBootstrapper.cs" />
     <Compile Include="IOC\IIOC.cs" />
     <Compile Include="IOC\IOCAttribute.cs" />
@@ -230,6 +332,7 @@
   <ItemGroup>
     <None Include="Distrib.licenseheader" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
