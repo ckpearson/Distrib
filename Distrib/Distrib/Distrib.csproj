@@ -44,6 +44,57 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="External\ImpromptuInterface\ActLikeCaster.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\Builder.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\CacheableInvocation.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ExtensionToInstanceProxy.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\FluentRegex.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\FluentStringLookup.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\IActLike.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\IDynamicKnowLike.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuBuilder.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuDictionary.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuDictionaryBase.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuDummy.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuFactory.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuForwarder.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuForwarderAddRemove.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuGet.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuLateLibraryType.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuLazy.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuList.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuMatch.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuObject.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuPropertyDescriptor.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ImpromptuRecorder.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\InlineLambdas.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\Invocation.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\LinqInstanceProxy.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\Mimic.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\NonRecursiveInterfaceAttribute.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\PartialApplyInvocation.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\ThisFunctions.cs" />
+    <Compile Include="External\ImpromptuInterface\Dynamic\UseNamedArgumentAttribute.cs" />
+    <Compile Include="External\ImpromptuInterface\EmitProxy\ActLikeProxy.cs" />
+    <Compile Include="External\ImpromptuInterface\EmitProxy\ActLikeProxyAttribute.cs" />
+    <Compile Include="External\ImpromptuInterface\EmitProxy\ActLikeProxySerializationHelper.cs" />
+    <Compile Include="External\ImpromptuInterface\EmitProxy\BuildProxy.cs" />
+    <Compile Include="External\ImpromptuInterface\EmitProxy\EmitExtensions.cs" />
+    <Compile Include="External\ImpromptuInterface\EmitProxy\TypeHash.cs" />
+    <Compile Include="External\ImpromptuInterface\IActLikeProxy.cs" />
+    <Compile Include="External\ImpromptuInterface\Impromptu.cs" />
+    <Compile Include="External\ImpromptuInterface\Internal\Curry.cs" />
+    <Compile Include="External\ImpromptuInterface\Internal\InvokeSetters.cs" />
+    <Compile Include="External\ImpromptuInterface\Internal\Support.cs" />
+    <Compile Include="External\ImpromptuInterface\InvokeArg.cs" />
+    <Compile Include="External\ImpromptuInterface\InvokeContext.cs" />
+    <Compile Include="External\ImpromptuInterface\InvokeExt\InvokeExt.cs" />
+    <Compile Include="External\ImpromptuInterface\InvokeMemberName.cs" />
+    <Compile Include="External\ImpromptuInterface\Optimization\BareBonesList.cs" />
+    <Compile Include="External\ImpromptuInterface\Optimization\BinderHash.cs" />
+    <Compile Include="External\ImpromptuInterface\Optimization\InvokeHelper-Regular.cs" />
+    <Compile Include="External\ImpromptuInterface\Optimization\InvokeHelper.cs" />
+    <Compile Include="External\ImpromptuInterface\Optimization\Util.cs" />
     <Compile Include="IOC\DistribBootstrapper.cs" />
     <Compile Include="IOC\IIOC.cs" />
     <Compile Include="IOC\IOCAttribute.cs" />
@@ -176,7 +227,10 @@
     <Compile Include="Utils\TrackWritten.cs" />
     <Compile Include="Utils\WriteOnce.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="External\ImpromptuInterface\Details.txt" />
+    <Content Include="External\ImpromptuInterface\Impromptu Interface License.txt" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="Distrib.licenseheader" />
   </ItemGroup>
