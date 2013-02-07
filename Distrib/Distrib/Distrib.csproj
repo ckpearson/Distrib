@@ -228,10 +228,6 @@
     <Compile Include="Utils\WriteOnce.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="External\ImpromptuInterface\Details.txt" />
-    <Content Include="External\ImpromptuInterface\Impromptu Interface License.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Distrib.licenseheader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

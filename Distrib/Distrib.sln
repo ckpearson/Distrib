@@ -23,6 +23,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maths", "Maths", "{B98BDBEA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathOperationsProcessLibary", "MathOperationsProcessLibary\MathOperationsProcessLibary.csproj", "{B88DE181-F28C-4D22-B9D6-80091C36BB17}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{89B97063-4093-4C12-A9FB-2C1AAFC55B5B}"
+	ProjectSection(SolutionItems) = preProject
+		NOTICE.TXT = NOTICE.TXT
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 6
