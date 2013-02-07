@@ -51,8 +51,15 @@ namespace ProcessRunner
         {
             base.OnStartup(e);
 
+            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+
             var prismBoot = new PrismBootstrapper();
             prismBoot.Run();
+        }
+
+        void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 

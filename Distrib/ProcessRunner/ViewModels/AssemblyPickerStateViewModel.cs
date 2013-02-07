@@ -142,8 +142,21 @@ namespace ProcessRunner.ViewModels
                                     if (ofd.ShowDialog().Value)
                                     {
                                         updateStatus("Loading assembly...");
-                                        _distribInteraction.LoadAssembly(ofd.FileName);
-                                        updateStatus("Assembly loaded");
+                                        try
+                                        {
+                                            _distribInteraction.LoadAssembly(ofd.FileName);
+                                            updateStatus("Assembly loaded");
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            var baseExcep = ex;
+                                            updateStatus(string.Format("An error occurred: '{0}' ({1}) \n{2}",
+                                                baseExcep.Message,
+                                                baseExcep.Source,
+                                                baseExcep.InnerException != null ?
+                                                " - \"" + baseExcep.GetBaseException().Message + "\" (" +
+                                                    baseExcep.GetBaseException().Source + ")" : ""));
+                                        }
                                     }
                                     else
                                     {
