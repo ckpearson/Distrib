@@ -513,9 +513,9 @@ namespace Distrib.Processes
         }
     }
 
-    public sealed class InstancePoweredProcessHost : CrossAppDomainObject,
+    public sealed class TypePoweredProcessHost : CrossAppDomainObject,
         IProcessHost,
-        IInstancePoweredProcessHost,
+        ITypePoweredProcessHost,
         IJobInputTracker,
         IJobOutputTracker
     {
@@ -531,7 +531,7 @@ namespace Distrib.Processes
         private DateTime _creationStamp;
         private string _creationID;
 
-        public InstancePoweredProcessHost(
+        public TypePoweredProcessHost(
             [IOC(false)] Type instanceType,
             [IOC(true)] IJobFactory jobFactory)
         {

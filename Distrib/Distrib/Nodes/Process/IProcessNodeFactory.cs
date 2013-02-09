@@ -35,18 +35,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Processes
+namespace Distrib.Nodes.Process
 {
-    /// <summary>
-    /// Factory that creates job descriptors
-    /// </summary>
-    public interface IJobDescriptorFactory
+    public interface IProcessNodeFactory
     {
-        /// <summary>
-        /// Create a job descriptor
-        /// </summary>
-        /// <param name="definition">The job definition to create the descriptor from</param>
-        /// <returns>The job descriptor</returns>
-        IJobDescriptor Create(IJobDefinition definition);
+        IProcessNode Create(IProcessHostSource hostSource);
     }
 }

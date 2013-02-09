@@ -1,4 +1,5 @@
-﻿/*
+﻿using Distrib.Utils;
+/*
 	This software known as 'Distrib' at time of creation is under the GNU GPL v2. License
 		This license can be found at: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -108,6 +109,18 @@ namespace Distrib.Processes
                     }
                 }
             }
+        }
+
+
+        public bool Match(IProcessJobDefinitionField field)
+        {
+            return AllCChain<bool>
+                .If(false, () => this.Name == field.Name, true)
+                .ThenIf(() => this.Mode == field.Mode, true)
+                .ThenIf(() => this.Type.Equals(field.Type), true)
+                .ThenIf(() => this.DisplayName == field.DisplayName, true)
+                .ThenIf(() => this.Config.Match(field.Config), true)
+                .Result;
         }
     }
 

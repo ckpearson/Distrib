@@ -95,7 +95,7 @@ namespace Distrib.Processes
                 foreach (var _ex in _lstJobsExs)
                 {
                     var def = _ex.FuncCheck();
-                    if (def == definition)
+                    if (def.Match(definition))
                     {
                         foundEx = _ex;
                         break;

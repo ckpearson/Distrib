@@ -170,5 +170,51 @@ namespace Distrib.Processes
         {
             get { return _jobDescription; }
         }
+
+        public bool Match(IJobDefinition definition)
+        {
+            return AllCChain<bool>
+                .If(false, () => this.Name == definition.Name, true)
+                .ThenIf(() => this.Description == definition.Description, true)
+                .ThenIf(() => this.InputFields != null && definition.InputFields != null, true)
+                .ThenIf(() => this.InputFields.Count == definition.InputFields.Count, true)
+                .ThenIf(() => 
+                    {
+                        bool match = true;
+                        for (int i = 0; i < this.InputFields.Count; i++)
+                        {
+                            var leftField = this.InputFields[i];
+                            var rightField = definition.InputFields[i];
+
+                            if (!leftField.Match(rightField))
+                            {
+                                match = false;
+                                break;
+                            }
+                        }
+
+                        return match;
+                    }, true)
+                .ThenIf(() => this.OutputFields != null && definition.OutputFields != null, true)
+                .ThenIf(() => this.OutputFields.Count == definition.OutputFields.Count, true)
+                .ThenIf(() =>
+                {
+                    bool match = true;
+                    for (int i = 0; i < this.OutputFields.Count; i++)
+                    {
+                        var leftField = this.OutputFields[i];
+                        var rightField = definition.OutputFields[i];
+
+                        if (!leftField.Match(rightField))
+                        {
+                            match = false;
+                            break;
+                        }
+                    }
+
+                    return match;
+                }, true)
+                .Result;
+        }
     }
 }

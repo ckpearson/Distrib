@@ -29,49 +29,30 @@
 	the terms of the original license and you wish to obtain a different license to cover your use of the software, then you may contact
 	the copyright holder to negotiate a new license.
 */
+using Distrib.IOC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
-namespace Distrib.Processes
+namespace Distrib.Nodes.Process
 {
-    /// <summary>
-    /// Core job descriptor
-    /// </summary>
-    [Serializable()]
-    public sealed class JobDescriptor : IJobDescriptor
+    public sealed class ProcessNodeFactory : IProcessNodeFactory
     {
-        private readonly string _name;
-        private readonly IReadOnlyList<IProcessJobDefinitionField> _inputFields;
-        private readonly IReadOnlyList<IProcessJobDefinitionField> _outputFields;
+        private IIOC _ioc;
 
-        private JobDescriptor() { }
-
-        public JobDescriptor(string jobName,
-            IReadOnlyList<IProcessJobDefinitionField> inputFields,
-            IReadOnlyList<IProcessJobDefinitionField> outputFields)
+        public ProcessNodeFactory(IIOC ioc)
         {
-            _name = jobName;
-            _inputFields = inputFields;
-            _outputFields = outputFields;
+            _ioc = ioc;
         }
 
-        public string JobName
+        public IProcessNode Create(IProcessHostSource hostSource)
         {
-            get { return _name; }
-        }
-
-        public IReadOnlyList<IProcessJobDefinitionField> InputFields
-        {
-            get { return _inputFields; }
-        }
-
-        public IReadOnlyList<IProcessJobDefinitionField> OutputFields
-        {
-            get { return _outputFields; }
+            return _ioc.Get<IProcessNode>(new[]
+                {
+                    new IOCConstructorArgument("hostSource", hostSource),
+                });
         }
     }
 }

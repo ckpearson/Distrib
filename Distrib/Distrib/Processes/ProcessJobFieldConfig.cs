@@ -111,6 +111,16 @@ namespace Distrib.Processes
                 }
             }
         }
+
+
+        public bool Match(IProcessJobFieldConfig config)
+        {
+            return AllCChain<bool>
+                .If(false, () => this.DefaultValue == config.DefaultValue, true)
+                .ThenIf(() => this.DeferredValueProvider == config.DeferredValueProvider, true)
+                .ThenIf(() => this.DisplayName == config.DisplayName, true)
+                .Result;
+        }
     }
 
     [Serializable()]

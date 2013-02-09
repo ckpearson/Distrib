@@ -46,6 +46,8 @@ namespace Distrib.Processes
         string DisplayName { get; }
 
         IProcessJobFieldConfig Config { get; }
+
+        bool Match(IProcessJobDefinitionField field);
     }
 
     public interface IProcessJobDefinitionField<T> : IProcessJobDefinitionField

@@ -1,4 +1,5 @@
-﻿/*
+﻿using Distrib.Processes;
+/*
 	This software known as 'Distrib' at time of creation is under the GNU GPL v2. License
 		This license can be found at: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,26 +36,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Processes
+namespace Distrib.Nodes.Process
 {
-    /// <summary>
-    /// Holds the core details of the job
-    /// </summary>
-    public interface IJobDescriptor
+    public interface IProcessNode
     {
-        /// <summary>
-        /// Gets the job name
-        /// </summary>
-        string JobName { get; }
-
-        /// <summary>
-        /// Gets the input definition fields
-        /// </summary>
-        IReadOnlyList<IProcessJobDefinitionField> InputFields { get; }
-
-        /// <summary>
-        /// Gets the output definition fields
-        /// </summary>
-        IReadOnlyList<IProcessJobDefinitionField> OutputFields { get; }
+        IEnumerable<IProcessNodeProcess> Processes { get; }
     }
 }

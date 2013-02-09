@@ -29,7 +29,6 @@
 	the terms of the original license and you wish to obtain a different license to cover your use of the software, then you may contact
 	the copyright holder to negotiate a new license.
 */
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,13 +45,14 @@ namespace Distrib.IOC
             //Bind<Processes.IProcessHost, Processes.ProcessHost>();
 
             Bind<Processes.IPluginPoweredProcessHost, Processes.PluginPoweredProcessHost>();
-            Bind<Processes.IInstancePoweredProcessHost, Processes.InstancePoweredProcessHost>();
+            Bind<Processes.ITypePoweredProcessHost, Processes.TypePoweredProcessHost>();
 
             BindSingleton<Processes.IJobFactory, Processes.JobFactory>();
             Bind<Processes.IJob, Processes.StandardProcessJob>();
 
-            BindSingleton<Processes.IJobDescriptorFactory, Processes.JobDescriptorFactory>();
-            Bind<Processes.IJobDescriptor, Processes.JobDescriptor>();
+            // Process host type service
+            BindSingleton<Processes.IProcessHostTypeService,
+                Processes.ProcessHostTypeService>();
         }
     }
 }

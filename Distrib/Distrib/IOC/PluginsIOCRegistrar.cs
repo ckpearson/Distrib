@@ -29,7 +29,6 @@
 	the terms of the original license and you wish to obtain a different license to cover your use of the software, then you may contact
 	the copyright holder to negotiate a new license.
 */
-
 using System;
 using System.Collections.Generic;
 using System.Linq;

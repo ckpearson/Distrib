@@ -62,6 +62,8 @@ namespace Distrib.Processes
         /// Gets the description of the job definition
         /// </summary>
         string Description { get; }
+
+        bool Match(IJobDefinition definition);
     }
 
     /// <summary>

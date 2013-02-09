@@ -54,13 +54,13 @@ namespace Distrib.Processes
         string InstanceID { get; }
     }
 
-    public interface IPluginPoweredProcessHost
+    public interface IPluginPoweredProcessHost : IProcessHost
     {
         IPluginDescriptor PluginDescriptor { get; }
         IReadOnlyList<string> DeclaredDependentAssemblies { get; }
     }
 
-    public interface IInstancePoweredProcessHost
+    public interface ITypePoweredProcessHost : IProcessHost
     {
         Type InstanceType { get; }
     }

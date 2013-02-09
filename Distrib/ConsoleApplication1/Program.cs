@@ -31,6 +31,9 @@
 */
 
 using Distrib.IOC;
+using Distrib.IOC.Ninject;
+using Distrib.Nodes.Process;
+using Distrib.Nodes.Process.HostSources;
 using Distrib.Plugins;
 using Distrib.Processes;
 using Distrib.Processes.Stock;
@@ -57,7 +60,25 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
             var p = new Program();
-            p.InputHelperTest();
+          //  p.InputHelperTest();
+           p.ProcessNodeTest();
+        }
+
+        private void ProcessNodeTest()
+        {
+            IIOC nboot = new NinjectBootstrapper();
+            nboot.Start();
+
+            var procNode = nboot.Get<IProcessNodeFactory>()
+                .Create(new KnownProcessHostSource(new[]
+                {
+                    nboot.Get<IProcessHostFactory>().CreateHostFromType(typeof(SomeProcess)),
+                }));
+
+            var firstProc = procNode.Processes.FirstOrDefault();
+
+            var b = firstProc.JobDefinitions[0]
+                .Match(firstProc.JobDefinitions[0]);
         }
 
         private void InputHelperTest()
