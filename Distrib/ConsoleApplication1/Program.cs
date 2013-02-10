@@ -45,6 +45,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -60,8 +62,34 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
             var p = new Program();
-          //  p.InputHelperTest();
-           p.ProcessNodeTest();
+            //  p.InputHelperTest();
+            //p.ProcessNodeTest();
+            p.CommsTest();
+        }
+
+        private void CommsTest()
+        {
+            int port = 1024;
+
+            var tcp = new TCPIncomingCommLink(port, new CommsMessageHandler());
+            var icomms = new IncomingComms<IAbc_IncomingComms>(tcp);
+            var abc = new Abc(icomms);
+
+            var client = new TcpClient();
+            client.ConnectAsync(IPAddress.Loopback, port)
+                .ContinueWith((t) =>
+                    {
+                        var str = client.GetStream();
+                        using (StreamWriter sw = new StreamWriter(str))
+                        {
+                            var msg = new CommsMethodInvokeMessage("DoSomething", null);
+                            var bf = new BinaryFormatter();
+                            bf.Serialize(str, msg);
+                            client.Close();
+                        }
+                    });
+
+            Console.ReadLine();
         }
 
         private void ProcessNodeTest()
@@ -75,10 +103,10 @@ namespace ConsoleApplication1
                     nboot.Get<IProcessHostFactory>().CreateHostFromType(typeof(SomeProcess)),
                 }));
 
-            var firstProc = procNode.Processes.FirstOrDefault();
-
-            var b = firstProc.JobDefinitions[0]
-                .Match(firstProc.JobDefinitions[0]);
+            procNode.Run();
+            Console.WriteLine("<Enter> to stop");
+            Console.ReadLine();
+            procNode.Stop();
         }
 
         private void InputHelperTest()

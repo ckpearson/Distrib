@@ -153,6 +153,7 @@
     <Compile Include="Processes\ProcessJobFieldConfig.cs" />
     <Compile Include="Processes\ProcessJobFieldConfigFactory.cs" />
     <Compile Include="Processes\ProcessJobFieldFactory.cs" />
+    <Compile Include="Processes\ProcessJobFieldsGeneratorService.cs" />
     <Compile Include="Processes\ProcessJobFieldValue.cs" />
     <Compile Include="Processes\StandardProcessJob.cs" />
     <Compile Include="Processes\ProcessJobDefinitionBase.cs" />

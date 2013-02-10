@@ -112,14 +112,14 @@ namespace Distrib.Processes
         }
 
 
-        public bool Match(IProcessJobDefinitionField field)
+        public bool Match(IProcessJobDefinitionField field, bool matchConfig = true)
         {
             return AllCChain<bool>
                 .If(false, () => this.Name == field.Name, true)
                 .ThenIf(() => this.Mode == field.Mode, true)
                 .ThenIf(() => this.Type.Equals(field.Type), true)
                 .ThenIf(() => this.DisplayName == field.DisplayName, true)
-                .ThenIf(() => this.Config.Match(field.Config), true)
+                .ThenIf(() => (matchConfig == true) ? this.Config.Match(field.Config) : true, true)
                 .Result;
         }
     }

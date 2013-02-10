@@ -83,13 +83,9 @@ namespace Distrib.Processes
                     {
 
                         var foundFields =
-                            (_inputInterfaceType.GetProperties()
-                                .Where(p => p.CanRead && (p.PropertyType.IsClass || p.PropertyType.IsValueType) && p.PropertyType.IsSerializable))
-                                .Select(p => ProcessJobFieldFactory.CreateDefinitionField(p.PropertyType, p.Name, FieldMode.Input))
+                            ProcessJobFieldsGeneratorService.GetFieldsFromInterface(_inputInterfaceType, FieldMode.Input)
                             .Concat(
-                                _outputInterfaceType.GetProperties()
-                                .Where(p => (p.CanRead && p.CanWrite) && (p.PropertyType.IsClass || p.PropertyType.IsValueType) && p.PropertyType.IsSerializable)
-                                .Select(p => ProcessJobFieldFactory.CreateDefinitionField(p.PropertyType, p.Name, FieldMode.Output))).ToList();
+                                ProcessJobFieldsGeneratorService.GetFieldsFromInterface(_outputInterfaceType, FieldMode.Output));
 
                         return new List<IProcessJobDefinitionField>(foundFields);
                     });
@@ -178,7 +174,7 @@ namespace Distrib.Processes
                 .ThenIf(() => this.Description == definition.Description, true)
                 .ThenIf(() => this.InputFields != null && definition.InputFields != null, true)
                 .ThenIf(() => this.InputFields.Count == definition.InputFields.Count, true)
-                .ThenIf(() => 
+                .ThenIf(() =>
                     {
                         bool match = true;
                         for (int i = 0; i < this.InputFields.Count; i++)

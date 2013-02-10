@@ -41,5 +41,19 @@ namespace Distrib.Nodes.Process
     public interface IProcessNode
     {
         IEnumerable<IProcessNodeProcess> Processes { get; }
+
+        /// <summary>
+        /// Gets the job definitions available to the node, by default these are only those
+        /// of the initialised process hosts
+        /// </summary>
+        /// <param name="visitor">Visitor allowing custom behaviour for each node process</param>
+        /// <returns>The job definitions</returns>
+        IEnumerable<IJobDefinition> GetJobDefinitions(
+            Func<IProcessNodeProcess, IEnumerable<IJobDefinition>> visitor = null);
+
+        void Run();
+        void Stop();
+
+        bool IsRunning { get; }
     }
 }
