@@ -66,17 +66,26 @@ namespace ConsoleApplication1
             var p = new Program();
 
             int port = 8080;
-            var tcpIncomingLink = new TcpIncomingCommsLink<IAbcComms>(
-                new XDocumentCommsMessageReaderWriter(new BinaryFormatterCommsMessageSerialiserDeserialiser()), 
-                new DirectInvocationMessageLink(), port);
+            var tcpIncomingLink = new TcpIncomingCommsLink<IAbcComms>(IPAddress.Any,
+                port,
+                new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()),
+                new DirectInvocationCommsMessageProcessor());
 
             var abc = new Abc(tcpIncomingLink);
 
             var tcpOut = new TcpOutgoingCommsLink<IAbcComms>(IPAddress.Loopback, port,
-                new XDocumentCommsMessageReaderWriter(new BinaryFormatterCommsMessageSerialiserDeserialiser()));
+                new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()));
 
             var abcProx = new AbcOutgoingProxy(tcpOut);
-            string sHello = abcProx.SayHello("Clint");
+            //string sHello = abcProx.SayHello("Clint");
+
+            int num = abcProx.Number;
+
+            string s = abcProx.SayHello("Clint");
+
+            abcProx.Number = 150;
+
+            num = abcProx.Number;
 
             Console.ReadLine();
         }
@@ -86,6 +95,8 @@ namespace ConsoleApplication1
     {
         void DoSomethingOverComms();
         string SayHello(string name);
+
+        int Number { get; set; }
     }
 
     public interface IAbc
@@ -123,10 +134,15 @@ namespace ConsoleApplication1
         {
         }
 
-
         public string SayHello(string name)
         {
-            return "Hello, " + name;
+            return string.Format("Hello, {0}", name);
+        }
+
+        public int Number
+        {
+            get;
+            set;
         }
     }
 
@@ -147,6 +163,14 @@ namespace ConsoleApplication1
         public string SayHello(string name)
         {
             return (string)this.Link.InvokeMethod(new[] { name });
+        }
+        public int Number
+        {
+            get { return (int)this.Link.GetProperty(); }
+            set
+            {
+                this.Link.SetProperty(value);
+            }
         }
     }
 }

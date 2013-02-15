@@ -7,13 +7,10 @@ using System.Threading.Tasks;
 namespace Distrib.Communication
 {
     /// <summary>
-    /// Represents a communications message
+    /// Represents an incoming comms message processor
     /// </summary>
-    public interface ICommsMessage
+    public interface IIncomingCommsMessageProcessor
     {
-        /// <summary>
-        /// Gets the type of comms message
-        /// </summary>
-        CommsMessageType Type { get; }
+        ICommsMessage ProcessMessage(object target, ICommsMessage msg);
     }
 }

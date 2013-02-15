@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 namespace Distrib.Communication
 {
     /// <summary>
-    /// Represents a communications message
+    /// Represents a comms message for retrieving a property value
     /// </summary>
-    public interface ICommsMessage
+    public interface IGetPropertyCommsMessage : ICommsMessage
     {
         /// <summary>
-        /// Gets the type of comms message
+        /// The name of the property to get
         /// </summary>
-        CommsMessageType Type { get; }
+        string PropertyName { get; }
     }
 }
