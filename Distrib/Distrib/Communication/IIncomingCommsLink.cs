@@ -9,7 +9,7 @@ namespace Distrib.Communication
     /// <summary>
     /// Represents an incoming comms link
     /// </summary>
-    public interface IIncomingCommsLink
+    public interface IIncomingCommsLink : ICommsLink
     {
         /// <summary>
         /// Starts listening for messages for processing against the given target

@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -65,28 +66,18 @@ namespace ConsoleApplication1
         {
             var p = new Program();
 
-            int port = 8080;
-            var tcpIncomingLink = new TcpIncomingCommsLink<IAbcComms>(IPAddress.Any,
-                port,
+            var abc = new Abc(new NamedPipeIncomingCommsLink<IAbcComms>("test",
                 new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()),
-                new DirectInvocationCommsMessageProcessor());
+                new DirectInvocationCommsMessageProcessor()));
 
-            var abc = new Abc(tcpIncomingLink);
+            var aProx = new AbcOutgoingProxy(new NamedPipeOutgoingCommsLink<IAbcComms>(".",
+                "test",
+                new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter())));
 
-            var tcpOut = new TcpOutgoingCommsLink<IAbcComms>(IPAddress.Loopback, port,
-                new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()));
+            var s = aProx.SayHello("Clint");
 
-            var abcProx = new AbcOutgoingProxy(tcpOut);
-            //string sHello = abcProx.SayHello("Clint");
-
-            int num = abcProx.Number;
-
-            string s = abcProx.SayHello("Clint");
-
-            abcProx.Number = 150;
-
-            num = abcProx.Number;
-
+            var sx = aProx.SayHello("Yoshii");
+            
             Console.ReadLine();
         }
     }

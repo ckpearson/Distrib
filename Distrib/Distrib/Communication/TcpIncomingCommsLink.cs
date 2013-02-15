@@ -99,23 +99,31 @@ namespace Distrib.Communication
         {
             try
             {
-                var client = task.Result;
-                var stream = client.GetStream();
-                var sr = new StreamReader(stream);
-                var sw = new StreamWriter(stream);
-                sw.AutoFlush = true;
+                lock (_lock)
+                {
+                    var client = task.Result;
+                    var stream = client.GetStream();
+                    var sr = new StreamReader(stream);
+                    var sw = new StreamWriter(stream);
+                    sw.AutoFlush = true;
 
-                var incomingMsg = _readerWriter.Read(sr.ReadLine());
-                sw.WriteLine(_readerWriter.Write(_messageProcessor.ProcessMessage(_invokeTarget, incomingMsg)));
+                    var incomingMsg = _readerWriter.Read(sr.ReadLine());
+                    sw.WriteLine(_readerWriter.Write(_messageProcessor.ProcessMessage(_invokeTarget, incomingMsg)));
 
-                client.Close();
-                _listener.AcceptTcpClientAsync()
-                    .ContinueWith(OnClientConnected);
+                    client.Close();
+                    _listener.AcceptTcpClientAsync()
+                        .ContinueWith(OnClientConnected);
+                }
             }
             catch (Exception ex)
             {
                 throw new ApplicationException("Failed to handle connected client", ex);
             }
+        }
+
+        public CommsDirection PrimaryDirection
+        {
+            get { return CommsDirection.Incoming; }
         }
     }
 

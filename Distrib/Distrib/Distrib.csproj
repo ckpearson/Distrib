@@ -68,6 +68,8 @@
     <Compile Include="Communication\ISetPropertyResultCommsMessage.cs" />
     <Compile Include="Communication\MethodInvokeCommsMessage.cs" />
     <Compile Include="Communication\MethodInvokeResultCommsMessage.cs" />
+    <Compile Include="Communication\NamedPipeIncomingCommsLink.cs" />
+    <Compile Include="Communication\NamedPipeOutgoingCommsLink.cs" />
     <Compile Include="Communication\OutgoingCommsProxyBase.cs" />
     <Compile Include="Communication\SetPropertyCommsMessage.cs" />
     <Compile Include="Communication\SetPropertyResultCommsMessage.cs" />
