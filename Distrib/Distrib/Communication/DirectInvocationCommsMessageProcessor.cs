@@ -113,41 +113,10 @@ namespace Distrib.Communication
                             .GetParameters()
                             .Select(p => Expression.Parameter(p.ParameterType, p.Name)).ToArray());
 
-                    //ParameterExpression argsParam = Expression.Parameter(typeof(object[]), "args");
-                    //LabelTarget returnTarget = Expression.Label(typeof(object));
-
-                    //GotoExpression returnExpr = Expression.Return(returnTarget,
-                    //    Expression.Call(
-                    //        Expression.Constant(target),
-                    //        msg.MethodName,
-                    //        null,
-                    //        Expression.Constant(argsParam)), typeof(object));
-
-                    //LabelExpression returnlabel = Expression.Label(returnTarget, Expression.Constant(null));
-
-                    //BlockExpression block = Expression.Block(
-                    //    returnExpr,
-                    //    returnlabel);
-
                     var lamb = Expression.Lambda(call, call.Arguments.Cast<ParameterExpression>().ToArray()).Compile();
                     _dictMethodInvokeCache[msg.MethodName] = lamb;
                     return new MethodInvokeResultCommsMessage(msg, lamb.DynamicInvoke(msg.InvokeArgs));
                 }
-
-                //Expression expr = Expression.Call(
-                //    Expression.Constant(target),
-                //    msg.MethodName,
-                //    null,
-                //    msg.InvokeArgs == null ? null :
-                //        msg.InvokeArgs.Select(s => Expression.Constant(s)).ToArray());
-
-                //return new MethodInvokeResultCommsMessage(msg,
-                //    Expression.Lambda<Func<object>>(expr).Compile()());
-                    
-                //return new MethodInvokeResultCommsMessage(msg,
-                //    target.GetType()
-                //        .GetMethod(msg.MethodName)
-                //        .Invoke(target, msg.InvokeArgs));
             }
             catch (Exception ex)
             {
