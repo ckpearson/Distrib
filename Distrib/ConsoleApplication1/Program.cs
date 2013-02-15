@@ -66,17 +66,26 @@ namespace ConsoleApplication1
         {
             var p = new Program();
 
-            var abc = new Abc(new NamedPipeIncomingCommsLink<IAbcComms>("test",
-                new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()),
-                new DirectInvocationCommsMessageProcessor()));
+            //var abc = new Abc(new NamedPipeIncomingCommsLink<IAbcComms>("test",
+            //    new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()),
+            //    new DirectInvocationCommsMessageProcessor()));
 
-            var aProx = new AbcOutgoingProxy(new NamedPipeOutgoingCommsLink<IAbcComms>(".",
-                "test",
-                new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter())));
+            //var aProx = new AbcOutgoingProxy(new NamedPipeOutgoingCommsLink<IAbcComms>(".",
+            //    "test",
+            //    new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter())));
 
-            var s = aProx.SayHello("Clint");
+            //var s = aProx.SayHello("Clint");
 
-            var sx = aProx.SayHello("Yoshii");
+            //var sx = aProx.SayHello("Yoshii");
+
+            var bridge = new DirectInvokeCommsBridge();
+            var abc = new Abc(new DirectInvokeIncomingCommsLink<IAbcComms>(bridge));
+
+            var aprox = new AbcOutgoingProxy(new DirectInvokeOutgoingCommsLink<IAbcComms>(bridge));
+
+            var s = aprox.SayHello("Clint");
+
+            s = aprox.SayHello("Bob");
             
             Console.ReadLine();
         }

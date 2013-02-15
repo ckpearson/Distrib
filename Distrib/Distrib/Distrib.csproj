@@ -49,6 +49,9 @@
     <Compile Include="Communication\CommsMessageBase.cs" />
     <Compile Include="Communication\CommsMessageType.cs" />
     <Compile Include="Communication\DirectInvocationCommsMessageProcessor.cs" />
+    <Compile Include="Communication\DirectInvokeCommsBridge.cs" />
+    <Compile Include="Communication\DirectInvokeIncomingCommsLink.cs" />
+    <Compile Include="Communication\DirectInvokeOutgoingCommsLink.cs" />
     <Compile Include="Communication\ExceptionCommsMessage.cs" />
     <Compile Include="Communication\GetPropertyCommsMessage.cs" />
     <Compile Include="Communication\GetPropertyResultCommsMessage.cs" />

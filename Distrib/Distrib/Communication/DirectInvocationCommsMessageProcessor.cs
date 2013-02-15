@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -85,6 +86,9 @@ namespace Distrib.Communication
             }
         }
 
+        private Dictionary<string, Delegate> _dictMethodInvokeCache =
+            new Dictionary<string, Delegate>();
+
         private ICommsMessage _handleMethodInvoke(object target, IMethodInvokeCommsMessage msg)
         {
             if (target == null) throw Ex.ArgNull(() => target);
@@ -94,10 +98,56 @@ namespace Distrib.Communication
 
             try
             {
-                return new MethodInvokeResultCommsMessage(msg,
-                    target.GetType()
-                        .GetMethod(msg.MethodName)
-                        .Invoke(target, msg.InvokeArgs));
+                if (_dictMethodInvokeCache.ContainsKey(msg.MethodName))
+                {
+                    return new MethodInvokeResultCommsMessage(msg,
+                        _dictMethodInvokeCache[msg.MethodName].DynamicInvoke(msg.InvokeArgs));
+                }
+                else
+                {
+
+                    var call = Expression.Call(Expression.Constant(target),
+                        msg.MethodName,
+                        null,
+                        target.GetType().GetMethod(msg.MethodName)
+                            .GetParameters()
+                            .Select(p => Expression.Parameter(p.ParameterType, p.Name)).ToArray());
+
+                    //ParameterExpression argsParam = Expression.Parameter(typeof(object[]), "args");
+                    //LabelTarget returnTarget = Expression.Label(typeof(object));
+
+                    //GotoExpression returnExpr = Expression.Return(returnTarget,
+                    //    Expression.Call(
+                    //        Expression.Constant(target),
+                    //        msg.MethodName,
+                    //        null,
+                    //        Expression.Constant(argsParam)), typeof(object));
+
+                    //LabelExpression returnlabel = Expression.Label(returnTarget, Expression.Constant(null));
+
+                    //BlockExpression block = Expression.Block(
+                    //    returnExpr,
+                    //    returnlabel);
+
+                    var lamb = Expression.Lambda(call, call.Arguments.Cast<ParameterExpression>().ToArray()).Compile();
+                    _dictMethodInvokeCache[msg.MethodName] = lamb;
+                    return new MethodInvokeResultCommsMessage(msg, lamb.DynamicInvoke(msg.InvokeArgs));
+                }
+
+                //Expression expr = Expression.Call(
+                //    Expression.Constant(target),
+                //    msg.MethodName,
+                //    null,
+                //    msg.InvokeArgs == null ? null :
+                //        msg.InvokeArgs.Select(s => Expression.Constant(s)).ToArray());
+
+                //return new MethodInvokeResultCommsMessage(msg,
+                //    Expression.Lambda<Func<object>>(expr).Compile()());
+                    
+                //return new MethodInvokeResultCommsMessage(msg,
+                //    target.GetType()
+                //        .GetMethod(msg.MethodName)
+                //        .Invoke(target, msg.InvokeArgs));
             }
             catch (Exception ex)
             {
