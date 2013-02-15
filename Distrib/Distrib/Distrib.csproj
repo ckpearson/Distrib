@@ -47,6 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\ICommsLink.cs" />
+    <Compile Include="Communication\ICommsMessage.cs" />
+    <Compile Include="Communication\ICommsMessageReaderWriter.cs" />
     <Compile Include="IOC\DistribBootstrapper.cs" />
     <Compile Include="IOC\IIOC.cs" />
     <Compile Include="IOC\IOCAttribute.cs" />

@@ -30,6 +30,7 @@
 	the copyright holder to negotiate a new license.
 */
 
+using Distrib.Communication;
 using Distrib.IOC;
 using Distrib.IOC.Ninject;
 using Distrib.Nodes.Process;
@@ -43,6 +44,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -62,148 +64,89 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
             var p = new Program();
-            //  p.InputHelperTest();
-            //p.ProcessNodeTest();
-            p.CommsTest();
-        }
 
-        private void CommsTest()
-        {
-            int port = 1024;
+            int port = 8080;
+            var tcpIncomingLink = new TcpIncomingCommsLink<IAbcComms>(
+                new XDocumentCommsMessageReaderWriter(new BinaryFormatterCommsMessageSerialiserDeserialiser()), 
+                new DirectInvocationMessageLink(), port);
 
-            var tcp = new TCPIncomingCommLink(port, new CommsMessageHandler());
-            var icomms = new IncomingComms<IAbc_IncomingComms>(tcp);
-            var abc = new Abc(icomms);
+            var abc = new Abc(tcpIncomingLink);
 
-            var client = new TcpClient();
-            client.ConnectAsync(IPAddress.Loopback, port)
-                .ContinueWith((t) =>
-                    {
-                        var str = client.GetStream();
-                        using (StreamWriter sw = new StreamWriter(str))
-                        {
-                            var msg = new CommsMethodInvokeMessage("DoSomething", null);
-                            var bf = new BinaryFormatter();
-                            bf.Serialize(str, msg);
-                            client.Close();
-                        }
-                    });
+            var tcpOut = new TcpOutgoingCommsLink<IAbcComms>(IPAddress.Loopback, port,
+                new XDocumentCommsMessageReaderWriter(new BinaryFormatterCommsMessageSerialiserDeserialiser()));
+
+            var abcProx = new AbcOutgoingProxy(tcpOut);
+            string sHello = abcProx.SayHello("Clint");
 
             Console.ReadLine();
-        }
-
-        private void ProcessNodeTest()
-        {
-            IIOC nboot = new NinjectBootstrapper();
-            nboot.Start();
-
-            var procNode = nboot.Get<IProcessNodeFactory>()
-                .Create(new KnownProcessHostSource(new[]
-                {
-                    nboot.Get<IProcessHostFactory>().CreateHostFromType(typeof(SomeProcess)),
-                }));
-
-            procNode.Run();
-            Console.WriteLine("<Enter> to stop");
-            Console.ReadLine();
-            procNode.Stop();
-        }
-
-        private void InputHelperTest()
-        {
-            IIOC nboot = new Distrib.IOC.Ninject.NinjectBootstrapper();
-            nboot.Start();
-
-            var processHostFactory =
-                nboot.Get<IProcessHostFactory>();
-
-            var procHost =
-                processHostFactory.CreateHostFromTypeSeparated(typeof(SomeProcess));
-
-            procHost.Initialise();
-
-            var result = procHost.ProcessJob(procHost.JobDefinitions[0],
-                JobDataHelper<IStockInput<string>>
-                .New(procHost.JobDefinitions[0])
-                .ForInputSet()
-                .Set(i => i.Input, "Clint")
-                .ToValueFields());
-
-            var message = JobDataHelper<IStockOutput<string>>
-                .New(procHost.JobDefinitions[0])
-                .ForOutputGet(result)
-                .Get(o => o.Output);
-
-            procHost.Unitialise();
-            procHost = null;
-        }
-
-        private void RunNewIOCTest()
-        {
-            var kernel = new StandardKernel(new INinjectModule[] { });
-            IIOC nboot = new Distrib.IOC.Ninject.NinjectBootstrapper(kernel);
-            nboot.Start();
-        }
-
-        private void DashedLine()
-        {
-            Console.WriteLine(new string(Enumerable.Repeat('*', Console.BufferWidth - 5).ToArray()));
         }
     }
 
-    public sealed class SomeProcess : IProcess
+    public interface IAbcComms
     {
+        void DoSomethingOverComms();
+        string SayHello(string name);
+    }
 
-        public void InitProcess()
+    public interface IAbc
+    {
+        void DoSomething();
+    }
+
+    public sealed class Abc : IAbc, IAbcComms, IDisposable
+    {
+        private IIncomingCommsLink<IAbcComms> _incomingComms;
+
+        public Abc(IIncomingCommsLink<IAbcComms> incomingComms)
         {
+            _incomingComms = incomingComms;
+            _incomingComms.StartListening(this as IAbcComms);
         }
 
-        public void UninitProcess()
+        public void DoSomething()
         {
+            
         }
 
-        private IJobDefinition<IStockInput<string>, IStockOutput<string>> _sayHelloJob;
-        private IReadOnlyList<IJobDefinition> _jobs = null;
-        public IReadOnlyList<IJobDefinition> JobDefinitions
+        public void Dispose()
         {
-            get
+            if (_incomingComms != null)
             {
-                if (_jobs == null)
+                if (_incomingComms.IsListening)
                 {
-                    if (_sayHelloJob == null)
-                    {
-                        _sayHelloJob = new ProcessJobDefinition<IStockInput<string>, IStockOutput<string>>(
-                            "Say Hello", "Says hello to someone");
-                    }
-
-                    _jobs = new List<IJobDefinition>()
-                    {
-                        _sayHelloJob,
-                    }.AsReadOnly();
+                    _incomingComms.StopListening();
                 }
-
-                return _jobs;
             }
         }
 
-        public void ProcessJob(IJob job)
+        public void DoSomethingOverComms()
         {
-            JobExecutionHelper.New()
-                .AddHandler(() => _sayHelloJob, () =>
-                    {
-                        var input = JobDataHelper<IStockInput<string>>
-                            .New(job.Definition)
-                            .ForInputGet(job);
+        }
 
-                        var output = JobDataHelper<IStockOutput<string>>
-                            .New(job.Definition)
-                            .ForOutputSet(job);
 
-                        output.Set(o => o.Output,
-                            string.Format("Hello, {0}",
-                                input.Get(i => i.Input)));
-                    })
-                .Execute(job.Definition);
+        public string SayHello(string name)
+        {
+            return "Hello, " + name;
+        }
+    }
+
+    public sealed class AbcOutgoingProxy : OutgoingCommsProxyBase, IAbcComms
+    {
+        public AbcOutgoingProxy(IOutgoingCommsLink<IAbcComms> link)
+            : base(link)
+        {
+
+        }
+
+        public void DoSomethingOverComms()
+        {
+            this.Link.InvokeMethod(null);
+        }
+
+
+        public string SayHello(string name)
+        {
+            return (string)this.Link.InvokeMethod(new[] { name });
         }
     }
 }
