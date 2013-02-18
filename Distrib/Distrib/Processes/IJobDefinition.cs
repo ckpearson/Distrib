@@ -65,6 +65,12 @@ namespace Distrib.Processes
         string Description { get; }
 
         bool Match(IJobDefinition definition);
+
+        /// <summary>
+        /// Takes a job definition that may well hold type data that can't be serialised and flattens it to pure definition
+        /// </summary>
+        /// <returns></returns>
+        IJobDefinition ToFlattened();
     }
 
     /// <summary>

@@ -9,16 +9,22 @@ using System.Threading.Tasks;
 
 namespace Distrib.Communication
 {
+    [Serializable()]
+    public sealed class TCPEndpointDetails
+    {
+        public IPAddress Address { get; set; }
+        public int Port { get; set; }
+    }
+
     /// <summary>
     /// Incoming comms link that uses TCP
     /// </summary>
     public class TcpIncomingCommsLink : IIncomingCommsLink
     {
-        private readonly ICommsMessageReaderWriter _readerWriter;
-        private readonly IIncomingCommsMessageProcessor _messageProcessor;
+        protected readonly ICommsMessageReaderWriter _readerWriter;
+        protected readonly IIncomingCommsMessageProcessor _messageProcessor;
 
-        private readonly int _listeningPort;
-        private readonly IPAddress _listeningAddress;
+        private readonly TCPEndpointDetails _endpoint;
 
         private readonly object _lock = new object();
         private bool _listening = false;
@@ -27,11 +33,10 @@ namespace Distrib.Communication
 
         private TcpListener _listener = null;
 
-        public TcpIncomingCommsLink(IPAddress listeningAddress, int listeningPort,
+        public TcpIncomingCommsLink(TCPEndpointDetails endpointDetails,
             ICommsMessageReaderWriter readerWriter, IIncomingCommsMessageProcessor messageProcessor)
         {
-            _listeningAddress = listeningAddress;
-            _listeningPort = listeningPort;
+            _endpoint = endpointDetails;
             _readerWriter = readerWriter;
             _messageProcessor = messageProcessor;
         }
@@ -48,7 +53,7 @@ namespace Distrib.Communication
                     }
 
                     _invokeTarget = target;
-                    _listener = new TcpListener(_listeningAddress, _listeningPort);
+                    _listener = new TcpListener(_endpoint.Address, _endpoint.Port);
                     _listener.Start();
                     _listening = true;
                     _listener.AcceptTcpClientAsync()
@@ -125,17 +130,30 @@ namespace Distrib.Communication
         {
             get { return CommsDirection.Incoming; }
         }
+
+        public object GetEndpointDetails()
+        {
+            return _endpoint;
+        }
+
+
+        public IOutgoingCommsLink CreateOutgoingOfSameTransport(object endpoint)
+        {
+            var endp = (TCPEndpointDetails)endpoint;
+            return new TcpOutgoingCommsLink(endp.Address, endp.Port,
+                _readerWriter);
+        }
     }
 
     /// <summary>
     /// Incoming comms link that uses TCP with a type parameter for compile-time checks
     /// </summary>
     /// <typeparam name="T">The comms interface</typeparam>
-    public sealed class TcpIncomingCommsLink<T> : TcpIncomingCommsLink, IIncomingCommsLink<T>
+    public sealed class TcpIncomingCommsLink<T> : TcpIncomingCommsLink, IIncomingCommsLink<T> where T : class
     {
-        public TcpIncomingCommsLink(IPAddress listeningAddress, int listeningPort,
+        public TcpIncomingCommsLink(TCPEndpointDetails endpoint,
             ICommsMessageReaderWriter readerWriter, IIncomingCommsMessageProcessor messageProcessor)
-            : base(listeningAddress, listeningPort, readerWriter, messageProcessor)
+            : base(endpoint, readerWriter, messageProcessor)
         {
 
         }
@@ -143,6 +161,19 @@ namespace Distrib.Communication
         public void StartListening(T invokerObject)
         {
             base.StartListening(invokerObject);
+        }
+
+
+        public new IOutgoingCommsLink<T> CreateOutgoingOfSameTransport(object endpoint)
+        {
+            var e = (TCPEndpointDetails)endpoint;
+            return new TcpOutgoingCommsLink<T>(e.Address, e.Port, _readerWriter);
+        }
+
+        public IOutgoingCommsLink<K> CreateOutgoingOfSameTransportDiffContract<K>(object endpoint) where K : class
+        {
+            var e = (TCPEndpointDetails)endpoint;
+            return new TcpOutgoingCommsLink<K>(e.Address, e.Port, _readerWriter);
         }
     }
 }

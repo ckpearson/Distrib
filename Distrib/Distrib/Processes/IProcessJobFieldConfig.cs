@@ -50,6 +50,8 @@ namespace Distrib.Processes
         bool HasDisplayName { get; }
 
         bool Match(IProcessJobFieldConfig config);
+
+
     }
 
     public interface IProcessJobFieldConfig<T> : IProcessJobFieldConfig

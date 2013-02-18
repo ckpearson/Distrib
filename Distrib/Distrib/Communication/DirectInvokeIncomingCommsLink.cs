@@ -11,8 +11,8 @@ namespace Distrib.Communication
     /// </summary>
     public class DirectInvokeIncomingCommsLink : IIncomingCommsLink
     {
-        private readonly DirectInvocationCommsMessageProcessor _processor;
-        private readonly DirectInvokeCommsBridge _bridge;
+        protected readonly DirectInvocationCommsMessageProcessor _processor;
+        protected readonly DirectInvokeCommsBridge _bridge;
 
         private object _target;
 
@@ -89,6 +89,18 @@ namespace Distrib.Communication
         {
             get { return CommsDirection.Incoming; }
         }
+
+
+        public object GetEndpointDetails()
+        {
+            return null;
+        }
+
+
+        public IOutgoingCommsLink CreateOutgoingOfSameTransport(object endpoint)
+        {
+            return new DirectInvokeOutgoingCommsLink(_bridge);
+        }
     }
 
     public class DirectInvokeIncomingCommsLink<T> : DirectInvokeIncomingCommsLink, IIncomingCommsLink<T> where T : class
@@ -99,6 +111,18 @@ namespace Distrib.Communication
         public void StartListening(T target)
         {
             base.StartListening(target);
+        }
+
+
+        public new IOutgoingCommsLink<T> CreateOutgoingOfSameTransport(object endpoint)
+        {
+            return new DirectInvokeOutgoingCommsLink<T>((DirectInvokeCommsBridge)endpoint);
+        }
+
+
+        public IOutgoingCommsLink<K> CreateOutgoingOfSameTransportDiffContract<K>(object endpoint) where K : class
+        {
+            return new DirectInvokeOutgoingCommsLink<K>((DirectInvokeCommsBridge)endpoint);
         }
     }
 }

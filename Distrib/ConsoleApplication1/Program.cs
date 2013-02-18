@@ -59,6 +59,225 @@ using System.Xml.Serialization;
 
 namespace ConsoleApplication1
 {
+    public interface IHostComms
+    {
+        void Initialise();
+        IReadOnlyList<IJobDefinition> GetJobDefinitions();
+        IReadOnlyList<IProcessJobValueField> ProcessJob(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputs);
+        bool SupportsDefinition(IJobDefinition definition);
+        bool IsProcessingJob();
+        int QueuedJobCount();
+    }
+
+    public sealed class HostExposer
+        : IHostComms
+    {
+        private readonly IProcessHost _host;
+        private readonly IIncomingCommsLink<IHostComms> _link;
+        private readonly HostTrackerProxy _tracker;
+
+        public HostExposer(IProcessHost host, IIncomingCommsLink<IHostComms> incomingLink, HostTrackerProxy tracker)
+        {
+            _host = host;
+            _tracker = tracker;
+            _link = incomingLink;
+            _link.StartListening(this);
+        }
+
+        public void Initialise()
+        {
+            _host.Initialise();
+            _tracker.HostOnline(_link.GetEndpointDetails());
+        }
+
+
+        public IReadOnlyList<IJobDefinition> GetJobDefinitions()
+        {
+            var jds = _host.JobDefinitions;
+            var lst = new List<IJobDefinition>();
+
+            foreach (var jd in jds)
+            {
+                lst.Add(jd.ToFlattened());
+            }
+
+            return lst.AsReadOnly();
+        }
+
+
+        public IReadOnlyList<IProcessJobValueField> ProcessJob(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputs)
+        {
+            return _host.QueueJobAndWait(definition, inputs);
+        }
+
+
+        public bool SupportsDefinition(IJobDefinition definition)
+        {
+            return GetJobDefinitions().Any(d => d.Match(definition));
+        }
+
+        public bool IsProcessingJob()
+        {
+            return _host.JobExecuting;
+        }
+
+        public int QueuedJobCount()
+        {
+            return _host.QueuedJobs;
+        }
+    }
+
+    public sealed class HostExposerProxy
+        : OutgoingCommsProxyBase,
+        IHostComms
+    {
+        public HostExposerProxy(IOutgoingCommsLink<IHostComms> link)
+            : base(link)
+        {
+
+        }
+
+        public void Initialise()
+        {
+            Link.InvokeMethod(null);
+        }
+
+
+        public IReadOnlyList<IJobDefinition> GetJobDefinitions()
+        {
+            return Link.InvokeMethod(null) as IReadOnlyList<IJobDefinition>;
+        }
+
+
+        public IReadOnlyList<IProcessJobValueField> ProcessJob(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputs)
+        {
+            return Link.InvokeMethod(new object[] { definition.ToFlattened(), inputs }) as IReadOnlyList<IProcessJobValueField>;
+        }
+
+
+        public bool SupportsDefinition(IJobDefinition definition)
+        {
+            return (bool)Link.InvokeMethod(new object[] { definition });
+        }
+
+        public bool IsProcessingJob()
+        {
+            return (bool)Link.InvokeMethod(null);
+        }
+
+        public int QueuedJobCount()
+        {
+            return (int)Link.InvokeMethod(null);
+        }
+    }
+
+    public interface ITrackerComms
+    {
+        void HostOnline(object endpoint);
+        void HostOffline(object endpoint);
+
+        IReadOnlyList<IJobDefinition> GetJobDefinitions();
+
+        IReadOnlyList<IProcessJobValueField> SubmitJob(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputs);
+    }
+
+    public sealed class HostTrackerProxy
+        : OutgoingCommsProxyBase,
+        ITrackerComms
+    {
+        public HostTrackerProxy(IOutgoingCommsLink<ITrackerComms> link)
+            : base(link)
+        {
+
+        }
+
+        public void HostOnline(object endpoint)
+        {
+            Link.InvokeMethod(new[] { endpoint });
+        }
+
+        public void HostOffline(object endpoint)
+        {
+            Link.InvokeMethod(new[] { endpoint });
+        }
+
+
+        public IReadOnlyList<IJobDefinition> GetJobDefinitions()
+        {
+            return Link.InvokeMethod(null) as IReadOnlyList<IJobDefinition>;
+        }
+
+
+        public IReadOnlyList<IProcessJobValueField> SubmitJob(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputs)
+        {
+            return Link.InvokeMethod(new object[] { definition.ToFlattened(), inputs }) as IReadOnlyList<IProcessJobValueField>;
+        }
+    }
+
+    public sealed class Tracker
+        : ITrackerComms
+    {
+        private readonly IIncomingCommsLink<ITrackerComms> _link;
+
+        private Dictionary<object, HostExposerProxy> _hosts = new Dictionary<object, HostExposerProxy>();
+
+        public Tracker(IIncomingCommsLink<ITrackerComms> incomingLink)
+        {
+            _link = incomingLink;
+            _link.StartListening(this);
+        }
+
+        public void HostOnline(object endpoint)
+        {
+            _hosts.Add(endpoint,
+                new HostExposerProxy(_link.CreateOutgoingOfSameTransportDiffContract<IHostComms>(endpoint)));
+        }
+
+        public void HostOffline(object endpoint)
+        {
+            _hosts.Remove(endpoint);
+        }
+
+
+        public IReadOnlyList<IJobDefinition> GetJobDefinitions()
+        {
+            var lst = new List<IJobDefinition>();
+            lock (_hosts)
+            {
+                foreach (var h in _hosts.Values)
+                {
+                    var jds = h.GetJobDefinitions();
+                    foreach (var jd in jds)
+                    {
+                        if (!lst.Any(j => j.Match(jd)))
+                        {
+                            lst.Add(jd);
+                        }
+                    }
+                }
+            }
+
+            return lst;
+        }
+
+
+        public IReadOnlyList<IProcessJobValueField> SubmitJob(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputs)
+        {
+            var md = GetJobDefinitions().SingleOrDefault(d => d.Match(definition));
+
+            if (md == null)
+            {
+                throw new InvalidOperationException("No job definition exists on hosts");
+            }
+
+            lock (_hosts)
+            {
+                var minLoad = _hosts.Values.OrderBy<IHostComms, int>(h => h.QueuedJobCount()).First();
+                return minLoad.ProcessJob(md, inputs);
+            }
+        }
+    }
+
     class Program
     {
         private string dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "distrib plugins");
@@ -67,10 +286,67 @@ namespace ConsoleApplication1
         {
             var p = new Program();
 
-            p.DoProcessNodeTest();
+            //p.DoProcessNodeTest();
+
+            p.NaiveDistribTest();
 
 
             Console.ReadLine();
+        }
+
+        private void NaiveDistribTest()
+        {
+            var nboot = new NinjectBootstrapper();
+            nboot.Start();
+
+            var trackerEndpoint = new TCPEndpointDetails()
+            {
+                Address = IPAddress.Loopback,
+                Port = 8080,
+            };
+
+            var track = new Tracker(
+                new TcpIncomingCommsLink<ITrackerComms>(
+                    trackerEndpoint,
+                    new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()),
+                    new DirectInvocationCommsMessageProcessor()));
+
+            var hosts = CreateHosts(3, nboot, trackerEndpoint);
+
+            foreach (var h in hosts)
+            {
+                h.Initialise();
+            }
+
+            var allDefs = track.GetJobDefinitions();
+
+            var sw = new Stopwatch();
+            sw.Start();
+            var res = track.SubmitJob(allDefs.First(),
+                JobDataHelper<IStockInput<string>>
+                .New(allDefs.First())
+                .ForInputSet()
+                .Set(i => i.Input, "Clint")
+                .ToValueFields());
+            sw.Stop();
+            var el = sw.Elapsed;
+        }
+
+        private IEnumerable<HostExposer> CreateHosts(int num, IIOC ioc, TCPEndpointDetails trackerEndpoint)
+        {
+            int startPort = 8080;
+
+            for (int i = 1; i <= num; i++)
+            {
+                yield return new HostExposer(ioc.Get<IProcessHostFactory>().CreateHostFromType(typeof(SomeProcess)),
+                    new TcpIncomingCommsLink<IHostComms>(new TCPEndpointDetails()
+                    {
+                        Address = IPAddress.Loopback,
+                        Port = startPort + (i * 10),
+                    }, new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()), new DirectInvocationCommsMessageProcessor()),
+                    new HostTrackerProxy(
+                        new TcpOutgoingCommsLink<ITrackerComms>(trackerEndpoint.Address, trackerEndpoint.Port, new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()))));
+            }
         }
 
         private async void DoProcessNodeTest()
@@ -78,7 +354,7 @@ namespace ConsoleApplication1
             var nboot = new NinjectBootstrapper();
             nboot.Start();
 
-            
+
 
             var mi = this.GetType().GetMethod("DoSomething");
             var actArg = mi.GetParameters()[0];
@@ -89,12 +365,27 @@ namespace ConsoleApplication1
 
             mi.Invoke(this, new object[] { d });
 
+            var cp = new CommsActionParameter()
+            {
+                Name = actArg.Name,
+                Types = actArg.ParameterType.GenericTypeArguments.Select(t => t.FullName).ToArray(),
+                Values = vlist.ToArray(),
+            };
+
+
             var s = "";
+        }
+
+        public sealed class CommsActionParameter
+        {
+            public string Name { get; set; }
+            public string[] Types { get; set; }
+            public object[] Values { get; set; }
         }
 
         public Delegate BuildDynamicAction(ParameterInfo actionParameter, out List<object> valuesList)
         {
-            if (actionParameter.ParameterType.GenericTypeArguments == null || 
+            if (actionParameter.ParameterType.GenericTypeArguments == null ||
                 actionParameter.ParameterType.GenericTypeArguments.Length == 0)
             {
                 throw new ArgumentException();
@@ -143,87 +434,6 @@ namespace ConsoleApplication1
         public void DoSomething(Action<string> act)
         {
             act("Hello");
-        }
-    }
-
-    public sealed class HostCommsWrapper
-    {
-        private readonly IProcessHost _host;
-        private IIncomingCommsLink<IProcessHost> _hostComms;
-
-        public HostCommsWrapper(IProcessHost host)
-        {
-            _host = host;
-            _hostComms = new TcpIncomingCommsLink<IProcessHost>(IPAddress.Any,
-                8080,
-                new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()),
-                new DirectInvocationCommsMessageProcessor());
-            _hostComms.StartListening(_host);
-        }
-    }
-
-    public sealed class HostCommsProxy
-        : OutgoingCommsProxyBase, IProcessHost
-    {
-        public HostCommsProxy(IOutgoingCommsLink<IProcessHost> outgoingLink)
-            : base(outgoingLink)
-        {
-
-        }
-
-        public void Initialise()
-        {
-            Link.InvokeMethod(null);
-        }
-
-        public void Unitialise()
-        {
-            Link.InvokeMethod(null);
-        }
-
-        public bool IsInitialised
-        {
-            get { return (bool)Link.GetProperty(); }
-        }
-
-        public IReadOnlyList<IJobDefinition> JobDefinitions
-        {
-            get { return (IReadOnlyList<IJobDefinition>)Link.GetProperty(); }
-        }
-
-        public void QueueJob(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues, Action<IReadOnlyList<IProcessJobValueField>, object> onCompletion, object data, Action<Exception> onException)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IReadOnlyList<IProcessJobValueField> QueueJobAndWait(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int QueuedJobs
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public bool JobExecuting
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public IJobDefinition ExecutingJob
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public DateTime InstanceCreationStamp
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public string InstanceID
-        {
-            get { throw new NotImplementedException(); }
         }
     }
 

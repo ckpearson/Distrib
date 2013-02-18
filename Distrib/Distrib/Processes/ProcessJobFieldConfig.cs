@@ -66,6 +66,7 @@ namespace Distrib.Processes
         {
             this.DefaultValue = config.DefaultValue;
             this.DeferredValueProvider = config.DeferredValueProvider;
+            this.DisplayName = config.DisplayName;
         }
 
         private LockValue<IDeferredValueProvider> _deferredValueProvider = new LockValue<IDeferredValueProvider>(null);

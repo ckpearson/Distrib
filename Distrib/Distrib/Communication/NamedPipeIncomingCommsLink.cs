@@ -9,10 +9,17 @@ using System.Threading.Tasks;
 
 namespace Distrib.Communication
 {
+    [Serializable()]
+    public sealed class NamedPipeEndpointDetails
+    {
+        public string MachineName { get; set; }
+        public string PipeName { get; set; }
+    }
+
     public class NamedPipeIncomingCommsLink : IIncomingCommsLink
     {
-        private readonly ICommsMessageReaderWriter _readerWriter;
-        private readonly IIncomingCommsMessageProcessor _messageProcessor;
+        protected readonly ICommsMessageReaderWriter _readerWriter;
+        protected readonly IIncomingCommsMessageProcessor _messageProcessor;
 
         private readonly object _lock = new object();
         private bool _listening = false;
@@ -21,12 +28,12 @@ namespace Distrib.Communication
 
         private NamedPipeServerStream _server = null;
 
-        private readonly string _pipeName;
+        private readonly NamedPipeEndpointDetails _endpoint;
 
-        public NamedPipeIncomingCommsLink(string pipeName,
+        public NamedPipeIncomingCommsLink(NamedPipeEndpointDetails endpoint,
             ICommsMessageReaderWriter readerWriter, IIncomingCommsMessageProcessor messageProcessor)
         {
-            _pipeName = pipeName;
+            _endpoint = endpoint;
             _readerWriter = readerWriter;
             _messageProcessor = messageProcessor;
         }
@@ -43,7 +50,7 @@ namespace Distrib.Communication
                     }
 
                     _invokeTarget = target;
-                    _server = new NamedPipeServerStream(_pipeName, PipeDirection.InOut, 1, PipeTransmissionMode.Byte,
+                    _server = new NamedPipeServerStream(_endpoint.PipeName, PipeDirection.InOut, 1, PipeTransmissionMode.Byte,
                         PipeOptions.Asynchronous);
 
                     Task.Factory.StartNew(() =>
@@ -143,13 +150,27 @@ namespace Distrib.Communication
         {
             get { return CommsDirection.Incoming; }
         }
+
+
+        public object GetEndpointDetails()
+        {
+            return _endpoint;
+        }
+
+
+        public IOutgoingCommsLink CreateOutgoingOfSameTransport(object endpoint)
+        {
+            var endp = (NamedPipeEndpointDetails)endpoint;
+            return new NamedPipeOutgoingCommsLink(endp.MachineName, endp.PipeName,
+                _readerWriter);
+        }
     }
 
-    public sealed class NamedPipeIncomingCommsLink<T> : NamedPipeIncomingCommsLink, IIncomingCommsLink<T>
+    public sealed class NamedPipeIncomingCommsLink<T> : NamedPipeIncomingCommsLink, IIncomingCommsLink<T> where T : class
     {
-        public NamedPipeIncomingCommsLink(string pipeName,
+        public NamedPipeIncomingCommsLink(NamedPipeEndpointDetails endpoint,
             ICommsMessageReaderWriter readerWriter, IIncomingCommsMessageProcessor messageProcessor)
-            : base(pipeName, readerWriter, messageProcessor)
+            : base(endpoint, readerWriter, messageProcessor)
         {
 
         }
@@ -157,6 +178,20 @@ namespace Distrib.Communication
         public void StartListening(T target)
         {
             base.StartListening(target);
+        }
+
+
+        public new IOutgoingCommsLink<T> CreateOutgoingOfSameTransport(object endpoint)
+        {
+            var e = (NamedPipeEndpointDetails)endpoint;
+            return new NamedPipeOutgoingCommsLink<T>(e.MachineName, e.PipeName, _readerWriter);
+        }
+
+
+        public IOutgoingCommsLink<K> CreateOutgoingOfSameTransportDiffContract<K>(object endpoint) where K : class
+        {
+            var e = (NamedPipeEndpointDetails)endpoint;
+            return new NamedPipeOutgoingCommsLink<K>(e.MachineName, e.PipeName, _readerWriter);
         }
     }
 
