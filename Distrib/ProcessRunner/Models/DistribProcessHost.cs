@@ -118,7 +118,7 @@ namespace ProcessRunner.Models
                     {
                         actBeginning();
                         var fields = def.InputFields.Select(f => f.UnderlyingValueField);
-                        return _host.ProcessJob(def.UnderlyingJobDefinition, fields.ToList()).ToList().AsReadOnly(); 
+                        return _host.QueueJobAndWait(def.UnderlyingJobDefinition, fields.ToList()).ToList().AsReadOnly(); 
                     }
                 }).ContinueWith<IReadOnlyList<Distrib.Processes.IProcessJobValueField>>(t =>
                     {

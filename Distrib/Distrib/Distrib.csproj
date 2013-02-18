@@ -189,6 +189,7 @@
     <Compile Include="Processes\StandardProcessJobDefinition.cs" />
     <Compile Include="Processes\Stock\IStockInput.cs" />
     <Compile Include="Processes\Stock\IStockOutput.cs" />
+    <Compile Include="Processes\TypePoweredProcessHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CrossAppDomainObject.cs" />
     <Compile Include="Separation\ISeparateInstanceCreator.cs" />

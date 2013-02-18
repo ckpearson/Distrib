@@ -85,23 +85,28 @@ namespace ConsoleApplication1
 
             thost.Initialise();
 
+
             for (int i = 0; i < 10000; i++)
             {
-                thost.QueueJobAsync(
+                thost.QueueJob(
                     thost.JobDefinitions.First(),
                     JobDataHelper<IStockInput<string>>
                     .New(thost.JobDefinitions.First())
                     .ForInputSet()
                     .Set(_ => _.Input, "n" + i.ToString())
                     .ToValueFields(),
-                    (res, d) =>
+                    (r, d) =>
                     {
-                        Console.WriteLine("Finished: {0} - '{1}'",
-                            d, res[0].Value);
-                    }, i);
+                        Console.WriteLine("Finished[{0}] - '{1}'",
+                            d, r[0].Value);
+                    }, i, (ex) =>
+                            {
+                                throw ex;
+                            });
 
-                Console.WriteLine("Queued " + i.ToString());
+                Console.WriteLine("Queued[{0}]", i.ToString());
             }
+
             
         }
     }

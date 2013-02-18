@@ -47,12 +47,17 @@ namespace Distrib.Processes
 
         IReadOnlyList<IJobDefinition> JobDefinitions { get; }
 
-        IReadOnlyList<IProcessJobValueField> ProcessJob(IJobDefinition definition,
-            IEnumerable<IProcessJobValueField> inputValues);
+        void QueueJob(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues,
+            Action<IReadOnlyList<IProcessJobValueField>, object> onCompletion, object data,
+            Action<Exception> onException);
 
-        Task<IReadOnlyList<IProcessJobValueField>> ProcessJobAsync(IJobDefinition definition,
-            IEnumerable<IProcessJobValueField> inputValues);
+        IReadOnlyList<IProcessJobValueField> QueueJobAndWait(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues);
 
+        int QueuedJobs { get; }
+
+        bool JobExecuting { get; }
+
+        IJobDefinition ExecutingJob { get; }
   
 
         DateTime InstanceCreationStamp { get; }
@@ -67,8 +72,8 @@ namespace Distrib.Processes
 
     public interface ITypePoweredProcessHost : IProcessHost
     {
-        void QueueJobAsync(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues, Action<IReadOnlyList<IProcessJobValueField>, object> onCompletion, object data);
-        IEnumerable<IProcessJobValueField> QueueJobSynchronously(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues);
+        //void QueueJobAsync(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues, Action<IReadOnlyList<IProcessJobValueField>, object> onCompletion, object data);
+        //IEnumerable<IProcessJobValueField> QueueJobSynchronously(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues);
         Type InstanceType { get; }
     }
 }
