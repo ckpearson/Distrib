@@ -54,6 +54,11 @@ namespace Distrib.Communication
 
             try
             {
+                if (target.GetType().GetProperty(msg.PropertyName) == null)
+                {
+                    throw new ApplicationException("Property not present on target type");
+                }
+
                 target.GetType()
                     .GetProperty(msg.PropertyName)
                     .SetValue(target, msg.Value);
@@ -75,6 +80,11 @@ namespace Distrib.Communication
 
             try
             {
+                if (target.GetType().GetProperty(msg.PropertyName) == null)
+                {
+                    throw new ApplicationException("Property not present on target type");
+                }
+
                 return new GetPropertyResultCommsMessage(msg,
                     target.GetType()
                         .GetProperty(msg.PropertyName)
@@ -105,6 +115,10 @@ namespace Distrib.Communication
                 }
                 else
                 {
+                    if (target.GetType().GetMethod(msg.MethodName) == null)
+                    {
+                        throw new InvalidOperationException("Method not present on target type");
+                    }
 
                     var call = Expression.Call(Expression.Constant(target),
                         msg.MethodName,

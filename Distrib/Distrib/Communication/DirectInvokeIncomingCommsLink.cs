@@ -93,7 +93,7 @@ namespace Distrib.Communication
 
         public object GetEndpointDetails()
         {
-            return null;
+            return _bridge;
         }
 
 

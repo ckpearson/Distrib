@@ -11,6 +11,13 @@ namespace Distrib.Communication
     /// </summary>
     public sealed class DirectInvokeCommsBridge
     {
+        private readonly string _name;
+
+        public DirectInvokeCommsBridge(string name)
+        {
+            _name = name;
+        }
+
         public ICommsMessage SendMessage(ICommsMessage msg)
         {
             if (this.MessageReceived != null)
@@ -20,6 +27,14 @@ namespace Distrib.Communication
             else
             {
                 throw new InvalidOperationException("No objects are subscribed to the event");
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return _name;
             }
         }
 
