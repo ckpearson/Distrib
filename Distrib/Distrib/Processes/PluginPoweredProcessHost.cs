@@ -34,12 +34,14 @@ using Distrib.Plugins;
 using Distrib.Separation;
 using Distrib.Utils;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Distrib.Processes
@@ -53,7 +55,7 @@ namespace Distrib.Processes
         private readonly object _lock = new object();
 
         private IPluginDescriptor _pluginDescriptor;
-        
+
         private IPluginAssembly _pluginAssembly;
         private IPluginAssemblyFactory _pluginAssemblyFactory;
 
@@ -119,7 +121,7 @@ namespace Distrib.Processes
                     {
                         _pluginAssembly = _pluginAssemblyFactory.CreatePluginAssemblyFromPath(_pluginDescriptor.AssemblyPath);
                         var initRes = _pluginAssembly.Initialise();
-                        
+
                         if (!initRes.HasUsablePlugins)
                         {
                             throw new ApplicationException("The plugin assembly contains no usable plugins");
@@ -389,7 +391,7 @@ namespace Distrib.Processes
                 var definition = internalJob.Definition;
 
                 var inputDefField = definition.InputFields.SingleOrDefault(f => f.Name == prop);
-                
+
                 if (inputDefField == null)
                 {
                     throw new ApplicationException(string.Format("No input field could be found '{0}'", prop));
@@ -911,10 +913,100 @@ namespace Distrib.Processes
         }
 
 
-        public async Task<IReadOnlyList<IProcessJobValueField>> 
+        public async Task<IReadOnlyList<IProcessJobValueField>>
             ProcessJobAsync(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues)
         {
             return await Task.FromResult(ProcessJob(definition, inputValues));
+        }
+
+        private sealed class _QueuedJob
+        {
+            public IJobDefinition definition;
+            public IEnumerable<IProcessJobValueField> inputs;
+            public Action<IReadOnlyList<IProcessJobValueField>, object> completion;
+            public object uData;
+        }
+
+        private ConcurrentQueue<_QueuedJob> jobQueue = new ConcurrentQueue<_QueuedJob>();
+
+        private Task JobRunnerTask;
+
+        private CancellationTokenSource _jobCancellationSource;
+
+        public void QueueJobAsync(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues, Action<IReadOnlyList<IProcessJobValueField>, object> onCompletion,
+            object data)
+        {
+            lock (_lock)
+            {
+                if (JobRunnerTask == null)
+                {
+                    _jobCancellationSource = new CancellationTokenSource();
+                    JobRunnerTask = Task.Factory.StartNew(DoJobRunner, _jobCancellationSource.Token);
+                }
+
+            }
+
+            jobQueue.Enqueue(new _QueuedJob()
+            {
+                definition = definition,
+                inputs = inputValues,
+                completion = onCompletion,
+                uData = data,
+            });
+        }
+
+        private async void DoJobRunner()
+        {
+            while (true)
+            {
+                lock (_lock)
+                {
+                    if (_jobCancellationSource.IsCancellationRequested)
+                    {
+                        // Do cancellation
+                        break;
+                    }
+                }
+
+                _QueuedJob qj = null;
+
+                if (jobQueue.TryDequeue(out qj))
+                {
+                    // Got a job to do!
+
+                    lock (_lock)
+                    {
+                        var res = ProcessJob(qj.definition, qj.inputs);
+                        qj.completion(res, qj.uData);
+                    }
+                }
+                else
+                {
+                    await Task.Delay(250);
+                }
+            }
+
+            // Do cleanup
+            JobRunnerTask = null;
+            _jobCancellationSource = null;
+        }
+
+
+        public IEnumerable<IProcessJobValueField> QueueJobSynchronously(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues)
+        {
+            AutoResetEvent are = new AutoResetEvent(false);
+            IEnumerable<IProcessJobValueField> res = null;
+            QueueJobAsync(definition, inputValues, (r, d) =>
+                {
+                    res = r;
+                    are.Set();
+                },null);
+            while (!are.WaitOne(150))
+            {
+
+            }
+
+            return res;
         }
     }
 }

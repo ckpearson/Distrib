@@ -67,6 +67,7 @@ namespace ConsoleApplication1
             var p = new Program();
 
             p.DoProcessNodeTest();
+
             
             Console.ReadLine();
         }
@@ -79,6 +80,28 @@ namespace ConsoleApplication1
 
             var host = nboot.Get<IProcessHostFactory>()
                 .CreateHostFromType(typeof(SomeProcess));
+
+            var thost = (ITypePoweredProcessHost)host;
+
+            thost.Initialise();
+
+            for (int i = 0; i < 10000; i++)
+            {
+                thost.QueueJobAsync(
+                    thost.JobDefinitions.First(),
+                    JobDataHelper<IStockInput<string>>
+                    .New(thost.JobDefinitions.First())
+                    .ForInputSet()
+                    .Set(_ => _.Input, "n" + i.ToString())
+                    .ToValueFields(),
+                    (res, d) =>
+                    {
+                        Console.WriteLine("Finished: {0} - '{1}'",
+                            d, res[0].Value);
+                    }, i);
+
+                Console.WriteLine("Queued " + i.ToString());
+            }
             
         }
     }
@@ -117,7 +140,6 @@ namespace ConsoleApplication1
 
         public void ProcessJob(IJob job)
         {
-            Thread.Sleep(5000);
             JobExecutionHelper.New()
                 .AddHandler(() => _sayHelloJob,
                     () =>

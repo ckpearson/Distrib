@@ -53,6 +53,8 @@ namespace Distrib.Processes
         Task<IReadOnlyList<IProcessJobValueField>> ProcessJobAsync(IJobDefinition definition,
             IEnumerable<IProcessJobValueField> inputValues);
 
+  
+
         DateTime InstanceCreationStamp { get; }
         string InstanceID { get; }
     }
@@ -65,6 +67,8 @@ namespace Distrib.Processes
 
     public interface ITypePoweredProcessHost : IProcessHost
     {
+        void QueueJobAsync(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues, Action<IReadOnlyList<IProcessJobValueField>, object> onCompletion, object data);
+        IEnumerable<IProcessJobValueField> QueueJobSynchronously(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues);
         Type InstanceType { get; }
     }
 }
