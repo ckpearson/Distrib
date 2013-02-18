@@ -47,6 +47,7 @@ using System.Dynamic;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
@@ -68,7 +69,7 @@ namespace ConsoleApplication1
 
             p.DoProcessNodeTest();
 
-            
+
             Console.ReadLine();
         }
 
@@ -77,37 +78,152 @@ namespace ConsoleApplication1
             var nboot = new NinjectBootstrapper();
             nboot.Start();
 
+            
 
-            var host = nboot.Get<IProcessHostFactory>()
-                .CreateHostFromType(typeof(SomeProcess));
+            var mi = this.GetType().GetMethod("DoSomething");
+            var actArg = mi.GetParameters()[0];
 
-            var thost = (ITypePoweredProcessHost)host;
+            var vlist = new List<object>();
 
-            thost.Initialise();
+            var d = BuildDynamicAction(actArg, out vlist);
 
+            mi.Invoke(this, new object[] { d });
 
-            for (int i = 0; i < 10000; i++)
+            var s = "";
+        }
+
+        public Delegate BuildDynamicAction(ParameterInfo actionParameter, out List<object> valuesList)
+        {
+            if (actionParameter.ParameterType.GenericTypeArguments == null || 
+                actionParameter.ParameterType.GenericTypeArguments.Length == 0)
             {
-                thost.QueueJob(
-                    thost.JobDefinitions.First(),
-                    JobDataHelper<IStockInput<string>>
-                    .New(thost.JobDefinitions.First())
-                    .ForInputSet()
-                    .Set(_ => _.Input, "n" + i.ToString())
-                    .ToValueFields(),
-                    (r, d) =>
-                    {
-                        Console.WriteLine("Finished[{0}] - '{1}'",
-                            d, r[0].Value);
-                    }, i, (ex) =>
-                            {
-                                throw ex;
-                            });
-
-                Console.WriteLine("Queued[{0}]", i.ToString());
+                throw new ArgumentException();
             }
 
-            
+            valuesList = new List<object>();
+
+            var args = actionParameter.ParameterType.GenericTypeArguments;
+
+            var lt = Expression.Label();
+            var valVar = Expression.Variable(typeof(List<object>), "vals");
+            var para = args.Select(a => Expression.Parameter(a)).ToArray();
+
+            var setters = new List<Expression>();
+
+            var addvalMeth = valuesList.GetType().GetMethod("Add");
+
+            foreach (var p in para)
+            {
+                setters.Add(Expression.Call(valVar,
+                    addvalMeth, p));
+            }
+
+            var block = Expression.Block(
+                variables: new ParameterExpression[]
+                {
+                    valVar,
+                },
+                expressions: Enumerable.Concat(
+                    para,
+                    new Expression[]
+                    {
+                        Expression.Assign(valVar, Expression.Constant(valuesList)),
+                        Expression.Call(valVar, valuesList.GetType().GetMethod("Clear")),
+                    }.Concat(setters)
+                    .Concat(
+                        new Expression[]
+                        {
+                            Expression.Return(lt),
+                            Expression.Label(lt),
+                        })));
+
+            return Expression.Lambda(block, para).Compile();
+        }
+
+        public void DoSomething(Action<string> act)
+        {
+            act("Hello");
+        }
+    }
+
+    public sealed class HostCommsWrapper
+    {
+        private readonly IProcessHost _host;
+        private IIncomingCommsLink<IProcessHost> _hostComms;
+
+        public HostCommsWrapper(IProcessHost host)
+        {
+            _host = host;
+            _hostComms = new TcpIncomingCommsLink<IProcessHost>(IPAddress.Any,
+                8080,
+                new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()),
+                new DirectInvocationCommsMessageProcessor());
+            _hostComms.StartListening(_host);
+        }
+    }
+
+    public sealed class HostCommsProxy
+        : OutgoingCommsProxyBase, IProcessHost
+    {
+        public HostCommsProxy(IOutgoingCommsLink<IProcessHost> outgoingLink)
+            : base(outgoingLink)
+        {
+
+        }
+
+        public void Initialise()
+        {
+            Link.InvokeMethod(null);
+        }
+
+        public void Unitialise()
+        {
+            Link.InvokeMethod(null);
+        }
+
+        public bool IsInitialised
+        {
+            get { return (bool)Link.GetProperty(); }
+        }
+
+        public IReadOnlyList<IJobDefinition> JobDefinitions
+        {
+            get { return (IReadOnlyList<IJobDefinition>)Link.GetProperty(); }
+        }
+
+        public void QueueJob(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues, Action<IReadOnlyList<IProcessJobValueField>, object> onCompletion, object data, Action<Exception> onException)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IReadOnlyList<IProcessJobValueField> QueueJobAndWait(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int QueuedJobs
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public bool JobExecuting
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public IJobDefinition ExecutingJob
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public DateTime InstanceCreationStamp
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public string InstanceID
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 
@@ -188,7 +304,7 @@ namespace ConsoleApplication1
 
         public void DoSomething()
         {
-            
+
         }
 
         public void Dispose()
