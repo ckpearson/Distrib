@@ -55,9 +55,9 @@ namespace Distrib.Processes
         /// </summary>
         /// <param name="descriptor">The descriptor for the plugin to use</param>
         /// <returns>The created process host</returns>
-        IProcessHost CreateHostFromPluginSeparated(IPluginDescriptor descriptor);
+        //IProcessHost CreateHostFromPluginSeparated(IPluginDescriptor descriptor);
 
         IProcessHost CreateHostFromType(Type type);
-        IProcessHost CreateHostFromTypeSeparated(Type type);
+        //IProcessHost CreateHostFromTypeSeparated(Type type);
     }
 }

@@ -84,10 +84,10 @@
     <Compile Include="IOC\IOCAttribute.cs" />
     <Compile Include="IOC\IOCConstructorArgument.cs" />
     <Compile Include="IOC\IOCRegistrar.cs" />
-    <Compile Include="IOC\NodesIOCRegistrar.cs" />
     <Compile Include="IOC\PluginsIOCRegistrar.cs" />
     <Compile Include="IOC\ProcessesIOCRegistrar.cs" />
     <Compile Include="IOC\SeparationIOCRegistrar.cs" />
+    <Compile Include="Nodes\Process\IProcessNode.cs" />
     <Compile Include="Plugins\IPluginInstanceFactory.cs" />
     <Compile Include="Plugins\IPluginInteractionLink.cs" />
     <Compile Include="Plugins\IPluginInteractionLinkFactory.cs" />
@@ -216,9 +216,7 @@
   <ItemGroup>
     <None Include="Distrib.licenseheader" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Nodes\Process\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -34,7 +34,6 @@ using Distrib.Communication;
 using Distrib.IOC;
 using Distrib.IOC.Ninject;
 using Distrib.Nodes.Process;
-using Distrib.Nodes.Process.HostSources;
 using Distrib.Plugins;
 using Distrib.Processes;
 using Distrib.Processes.Stock;
@@ -53,6 +52,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
@@ -66,30 +66,75 @@ namespace ConsoleApplication1
         {
             var p = new Program();
 
-            //var abc = new Abc(new NamedPipeIncomingCommsLink<IAbcComms>("test",
-            //    new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()),
-            //    new DirectInvocationCommsMessageProcessor()));
-
-            //var aProx = new AbcOutgoingProxy(new NamedPipeOutgoingCommsLink<IAbcComms>(".",
-            //    "test",
-            //    new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter())));
-
-            //var s = aProx.SayHello("Clint");
-
-            //var sx = aProx.SayHello("Yoshii");
-
-            var bridge = new DirectInvokeCommsBridge();
-            var abc = new Abc(new DirectInvokeIncomingCommsLink<IAbcComms>(bridge));
-
-            var aprox = new AbcOutgoingProxy(new DirectInvokeOutgoingCommsLink<IAbcComms>(bridge));
-
-            var s = aprox.SayHello("Clint");
-
-            s = aprox.SayHello("Bob");
+            p.DoProcessNodeTest();
             
             Console.ReadLine();
         }
+
+        private async void DoProcessNodeTest()
+        {
+            var nboot = new NinjectBootstrapper();
+            nboot.Start();
+
+
+            var host = nboot.Get<IProcessHostFactory>()
+                .CreateHostFromType(typeof(SomeProcess));
+            
+        }
     }
+
+    public sealed class SomeProcess : IProcess
+    {
+        public void InitProcess()
+        {
+        }
+
+        public void UninitProcess()
+        {
+        }
+
+        private ProcessJobDefinition<IStockInput<string>, IStockOutput<string>>
+            _sayHelloJob;
+
+        public IReadOnlyList<IJobDefinition> JobDefinitions
+        {
+            get
+            {
+                if (_sayHelloJob == null)
+                {
+                    _sayHelloJob = new ProcessJobDefinition<IStockInput<string>, IStockOutput<string>>("Say Hello",
+                        "Says hello to someone");
+                    _sayHelloJob.ConfigInput(i => i.Input)
+                        .DisplayName = "Person Name";
+                }
+
+                return new[]
+                {
+                    _sayHelloJob,
+                }.ToList().AsReadOnly();
+            }
+        }
+
+        public void ProcessJob(IJob job)
+        {
+            Thread.Sleep(5000);
+            JobExecutionHelper.New()
+                .AddHandler(() => _sayHelloJob,
+                    () =>
+                    {
+                        JobDataHelper<IStockOutput<string>>
+                            .New(job.Definition)
+                            .ForOutputSet(job)
+                            .Set(o => o.Output,
+                                string.Format("Hello, {0}", JobDataHelper<IStockInput<string>>
+                                .New(job.Definition)
+                                .ForInputGet(job)
+                                .Get(i => i.Input)));
+                    })
+                .Execute(job.Definition);
+        }
+    }
+
 
     public interface IAbcComms
     {

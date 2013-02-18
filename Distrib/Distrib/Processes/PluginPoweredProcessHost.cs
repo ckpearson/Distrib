@@ -304,6 +304,15 @@ namespace Distrib.Processes
             }
         }
 
+        public Task<IReadOnlyList<IProcessJobValueField>>
+            ProcessJobAsync(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues)
+        {
+            return new Task<IReadOnlyList<IProcessJobValueField>>(() =>
+            {
+                return ProcessJob(definition, inputValues);
+            });
+        }
+
         public DateTime InstanceCreationStamp
         {
             get
@@ -899,6 +908,13 @@ namespace Distrib.Processes
             {
                 internalJob.SetOutputValue(outputDefField, value);
             }
+        }
+
+
+        public async Task<IReadOnlyList<IProcessJobValueField>> 
+            ProcessJobAsync(IJobDefinition definition, IEnumerable<IProcessJobValueField> inputValues)
+        {
+            return await Task.FromResult(ProcessJob(definition, inputValues));
         }
     }
 }

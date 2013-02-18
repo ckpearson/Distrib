@@ -61,7 +61,7 @@ namespace Distrib.Separation
         /// <param name="args">The arguments that are required outside of IOC</param>
         /// <param name="funcGetInstance">The function that creates the actual instance using the final arguments</param>
         /// <returns>The instance</returns>
-        private object _CreateInstance(Type type, KeyValuePair<string, object>[] args,
+        private object _CreateInstance(Type type, IOCConstructorArgument[] args,
             Func<Type, object[], object> funcGetInstance)
         {
             if (type == null) throw new ArgumentNullException("type must be supplied");
@@ -71,11 +71,11 @@ namespace Distrib.Separation
                 // Initialise args to empty if none provided
                 if (args == null)
                 {
-                    args = new KeyValuePair<string, object>[] { };
+                    args = new IOCConstructorArgument[] {};
                 }
 
                 // Make sure none of the args have duplicate names
-                if (args.GroupBy(a => a.Key).Any(g => g.Count() > 1))
+                if (args.GroupBy(a => a.Name).Any(g => g.Count() > 1))
                 {
                     throw new InvalidOperationException("Arguments must have unique names corresponding to the names expected by the constructor");
                 }
@@ -123,16 +123,16 @@ namespace Distrib.Separation
 
                             // Check to see if this parameter is already supplied for by the args list
 
-                            if (args.Count(a => a.Key == param.Name) == 1)
+                            if (args.Count(a => a.Name == param.Name) == 1)
                             {
-                                var arg = args.Single(a => a.Key == param.Name);
+                                var arg = args.Single(a => a.Name == param.Name);
 
                                 if (!param.ParameterType.IsAssignableFrom(arg.Value.GetType()))
                                 {
                                     // The value provided can't be used for the parameter of the same name
                                     throw new InvalidOperationException(string.Format("argument '{0}' value isn't assignable from type '{1}' of " +
                                         "constructor parameter, '{2}' expected",
-                                            arg.Key,
+                                            arg.Name,
                                             arg.Value.GetType().FullName,
                                             param.ParameterType.FullName));
                                 }
@@ -180,7 +180,7 @@ namespace Distrib.Separation
                                     {
                                         // IOC can provide the type, let it
 
-                                        try
+                                        try 
                                         {
                                             argsList[i] = _iocGetInstance(param.ParameterType);
                                         }
@@ -206,13 +206,13 @@ namespace Distrib.Separation
             }
         }
 
-        public object CreateInstanceSeparatedWithLoadedAssembly(Type type, string assemblyPath, KeyValuePair<string, object>[] args)
+        public object CreateInstanceSeparatedWithLoadedAssembly(Type type, string assemblyPath, IOCConstructorArgument[] args)
         {
             if (type == null) throw new ArgumentNullException("Type must be supplied");
 
             if (args == null)
             {
-                args = new KeyValuePair<string, object>[] { };
+                args = new IOCConstructorArgument[] { };
             }
 
             try
@@ -234,13 +234,13 @@ namespace Distrib.Separation
             }
         }
 
-        public object CreateInstanceWithSeparation(Type type, KeyValuePair<string, object>[] args)
+        public object CreateInstanceWithSeparation(Type type, IOCConstructorArgument[] args)
         {
             if (type == null) throw new ArgumentNullException("Type must be supplied");
 
             if (args == null)
             {
-                args = new KeyValuePair<string, object>[] { };
+                args = new IOCConstructorArgument[] { };
             }
 
             try
@@ -261,15 +261,15 @@ namespace Distrib.Separation
             }
         }
 
-        
 
-        public object CreateInstanceWithoutSeparation(Type type, KeyValuePair<string, object>[] args)
+
+        public object CreateInstanceWithoutSeparation(Type type, IOCConstructorArgument[] args)
         {
             if (type == null) throw new ArgumentNullException("Type must be supplied");
 
             if (args == null)
             {
-                args = new KeyValuePair<string, object>[] { };
+                args = new IOCConstructorArgument[] { };
             }
 
             try
@@ -281,6 +281,23 @@ namespace Distrib.Separation
             {
                 throw new ApplicationException("Failed to create non-separated instance", ex);
             }
+        }
+
+
+        public T CreateInstanceWithSeparation<T>(IOCConstructorArgument[] args) where T : class
+        {
+            return (T)CreateInstanceWithSeparation(typeof(T), args);
+        }
+
+
+        public T CreateInstanceWithoutSeparation<T>(IOCConstructorArgument[] args) where T : class
+        {
+            return (T)CreateInstanceWithoutSeparation(typeof(T), args);
+        }
+
+        public T CreateInstanceSeparatedWithLoadedAssembly<T>(string assemblyPath, IOCConstructorArgument[] args) where T : class
+        {
+            return (T)CreateInstanceSeparatedWithLoadedAssembly(typeof(T), assemblyPath, args);
         }
     }
 }

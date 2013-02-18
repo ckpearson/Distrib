@@ -1,4 +1,5 @@
-﻿/*
+﻿using Distrib.IOC;
+/*
 	This software known as 'Distrib' at time of creation is under the GNU GPL v2. License
 		This license can be found at: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,7 +49,9 @@ namespace Distrib.Separation
         /// <param name="type">The type of the instance to create</param>
         /// <param name="args">The constructor arguments required, those bound with IOC will be provided automatically.</param>
         /// <returns>The instance</returns>
-        object CreateInstanceWithSeparation(Type type, KeyValuePair<string, object>[] args);
+        object CreateInstanceWithSeparation(Type type, IOCConstructorArgument[] args);
+
+        T CreateInstanceWithSeparation<T>(IOCConstructorArgument[] args) where T : class;
 
         /// <summary>
         /// Creates an instance of the given type, no separation is used
@@ -56,8 +59,12 @@ namespace Distrib.Separation
         /// <param name="type">The type of the instance to create</param>
         /// <param name="args">The constructor arguments required, those bound with IOC will be provided automatically.</param>
         /// <returns>The instance</returns>
-        object CreateInstanceWithoutSeparation(Type type, KeyValuePair<string, object>[] args);
+        object CreateInstanceWithoutSeparation(Type type, IOCConstructorArgument[] args);
 
-        object CreateInstanceSeparatedWithLoadedAssembly(Type type, string assemblyPath, KeyValuePair<string, object>[] args);
+        T CreateInstanceWithoutSeparation<T>(IOCConstructorArgument[] args) where T : class;
+
+        object CreateInstanceSeparatedWithLoadedAssembly(Type type, string assemblyPath, IOCConstructorArgument[] args);
+
+        T CreateInstanceSeparatedWithLoadedAssembly<T>(string assemblyPath, IOCConstructorArgument[] args) where T : class;
     }
 }

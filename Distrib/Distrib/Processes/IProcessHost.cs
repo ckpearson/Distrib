@@ -50,6 +50,9 @@ namespace Distrib.Processes
         IReadOnlyList<IProcessJobValueField> ProcessJob(IJobDefinition definition,
             IEnumerable<IProcessJobValueField> inputValues);
 
+        Task<IReadOnlyList<IProcessJobValueField>> ProcessJobAsync(IJobDefinition definition,
+            IEnumerable<IProcessJobValueField> inputValues);
+
         DateTime InstanceCreationStamp { get; }
         string InstanceID { get; }
     }

@@ -124,7 +124,7 @@ namespace ProcessRunner.Services
                 }
 
                 var procHost = _distribIOC.Get<IProcessHostFactory>()
-                    .CreateHostFromPluginSeparated(process.Plugin.RawDescriptor);
+                    .CreateHostFromPlugin(process.Plugin.RawDescriptor);
                 procHost.Initialise();
 
                 return procHost;
