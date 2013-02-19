@@ -272,8 +272,8 @@ namespace ConsoleApplication1
 
             lock (_hosts)
             {
-                var minLoad = _hosts.Values.OrderBy<IHostComms, int>(h => h.QueuedJobCount()).First();
-                return minLoad.ProcessJob(md, inputs);
+                var minload = _hosts.Values.Where(h => h.GetJobDefinitions().Any(j => j.Match(definition))).OrderBy<IHostComms, int>(h => h.QueuedJobCount()).First();
+                return minload.ProcessJob(md, inputs);
             }
         }
     }
@@ -299,17 +299,17 @@ namespace ConsoleApplication1
             var nboot = new NinjectBootstrapper();
             nboot.Start();
 
-            //var trackerEndpoint = new TCPEndpointDetails()
-            //{
-            //    Address = IPAddress.Loopback,
-            //    Port = 8080,
-            //};
-
-            var trackerEndpoint = new NamedPipeEndpointDetails()
+            var trackerEndpoint = new TCPEndpointDetails()
             {
-                MachineName = ".",
-                PipeName = "tracker",
+                Address = IPAddress.Loopback,
+                Port = 8080,
             };
+
+            //var trackerEndpoint = new NamedPipeEndpointDetails()
+            //{
+            //    MachineName = ".",
+            //    PipeName = "tracker",
+            //};
 
             var dBridge = new DirectInvokeCommsBridge("tracker bridge");
 
@@ -326,9 +326,10 @@ namespace ConsoleApplication1
             //        new DirectInvocationCommsMessageProcessor()));
 
             var track = new Tracker(
-                new DirectInvokeIncomingCommsLink<ITrackerComms>(dBridge));
+                new TcpIncomingCommsLink<ITrackerComms>(trackerEndpoint,
+                    new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()), new DirectInvocationCommsMessageProcessor()));
 
-            var hosts = CreateHosts(3, nboot, dBridge);
+            var hosts = CreateHosts(3, nboot, trackerEndpoint);
 
             foreach (var h in hosts)
             {
@@ -349,15 +350,15 @@ namespace ConsoleApplication1
             var el = sw.Elapsed;
         }
 
-        private IEnumerable<HostExposer> CreateHosts(int num, IIOC ioc, DirectInvokeCommsBridge trackerBridge)
+        private IEnumerable<HostExposer> CreateHosts(int num, IIOC ioc, TCPEndpointDetails trackerEndpoint)
         {
             int startPort = 8080;
 
             for (int i = 1; i <= num; i++)
             {
                 yield return new HostExposer(ioc.Get<IProcessHostFactory>().CreateHostFromType(typeof(SomeProcess)),
-                    new DirectInvokeIncomingCommsLink<IHostComms>(new DirectInvokeCommsBridge(Guid.NewGuid().ToString())),
-                    new HostTrackerProxy(new DirectInvokeOutgoingCommsLink<ITrackerComms>(trackerBridge)));
+                    //new DirectInvokeIncomingCommsLink<IHostComms>(new DirectInvokeCommsBridge(Guid.NewGuid().ToString())),
+                    //new HostTrackerProxy(new DirectInvokeOutgoingCommsLink<ITrackerComms>(trackerBridge)));
                     //new NamedPipeIncomingCommsLink<IHostComms>(new NamedPipeEndpointDetails()
                     //{
                     //    MachineName = ".",
@@ -366,13 +367,13 @@ namespace ConsoleApplication1
                     //new HostTrackerProxy(
                     //    new NamedPipeOutgoingCommsLink<ITrackerComms>(trackerEndpoint.MachineName, trackerEndpoint.PipeName,
                     //        new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()))));
-                    //new TcpIncomingCommsLink<IHostComms>(new TCPEndpointDetails()
-                    //{
-                    //    Address = IPAddress.Loopback,
-                    //    Port = startPort + (i * 10),
-                    //}, new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()), new DirectInvocationCommsMessageProcessor()),
-                    //new HostTrackerProxy(
-                    //    new TcpOutgoingCommsLink<ITrackerComms>(trackerEndpoint.Address, trackerEndpoint.Port, new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()))));
+                    new TcpIncomingCommsLink<IHostComms>(new TCPEndpointDetails()
+                    {
+                        Address = IPAddress.Loopback,
+                        Port = startPort + (i * 10),
+                    }, new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()), new DirectInvocationCommsMessageProcessor()),
+                    new HostTrackerProxy(
+                        new TcpOutgoingCommsLink<ITrackerComms>(trackerEndpoint.Address, trackerEndpoint.Port, new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()))));
             }
         }
 
