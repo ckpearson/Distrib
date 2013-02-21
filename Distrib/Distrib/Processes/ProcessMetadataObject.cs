@@ -19,18 +19,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Processes.Plugin
+namespace Distrib.Processes
 {
     [Serializable()]
     public sealed class ProcessMetadataObject : Plugins.PluginAdditionalMetadataObject, 
-        IDistribProcessDetailsMetadata
+        IProcessMetadata
     {
         public ProcessMetadataObject(
             string name,
             string description,
             double version,
             string author)
-            : base(typeof(IDistribProcessDetailsMetadata),
+            : base(typeof(IProcessMetadata),
             "DistribProcessMetadata",
             PluginMetadataBundleExistencePolicy.SingleInstance)
         {

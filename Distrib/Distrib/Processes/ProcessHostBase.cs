@@ -222,7 +222,7 @@ namespace Distrib.Processes
             get { return _jobQueue.Count; }
         }
 
-        public bool JobExecuting
+        public bool IsJobExecuting
         {
             get
             {
@@ -233,7 +233,7 @@ namespace Distrib.Processes
             }
         }
 
-        public IJobDefinition ExecutingJob
+        public IJobDefinition CurrentlyExecutingJob
         {
             get
             {

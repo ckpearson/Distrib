@@ -18,12 +18,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Processes.Plugin
+namespace Distrib.Processes
 {
     /// <summary>
     /// Additional metadata interface for distrib process details
     /// </summary>
-    public interface IDistribProcessDetailsMetadata
+    public interface IProcessMetadata
     {
         /// <summary>
         /// Gets or sets the name of the process

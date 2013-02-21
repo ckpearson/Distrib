@@ -38,9 +38,9 @@ namespace Distrib.Processes
 
         int QueuedJobs { get; }
 
-        bool JobExecuting { get; }
+        bool IsJobExecuting { get; }
 
-        IJobDefinition ExecutingJob { get; }
+        IJobDefinition CurrentlyExecutingJob { get; }
   
 
         DateTime InstanceCreationStamp { get; }

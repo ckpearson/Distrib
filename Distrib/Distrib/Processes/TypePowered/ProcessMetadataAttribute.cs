@@ -12,21 +12,36 @@
 
 	If you wish to contact me about the software / licensing you can reach me at distribgrid@gmail.com
 */
-using Distrib.Nodes.Process;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.IOC
+namespace Distrib.Processes.TypePowered
 {
-    public sealed class NodesIOCRegistrar : IOCRegistrar
+    [Serializable()]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public sealed class ProcessMetadataAttribute : TypePoweredMetadataAttribute
     {
-        public override void PerformBindings()
+        public ProcessMetadataAttribute(
+            string name,
+            string description,
+            double version,
+            string author)
         {
-            BindSingleton<IProcessNodeFactory, ProcessNodeFactory>();
-            Bind<IProcessNode, StandardProcessNode>();
+            base.MetadataObject = new ProcessMetadataObject(
+                name,
+                description,
+                version,
+                author);
         }
+    }
+
+    [Serializable()]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public abstract class TypePoweredMetadataAttribute : Attribute
+    {
+        public object MetadataObject { get; protected set; }
     }
 }

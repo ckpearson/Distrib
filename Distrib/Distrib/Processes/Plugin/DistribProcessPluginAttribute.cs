@@ -19,7 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Processes.Plugin
+namespace Distrib.Processes.PluginPowered
 {
     /// <summary>
     /// Indicates that a given class is to be treated as a Distrib Process Plugin

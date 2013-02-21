@@ -175,8 +175,8 @@
     <Compile Include="Processes\JobExecutionHelper.cs" />
     <Compile Include="Processes\JobFactory.cs" />
     <Compile Include="Processes\Plugin\DistribProcessPluginAttribute.cs" />
-    <Compile Include="Processes\Plugin\IDistribProcessDetailsMetadata.cs" />
-    <Compile Include="Processes\Plugin\ProcessMetadataObject.cs" />
+    <Compile Include="Processes\IDistribProcessDetailsMetadata.cs" />
+    <Compile Include="Processes\ProcessMetadataObject.cs" />
     <Compile Include="Processes\IProcess.cs" />
     <Compile Include="Processes\PluginPoweredProcessHost.cs" />
     <Compile Include="Processes\ProcessHostBase.cs" />
@@ -194,6 +194,7 @@
     <Compile Include="Processes\Stock\IStockInput.cs" />
     <Compile Include="Processes\Stock\IStockOutput.cs" />
     <Compile Include="Processes\TypePoweredProcessHost.cs" />
+    <Compile Include="Processes\TypePowered\ProcessMetadataAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CrossAppDomainObject.cs" />
     <Compile Include="Separation\ISeparateInstanceCreator.cs" />

@@ -100,7 +100,7 @@ namespace ConsoleApplication1
 
         public bool IsProcessingJob()
         {
-            return _host.JobExecuting;
+            return _host.IsJobExecuting;
         }
 
         public int QueuedJobCount()
@@ -268,9 +268,9 @@ namespace ConsoleApplication1
         {
             var p = new Program();
 
-            //p.DoProcessNodeTest();
+            p.DoProcessNodeTest();
 
-            p.NaiveDistribTest();
+            //p.NaiveDistribTest();
 
 
             Console.ReadLine();
@@ -365,26 +365,17 @@ namespace ConsoleApplication1
             var nboot = new NinjectBootstrapper();
             nboot.Start();
 
+            var processNodeBridge = new DirectInvokeCommsBridge("ProcessNodeBridge");
 
+            var pn = nboot.Get<IProcessNodeFactory>()
+                .Create(new DirectInvokeIncomingCommsLink<IProcessNodeComms>(processNodeBridge));
 
-            var mi = this.GetType().GetMethod("DoSomething");
-            var actArg = mi.GetParameters()[0];
+            pn.CreateAndHost(typeof(SomeProcess));
 
-            var vlist = new List<object>();
+            var prox = nboot.Get<IProcessNodeFactory>()
+                .CreateCommsProxy(new DirectInvokeOutgoingCommsLink<IProcessNodeComms>(processNodeBridge));
 
-            var d = BuildDynamicAction(actArg, out vlist);
-
-            mi.Invoke(this, new object[] { d });
-
-            var cp = new CommsActionParameter()
-            {
-                Name = actArg.Name,
-                Types = actArg.ParameterType.GenericTypeArguments.Select(t => t.FullName).ToArray(),
-                Values = vlist.ToArray(),
-            };
-
-
-            var s = "";
+            var jd = prox.GetJobDefinitions();
         }
 
         public sealed class CommsActionParameter

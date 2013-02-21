@@ -12,21 +12,18 @@
 
 	If you wish to contact me about the software / licensing you can reach me at distribgrid@gmail.com
 */
-using Distrib.Nodes.Process;
+using Distrib.Communication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.IOC
+namespace Distrib.Nodes.Process
 {
-    public sealed class NodesIOCRegistrar : IOCRegistrar
+    public interface IProcessNodeFactory
     {
-        public override void PerformBindings()
-        {
-            BindSingleton<IProcessNodeFactory, ProcessNodeFactory>();
-            Bind<IProcessNode, StandardProcessNode>();
-        }
+        IProcessNode Create(IIncomingCommsLink<IProcessNodeComms> incomingLink);
+        IProcessNodeComms CreateCommsProxy(IOutgoingCommsLink<IProcessNodeComms> link);
     }
 }

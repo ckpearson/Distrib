@@ -1,7 +1,7 @@
 ﻿using Distrib;
 using Distrib.Plugins;
 using Distrib.Processes;
-using Distrib.Processes.Plugin;
+using Distrib.Processes.PluginPowered;
 using Distrib.Processes.Stock;
 using System;
 using System.Collections.Generic;
