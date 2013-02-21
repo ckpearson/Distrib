@@ -18,25 +18,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Distrib.Processes.TypePowered
+namespace Distrib
 {
     [Serializable()]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public sealed class ProcessMetadataAttribute : TypePoweredMetadataAttribute
+    public abstract class TypePoweredMetadataAttribute : Attribute
     {
-        public ProcessMetadataAttribute(
-            string name,
-            string description,
-            double version,
-            string author)
-        {
-            base.MetadataObject = new ProcessMetadataObject(
-                name,
-                description,
-                version,
-                author);
-        }
+        public object MetadataObject { get; protected set; }
     }
-
-
 }

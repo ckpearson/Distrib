@@ -18,6 +18,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Distrib.IOC;
+using Distrib.Processes.TypePowered;
+using System.Reflection;
 
 namespace Distrib.Processes
 {
@@ -29,6 +31,8 @@ namespace Distrib.Processes
 
         private DateTime _creationStamp;
         private string _creationId;
+
+        private IProcessMetadata _metadata;
 
         public TypePoweredProcessHost([IOC(false)] Type instanceType,
             [IOC(true)] IJobFactory jobFactory)
@@ -43,6 +47,11 @@ namespace Distrib.Processes
             {
                 lock (_lock)
                 {
+                    if (!Attribute.IsDefined(_instanceType, typeof(ProcessMetadataAttribute)))
+                    {
+                        throw new InvalidOperationException("Process type isn't decorated with the metadata attribute");
+                    }
+
                     _processInstance = (IProcess)Activator.CreateInstance(_instanceType);
                     _creationStamp = DateTime.Now;
                     _creationId = Guid.NewGuid().ToString();
@@ -89,6 +98,19 @@ namespace Distrib.Processes
         public Type InstanceType
         {
             get { return _instanceType; }
+        }
+
+        protected override IProcessMetadata GetMetadataObject()
+        {
+            if (Attribute.IsDefined(_instanceType, typeof(ProcessMetadataAttribute)))
+            {
+                var attr = _instanceType.GetCustomAttribute<ProcessMetadataAttribute>();
+                return (IProcessMetadata)attr.MetadataObject;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

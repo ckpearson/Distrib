@@ -43,6 +43,12 @@ namespace Distrib.Nodes.Process
         {
             return Link.InvokeMethod<IReadOnlyList<IJobDefinition>>(null);
         }
+
+
+        public IReadOnlyList<IProcessMetadata> GetProcessesMetadata()
+        {
+            return Link.InvokeMethod<IReadOnlyList<IProcessMetadata>>(null);
+        }
     }
 
     public sealed class StandardProcessNode : IProcessNode, IProcessNodeComms
@@ -128,12 +134,23 @@ namespace Distrib.Nodes.Process
 
             return lst.AsReadOnly();
         }
-    }
 
-    public sealed class HostedProcessDescriptor
-    {
-        private readonly string _id;
-        private readonly SystemPowerType _powerType;
+
+        IReadOnlyList<IProcessMetadata> IProcessNodeComms.GetProcessesMetadata()
+        {
+            var lst = new List<IProcessMetadata>();
+
+            lock (_hosts)
+            {
+                foreach (var host in _hosts.Where(h => h.Host != null && h.Host.IsInitialised)
+                    .Select(h => h.Host))
+                {
+                    lst.Add(host.Metadata);
+                }
+            }
+
+            return lst.AsReadOnly();
+        }
     }
 
     public abstract class HostedProcess

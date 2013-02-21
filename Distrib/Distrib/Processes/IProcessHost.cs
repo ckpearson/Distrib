@@ -45,6 +45,8 @@ namespace Distrib.Processes
 
         DateTime InstanceCreationStamp { get; }
         string InstanceID { get; }
+
+        IProcessMetadata Metadata { get; }
     }
 
     public interface IPluginPoweredProcessHost : IProcessHost

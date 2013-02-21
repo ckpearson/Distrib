@@ -217,6 +217,24 @@ namespace Distrib.Processes
                 }
             }
         }
+
+        protected override IProcessMetadata GetMetadataObject()
+        {
+            lock (_lock)
+            {
+                if (!IsInitialised)
+                {
+                    return null;
+                }
+                else
+                {
+                    var bundle = _pluginDescriptor.AdditionalMetadataBundles
+                        .Single(b => b.MetadataBundleIdentity == ProcessMetadataObject.BundleIdentity);
+
+                    return bundle.GetMetadataInstance<IProcessMetadata>();
+                }
+            }
+        }
     }
 
 

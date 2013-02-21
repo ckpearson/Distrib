@@ -25,13 +25,14 @@ namespace Distrib.Processes
     public sealed class ProcessMetadataObject : Plugins.PluginAdditionalMetadataObject, 
         IProcessMetadata
     {
+        public const string BundleIdentity  = "DistribProcessMetadata";
         public ProcessMetadataObject(
             string name,
             string description,
             double version,
             string author)
             : base(typeof(IProcessMetadata),
-            "DistribProcessMetadata",
+            BundleIdentity,
             PluginMetadataBundleExistencePolicy.SingleInstance)
         {
             this.Name = name;

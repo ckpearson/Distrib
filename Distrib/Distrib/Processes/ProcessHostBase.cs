@@ -591,5 +591,11 @@ namespace Distrib.Processes
             }
         }
 
+        protected abstract IProcessMetadata GetMetadataObject();
+
+        public IProcessMetadata Metadata
+        {
+            get { return GetMetadataObject(); }
+        }
     }
 }

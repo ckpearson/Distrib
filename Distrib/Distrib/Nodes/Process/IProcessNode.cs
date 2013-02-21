@@ -50,6 +50,7 @@ namespace Distrib.Nodes.Process
     {
         int CurrentHostCount();
         IReadOnlyList<IJobDefinition> GetJobDefinitions();
+        IReadOnlyList<IProcessMetadata> GetProcessesMetadata();
 
     }
 

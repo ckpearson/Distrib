@@ -19,6 +19,7 @@ using Distrib.Nodes.Process;
 using Distrib.Plugins;
 using Distrib.Processes;
 using Distrib.Processes.Stock;
+using Distrib.Processes.TypePowered;
 using Ninject;
 using Ninject.Modules;
 using System;
@@ -376,6 +377,8 @@ namespace ConsoleApplication1
                 .CreateCommsProxy(new DirectInvokeOutgoingCommsLink<IProcessNodeComms>(processNodeBridge));
 
             var jd = prox.GetJobDefinitions();
+
+            var md = prox.GetProcessesMetadata();
         }
 
         public sealed class CommsActionParameter
@@ -439,6 +442,10 @@ namespace ConsoleApplication1
         }
     }
 
+    [ProcessMetadata("Some process",
+        "some simple process",
+        1.0,
+        "Clint Pearson")]
     public sealed class SomeProcess : IProcess
     {
         public void InitProcess()
