@@ -29,6 +29,25 @@ namespace Distrib.IOC
         private static DistribBootstrapper _currentBootstrapper = null;
         private static object _lock = new object();
 
+        private readonly bool _attemptArgumentMatching = false;
+
+        private IReadOnlyList<IOCRegistrar> _registrars;
+
+        public DistribBootstrapper()
+            : this(true)
+        {
+
+        }
+
+        /// <summary>
+        /// Instantiates a new instance
+        /// </summary>
+        /// <param name="attemptArgumentMatching">Whether to attempt automatic argument matching</param>
+        public DistribBootstrapper(bool attemptArgumentMatching)
+        {
+            _attemptArgumentMatching = attemptArgumentMatching;
+        }
+
         /// <summary>
         /// Gets or sets the current active bootstrapper being used by Distrib
         /// </summary>
@@ -114,12 +133,12 @@ namespace Distrib.IOC
                 this.BindToConstant(typeof(IIOC), this);
 
                 // Now go out and ask all the IOC registrar classes to chime in
-                var registrars = Assembly.GetExecutingAssembly()
+                _registrars = Assembly.GetExecutingAssembly()
                     .GetTypes()
                     .Where(t => (t.BaseType != null && t.BaseType.Equals(typeof(IOCRegistrar))) && t.GetConstructor(Type.EmptyTypes) != null)
-                    .Select(t => (IOCRegistrar)Activator.CreateInstance(t));
+                    .Select(t => (IOCRegistrar)Activator.CreateInstance(t)).ToList().AsReadOnly();
 
-                foreach (var registrar in registrars)
+                foreach (var registrar in _registrars)
                 {
                     registrar.PerformBindings();
                 }
@@ -137,13 +156,129 @@ namespace Distrib.IOC
 
         public T Get<T>(params IOCConstructorArgument[] args)
         {
-            return (T)this.GetInstance(typeof(T), args);
+            return (T)this.GetInstance(typeof(T), _ArgMatchIfAble(typeof(T), args));
         }
 
 
         public object Get(Type serviceType, params IOCConstructorArgument[] args)
         {
-            return this.GetInstance(serviceType, args);
+            return this.GetInstance(serviceType, _ArgMatchIfAble(serviceType, args));
+        }
+
+        /// <summary>
+        /// Attempt to perform some naive argument matching if able to do so
+        /// </summary>
+        /// <param name="serviceType">The service type to attempt argument matching for</param>
+        /// <param name="args">The arguments already provided with the request</param>
+        /// <returns>The resulting arguments post-matching (if performed)</returns>
+        private IOCConstructorArgument[] _ArgMatchIfAble(Type serviceType, IOCConstructorArgument[] args)
+        {
+            if (serviceType == null) throw Ex.ArgNull(() => serviceType);
+
+            try
+            {
+                if (!_attemptArgumentMatching)
+                {
+                    return args;
+                }
+
+                if (args == null)
+                {
+                    return args;
+                }
+
+                var bindingEntry = _registrars.SelectMany(reg => reg.BindingEntries)
+                    .SingleOrDefault(be => be.Service == serviceType);
+
+                if (bindingEntry == null)
+                {
+                    throw new InvalidOperationException(string.Format("A single binding entry for service type '{0}' couldn't be found",
+                    serviceType.FullName));
+                }
+
+                var constructors = bindingEntry.Implementation.GetConstructors();
+
+                if (constructors.Length > 1)
+                {
+                    // Due to complexities of how the IOC frameworks may determine the correct constructor
+                    // the argument matching can only be (relatively) sure of success with the one ctor
+                    return args;
+                }
+
+                var ctorParameters = constructors[0].GetParameters();
+
+                if (ctorParameters == null || ctorParameters.Length == 0)
+                {
+                    return args;
+                }
+
+                foreach (var param in ctorParameters)
+                {
+                    bool tryDoMatch = true;
+
+                    if (Attribute.IsDefined(param, typeof(IOCAttribute)))
+                    {
+                        // The IOC attribute is on the parameter so that'll tell us if
+                        // it's expecting the parameter to be injected by IOC
+
+                        tryDoMatch = !param.GetCustomAttribute<IOCAttribute>().ForIOC;
+                    }
+
+                    if (param.ParameterType.Equals(typeof(IIOC)))
+                    {
+                        // No point in trying to match an IIOC argument
+                        tryDoMatch = false;
+                    }
+
+                    if (!tryDoMatch)
+                    {
+                        // So far because there's no match requirement this is an IOC injected arg
+                        // so it's not needed in the arguments list
+                        continue;
+                    }
+
+                    // Look for the argument with the matching name
+                    var foundArg = args.SingleOrDefault(arg => arg.Name == param.Name);
+
+                    if (foundArg != null)
+                    {
+                        // There's an argument supplied whose name matches the parameter name
+                        // Just leave this one be
+                        continue;
+                    }
+                    else
+                    {
+                        // Look for the argument with the matching type
+                        foundArg = args.SingleOrDefault(arg => arg.Value.GetType().Equals(param.ParameterType));
+
+                        if (foundArg != null)
+                        {
+                            var indx = Array.IndexOf(args, foundArg);
+                            args[indx] = new IOCConstructorArgument(param.Name, foundArg.Value);
+                            continue;
+                        }
+                        else
+                        {
+                            // Look for the argument with an assignable type in the event the parameter
+                            // is looking for an interface or a base-type
+                            foundArg = args.SingleOrDefault(arg => param.ParameterType.IsAssignableFrom(arg.Value.GetType()));
+
+                            if (foundArg != null)
+                            {
+                                var indx = Array.IndexOf(args, foundArg);
+                                args[indx] = new IOCConstructorArgument(param.Name, foundArg.Value);
+                                continue;
+                            }
+                        }
+                    }
+                }
+
+                return args;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Bootstrapper failed to perform argument matching", ex);
+            }
         }
 
 

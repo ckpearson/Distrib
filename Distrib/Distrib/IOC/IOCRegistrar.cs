@@ -27,6 +27,26 @@ namespace Distrib.IOC
     {
         public abstract void PerformBindings();
 
+        public sealed class BindingEntry
+        {
+            private readonly Type _serviceType;
+            private readonly Type _impType;
+            private readonly bool _isSingleton = false;
+
+            internal BindingEntry(Type service, Type imp, bool singleton)
+            {
+                _serviceType = service;
+                _impType = imp;
+                _isSingleton = singleton;
+            }
+
+            public Type Service { get { return _serviceType; } }
+            public Type Implementation { get { return _impType; } }
+            public bool IsSingleton { get { return _isSingleton; } }
+        }
+
+        private List<BindingEntry> _bindings = new List<BindingEntry>();
+
         /// <summary>
         /// Binds the given service type to an implementation type
         /// </summary>
@@ -45,6 +65,13 @@ namespace Distrib.IOC
                 }
 
                 DistribBootstrapper.CurrentBoostrapper.DoBind(serviceType, concreteType, false);
+                lock (_bindings)
+                {
+                    _bindings.Add(new BindingEntry(
+                        serviceType,
+                        concreteType,
+                        false));
+                }
             }
             catch (Exception ex)
             {
@@ -82,6 +109,13 @@ namespace Distrib.IOC
                 }
 
                 DistribBootstrapper.CurrentBoostrapper.DoBind(serviceType, concreteType, true);
+                lock (_bindings)
+                {
+                    _bindings.Add(new BindingEntry(
+                        serviceType,
+                        concreteType,
+                        true));
+                }
             }
             catch (Exception ex)
             {
@@ -99,6 +133,17 @@ namespace Distrib.IOC
             where TTO : class
         {
             BindSingleton(typeof(TFrom), typeof(TTO));
+        }
+
+        public IReadOnlyList<BindingEntry> BindingEntries
+        {
+            get
+            {
+                lock (_bindings)
+                {
+                    return _bindings.AsReadOnly();
+                }
+            }
         }
     }
 }

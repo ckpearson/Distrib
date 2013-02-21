@@ -84,10 +84,14 @@
     <Compile Include="IOC\IOCAttribute.cs" />
     <Compile Include="IOC\IOCConstructorArgument.cs" />
     <Compile Include="IOC\IOCRegistrar.cs" />
+    <Compile Include="IOC\NodesIOCRegistrar.cs" />
     <Compile Include="IOC\PluginsIOCRegistrar.cs" />
     <Compile Include="IOC\ProcessesIOCRegistrar.cs" />
     <Compile Include="IOC\SeparationIOCRegistrar.cs" />
     <Compile Include="Nodes\Process\IProcessNode.cs" />
+    <Compile Include="Nodes\Process\IProcessNodeFactory.cs" />
+    <Compile Include="Nodes\Process\ProcessNodeFactory.cs" />
+    <Compile Include="Nodes\Process\StandardProcessNode.cs" />
     <Compile Include="Plugins\IPluginInstanceFactory.cs" />
     <Compile Include="Plugins\IPluginInteractionLink.cs" />
     <Compile Include="Plugins\IPluginInteractionLinkFactory.cs" />
