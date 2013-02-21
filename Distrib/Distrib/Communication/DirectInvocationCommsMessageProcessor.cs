@@ -187,7 +187,7 @@ namespace Distrib.Communication
 
                                             for (int i = 0; i < paras.Length; i++)
                                             {
-                                                if (!paras[i].ParameterType.Equals(msg.InvokeArgs[i].GetType()))
+                                                if (!paras[i].ParameterType.IsAssignableFrom(msg.InvokeArgs[i].GetType()))
                                                 {
                                                     isMatch = false;
                                                     break;

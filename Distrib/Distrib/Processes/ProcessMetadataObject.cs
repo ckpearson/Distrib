@@ -13,6 +13,7 @@
 	If you wish to contact me about the software / licensing you can reach me at distribgrid@gmail.com
 */
 using Distrib.Plugins;
+using Distrib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +50,17 @@ namespace Distrib.Processes
         protected override object _provideMetadata()
         {
             return this;
+        }
+
+
+        public bool Match(IProcessMetadata metadata)
+        {
+            return CChain<bool>
+                .If(() => this.Name == metadata.Name, true, false)
+                .ThenIf(() => this.Description == metadata.Description, true)
+                .ThenIf(() => this.Version == metadata.Version, true)
+                .ThenIf(() => this.Author == metadata.Author, true)
+                .Result;
         }
     }
 }

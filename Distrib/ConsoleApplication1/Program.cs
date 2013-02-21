@@ -379,6 +379,8 @@ namespace ConsoleApplication1
             var jd = prox.GetJobDefinitions();
 
             var md = prox.GetProcessesMetadata();
+
+            var j = prox.GetJobDefinitionsForProcess(md.First());
         }
 
         public sealed class CommsActionParameter

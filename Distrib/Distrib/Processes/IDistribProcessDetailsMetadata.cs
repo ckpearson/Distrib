@@ -44,5 +44,7 @@ namespace Distrib.Processes
         /// Gets or sets the author of the process
         /// </summary>
         string Author { get; set; }
+
+        bool Match(IProcessMetadata metadata);
     }
 }

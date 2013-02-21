@@ -49,6 +49,12 @@ namespace Distrib.Nodes.Process
         {
             return Link.InvokeMethod<IReadOnlyList<IProcessMetadata>>(null);
         }
+
+
+        public IReadOnlyList<IJobDefinition> GetJobDefinitionsForProcess(IProcessMetadata metadata)
+        {
+            return Link.InvokeMethod<IReadOnlyList<IJobDefinition>>(new object[] { metadata });
+        }
     }
 
     public sealed class StandardProcessNode : IProcessNode, IProcessNodeComms
@@ -150,6 +156,17 @@ namespace Distrib.Nodes.Process
             }
 
             return lst.AsReadOnly();
+        }
+
+
+        IReadOnlyList<IJobDefinition> IProcessNodeComms.GetJobDefinitionsForProcess(IProcessMetadata metadata)
+        {
+            lock (_hosts)
+            {
+                var host = _hosts.Where(h => h.Host.Metadata.Match(metadata));
+            }
+
+            return null;
         }
     }
 
