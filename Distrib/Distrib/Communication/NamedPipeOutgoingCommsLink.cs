@@ -100,6 +100,11 @@ namespace Distrib.Communication
             }
         }
 
+        public TRes InvokeMethod<TRes>(object[] args, string methodName = "")
+        {
+            return (TRes)InvokeMethod(args, methodName);
+        }
+
         public object GetProperty(string propertyName = "")
         {
             if (string.IsNullOrEmpty(propertyName)) throw Ex.ArgNull(() => propertyName);

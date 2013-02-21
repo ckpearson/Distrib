@@ -43,7 +43,15 @@ namespace Distrib.Communication
 
         ICommsMessage bridge_MessageReceived(ICommsMessage msg)
         {
-            return _processor.ProcessMessage(_target, msg);
+            lock (_lock)
+            {
+                if (!IsListening)
+                {
+                    throw new InvalidOperationException("Direct incoming link received a message but isn't listening");
+                }
+
+                return _processor.ProcessMessage(_target, msg); 
+            }
         }
 
         public void StartListening(object target)

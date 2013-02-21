@@ -86,6 +86,12 @@ namespace Distrib.Communication
         {
             get { return CommsDirection.Outgoing; }
         }
+
+
+        public TRes InvokeMethod<TRes>(object[] args, string methodName = "")
+        {
+            return (TRes)InvokeMethod(args, methodName);
+        }
     }
 
     public class DirectInvokeOutgoingCommsLink<T> : DirectInvokeOutgoingCommsLink, IOutgoingCommsLink<T> where T : class

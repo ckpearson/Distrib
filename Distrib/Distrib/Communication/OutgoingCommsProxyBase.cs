@@ -20,9 +20,6 @@ using System.Threading.Tasks;
 
 namespace Distrib.Communication
 {
-    /// <summary>
-    /// Helper base for outgoing comms proxies
-    /// </summary>
     public abstract class OutgoingCommsProxyBase
     {
         private IOutgoingCommsLink _outgoingLink;
@@ -32,12 +29,28 @@ namespace Distrib.Communication
             _outgoingLink = outgoingLink;
         }
 
-        /// <summary>
-        /// The outgoing comms link
-        /// </summary>
         public IOutgoingCommsLink Link
         {
             get { return _outgoingLink; }
+        }
+    }
+
+    /// <summary>
+    /// Helper base for outgoing comms proxies
+    /// </summary>
+    public abstract class OutgoingCommsProxyBase<T> : OutgoingCommsProxyBase where T : class
+    {
+        public OutgoingCommsProxyBase(IOutgoingCommsLink<T> outgoingLink)
+            : base(outgoingLink)
+        {
+        }
+
+        /// <summary>
+        /// The outgoing comms link
+        /// </summary>
+        public new IOutgoingCommsLink<T> Link
+        {
+            get { return (IOutgoingCommsLink<T>)base.Link; }
         }
     }
 }

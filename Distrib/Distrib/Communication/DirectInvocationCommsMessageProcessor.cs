@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -129,15 +130,105 @@ namespace Distrib.Communication
                 }
                 else
                 {
-                    if (target.GetType().GetMethod(msg.MethodName) == null)
+                    var typ = target.GetType();
+                    MethodInfo chosenMethod = typ.GetMethod(msg.MethodName);
+
+                    if (chosenMethod == null)
                     {
-                        throw new InvalidOperationException("Method not present on target type");
+                        // The method couldn't be found, it could be because it's implemented explicitly
+                        // try to find an explicit hit via the interfaces
+
+                        var interfaces = typ.GetInterfaces();
+
+                        if (interfaces != null && interfaces.Length > 1)
+                        {
+                            var methNames =
+                                interfaces.Where(i => i.GetMethod(msg.MethodName) != null)
+                                .Select(i => new
+                                {
+                                    explicitName = i.Name + "." + msg.MethodName,
+                                    iface = i,
+                                    meth = i.GetMethod(msg.MethodName),
+                                }).ToArray();
+
+                            if (methNames == null || methNames.Length == 0)
+                            {
+                                throw new InvalidOperationException("Method not present on target type " +
+                            "and none of the implemented interfaces held a method for explicit resolution");
+                            }
+                            else
+                            {
+                                // There's a slight possibility of method names matching
+                                // for more than one explicit implementation
+                                // it's less likely they match on argument signatures, so
+                                // identify the method that has the right signature
+
+                                List<MethodInfo> lstFoundMethods = new List<MethodInfo>();
+
+                                foreach (var mn in methNames)
+                                {
+                                    var paras = mn.meth.GetParameters();
+                                    
+                                    if (paras == null || paras.Length == 0 &&
+                                        (msg.InvokeArgs == null || msg.InvokeArgs.Length == 0))
+                                    {
+                                        // No arguments supplied or expected, this is a candidate
+                                        lstFoundMethods.Add(mn.meth);
+                                    }
+                                    else
+                                    {
+                                        // There are some arguments
+                                        if (paras.Length == msg.InvokeArgs.Length)
+                                        {
+                                            // Only care if the same number of arguments count
+                                            // Check each argument has the same type
+
+                                            bool isMatch = true;
+
+                                            for (int i = 0; i < paras.Length; i++)
+                                            {
+                                                if (!paras[i].ParameterType.Equals(msg.InvokeArgs[i].GetType()))
+                                                {
+                                                    isMatch = false;
+                                                    break;
+                                                }
+                                            }
+
+                                            if (isMatch)
+                                            {
+                                                lstFoundMethods.Add(mn.meth);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (lstFoundMethods.Count == 0)
+                                {
+                                    throw new InvalidOperationException("Method not present on target type " +
+                            "and no interfaces had suitable methods for selection");
+                                }
+                                else if (lstFoundMethods.Count > 1)
+                                {
+                                    throw new InvalidOperationException("Method not present on target type " +
+                            "and multiple interfaces had suitable methods for selection, choice was ambiguous");
+                                }
+                                else
+                                {
+                                    // We have exactly one suitable method at the end of it all
+                                    chosenMethod = lstFoundMethods[0];
+                                }
+                            }
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("Method not present on target type " + 
+                            "and no interfaces were available for explicit implementation resolution");
+                        }
                     }
 
                     var call = Expression.Call(Expression.Constant(target),
-                        msg.MethodName,
-                        null,
-                        target.GetType().GetMethod(msg.MethodName)
+                        chosenMethod,
+                        chosenMethod
                             .GetParameters()
                             .Select(p => Expression.Parameter(p.ParameterType, p.Name)).ToArray());
 

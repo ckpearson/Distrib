@@ -29,6 +29,8 @@ namespace Distrib.Communication
         object InvokeMethod(object[] args, [CallerMemberName] string methodName = "");
         object GetProperty([CallerMemberName] string propertyName = "");
         void SetProperty(object value, [CallerMemberName] string propertyName = "");
+
+        TRes InvokeMethod<TRes>(object[] args, [CallerMemberName] string methodName = "");
     }
 
     /// <summary>
