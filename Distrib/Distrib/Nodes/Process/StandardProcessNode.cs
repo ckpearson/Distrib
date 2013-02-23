@@ -163,10 +163,16 @@ namespace Distrib.Nodes.Process
         {
             lock (_hosts)
             {
-                var host = _hosts.Where(h => h.Host.Metadata.Match(metadata));
-            }
+                var host = _hosts.Where(h => h.Host != null && h.Host.IsInitialised)
+                    .FirstOrDefault(h => h.Host.Metadata.Match(metadata));
 
-            return null;
+                if (host == null)
+                {
+                    throw new ApplicationException("No host could be found for that metadata");
+                }
+
+                return host.Host.JobDefinitions.Select(jd => jd.ToFlattened()).ToList().AsReadOnly();
+            }
         }
     }
 

@@ -366,15 +366,38 @@ namespace ConsoleApplication1
             var nboot = new NinjectBootstrapper();
             nboot.Start();
 
-            var processNodeBridge = new DirectInvokeCommsBridge("ProcessNodeBridge");
+            //var processNodeBridge = new DirectInvokeCommsBridge("ProcessNodeBridge");
+
+            //var pn = nboot.Get<IProcessNodeFactory>()
+            //    .Create(new DirectInvokeIncomingCommsLink<IProcessNodeComms>(processNodeBridge));
+
+            //pn.CreateAndHost(typeof(SomeProcess));
+
+            //var prox = nboot.Get<IProcessNodeFactory>()
+            //    .CreateCommsProxy(new DirectInvokeOutgoingCommsLink<IProcessNodeComms>(processNodeBridge));
+
+            //var jd = prox.GetJobDefinitions();
+
+            //var md = prox.GetProcessesMetadata();
+
+            //var j = prox.GetJobDefinitionsForProcess(md.First());
 
             var pn = nboot.Get<IProcessNodeFactory>()
-                .Create(new DirectInvokeIncomingCommsLink<IProcessNodeComms>(processNodeBridge));
+                .Create(new TcpIncomingCommsLink<IProcessNodeComms>(
+                    new TCPEndpointDetails()
+                    {
+                        Address = IPAddress.Loopback,
+                        Port = 8080,
+                    }, new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()),
+                    new DirectInvocationCommsMessageProcessor()));
 
             pn.CreateAndHost(typeof(SomeProcess));
 
             var prox = nboot.Get<IProcessNodeFactory>()
-                .CreateCommsProxy(new DirectInvokeOutgoingCommsLink<IProcessNodeComms>(processNodeBridge));
+                .CreateCommsProxy(new TcpOutgoingCommsLink<IProcessNodeComms>(
+                    IPAddress.Loopback,
+                    8080,
+                    new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter())));
 
             var jd = prox.GetJobDefinitions();
 
