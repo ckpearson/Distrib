@@ -119,7 +119,7 @@ namespace Distrib.Nodes.Process
         }
 
 
-        IReadOnlyList<IJobDefinition> IProcessNodeComms.GetJobDefinitions()
+        public IReadOnlyList<IJobDefinition> GetJobDefinitions()
         {
             var lst = new List<IJobDefinition>();
 
@@ -142,7 +142,7 @@ namespace Distrib.Nodes.Process
         }
 
 
-        IReadOnlyList<IProcessMetadata> IProcessNodeComms.GetProcessesMetadata()
+        public IReadOnlyList<IProcessMetadata> GetProcessesMetadata()
         {
             var lst = new List<IProcessMetadata>();
 
@@ -159,7 +159,7 @@ namespace Distrib.Nodes.Process
         }
 
 
-        IReadOnlyList<IJobDefinition> IProcessNodeComms.GetJobDefinitionsForProcess(IProcessMetadata metadata)
+        public IReadOnlyList<IJobDefinition> GetJobDefinitionsForProcess(IProcessMetadata metadata)
         {
             lock (_hosts)
             {

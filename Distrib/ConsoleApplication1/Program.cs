@@ -269,7 +269,17 @@ namespace ConsoleApplication1
         {
             var p = new Program();
 
-            p.DoProcessNodeTest();
+            //p.DoProcessNodeTest();
+
+            var nboot = new NinjectBootstrapper();
+            nboot.Start();
+
+            var host = nboot.Get<IProcessNodeFactory>().CreateCommsProxy(
+                new TcpOutgoingCommsLink<IProcessNodeComms>(IPAddress.Loopback,
+                    8080,
+                    new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter())));
+
+            var jd = host.GetJobDefinitions();
 
             //p.NaiveDistribTest();
 
