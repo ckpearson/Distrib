@@ -28,9 +28,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NOTICE.TXT = NOTICE.TXT
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessNode", "ProcessNode\ProcessNode.csproj", "{223F2F5C-EC2A-4BCC-A790-C5C746904B1E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{C474F7BB-5D54-4DBA-A52E-0F883D51BF11}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{3C4AB9CB-DA47-44A6-8560-393A27D9445E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistribApps.Core", "DistribApps.Core\DistribApps.Core.csproj", "{7B8450FF-0BCA-4709-8233-73190A8B1E0B}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 6
+		SccNumberOfProjects = 8
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
 		SccLocalPath0 = .
@@ -52,6 +60,14 @@ Global
 		SccProjectTopLevelParentUniqueName5 = Distrib.sln
 		SccProjectName5 = MathOperationsProcessLibary
 		SccLocalPath5 = MathOperationsProcessLibary
+		SccProjectUniqueName6 = ProcessNode\\ProcessNode.csproj
+		SccProjectTopLevelParentUniqueName6 = Distrib.sln
+		SccProjectName6 = ProcessNode
+		SccLocalPath6 = ProcessNode
+		SccProjectUniqueName7 = DistribApps.Core\\DistribApps.Core.csproj
+		SccProjectTopLevelParentUniqueName7 = Distrib.sln
+		SccProjectName7 = DistribApps.Core
+		SccLocalPath7 = DistribApps.Core
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +94,14 @@ Global
 		{B88DE181-F28C-4D22-B9D6-80091C36BB17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B88DE181-F28C-4D22-B9D6-80091C36BB17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B88DE181-F28C-4D22-B9D6-80091C36BB17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{223F2F5C-EC2A-4BCC-A790-C5C746904B1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{223F2F5C-EC2A-4BCC-A790-C5C746904B1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{223F2F5C-EC2A-4BCC-A790-C5C746904B1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{223F2F5C-EC2A-4BCC-A790-C5C746904B1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B8450FF-0BCA-4709-8233-73190A8B1E0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B8450FF-0BCA-4709-8233-73190A8B1E0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B8450FF-0BCA-4709-8233-73190A8B1E0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B8450FF-0BCA-4709-8233-73190A8B1E0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,9 +109,12 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0A530703-D4D3-409E-9002-032DBD921C90} = {978F4E0F-E9FF-4048-AFA2-D06980DD412B}
 		{59867D26-40D8-4545-A5CD-5E121E602FAD} = {978F4E0F-E9FF-4048-AFA2-D06980DD412B}
+		{223F2F5C-EC2A-4BCC-A790-C5C746904B1E} = {0A530703-D4D3-409E-9002-032DBD921C90}
 		{3C942342-E79D-438F-942E-7CF4FCA040E6} = {59867D26-40D8-4545-A5CD-5E121E602FAD}
 		{55D1064B-F22E-4862-BE0A-36ECE03D1420} = {202BE6B1-C0C3-4714-B2CB-0E8D39D21B55}
 		{B98BDBEA-E613-4A9A-BA02-69C24067FD70} = {0827C3F1-DBC8-49D5-8D51-60B78434B930}
 		{B88DE181-F28C-4D22-B9D6-80091C36BB17} = {B98BDBEA-E613-4A9A-BA02-69C24067FD70}
+		{3C4AB9CB-DA47-44A6-8560-393A27D9445E} = {C474F7BB-5D54-4DBA-A52E-0F883D51BF11}
+		{7B8450FF-0BCA-4709-8233-73190A8B1E0B} = {3C4AB9CB-DA47-44A6-8560-393A27D9445E}
 	EndGlobalSection
 EndGlobal
