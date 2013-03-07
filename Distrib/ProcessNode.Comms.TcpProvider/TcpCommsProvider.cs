@@ -1,4 +1,5 @@
 ﻿using Distrib.Communication;
+using Distrib.Nodes.Process;
 using DistribApps.Comms;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,21 @@ namespace ProcessNode.Comms.TcpProvider
                 throw new InvalidOperationException();
             }
 
-            return null;
+            var epoint = (TcpEndpointDetails)endpoint;
+
+            try
+            {
+                return new TcpIncomingCommsLink<IProcessNodeComms>(
+                    new TCPEndpointDetails()
+                    {
+                        Address = IPAddress.Loopback,
+                        Port = epoint.Port,
+                    }, new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()), new DirectInvocationCommsMessageProcessor());
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to create incoming tcp comms link", ex);
+            }
         }
 
         public IOutgoingCommsLink<Distrib.Nodes.Process.IProcessNodeComms> CreateOutgoing(CommsEndpointDetails endpoint)
@@ -38,7 +53,7 @@ namespace ProcessNode.Comms.TcpProvider
 
         public CommsEndpointDetails GetEndpointDetailsItem()
         {
-            return new TcpEndpointDetails()
+            return new TcpEndpointDetails(this)
             {
                 Address = IPAddress.Loopback,
                 Port = 8080,
@@ -52,8 +67,8 @@ namespace ProcessNode.Comms.TcpProvider
         public const string fld_address = "Address";
         public const string fld_port = "Port";
 
-        public TcpEndpointDetails()
-            : base("TCP")
+        public TcpEndpointDetails(ICommsProvider provider)
+            : base("TCP", provider)
         {
 
         }

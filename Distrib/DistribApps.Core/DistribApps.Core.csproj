@@ -54,6 +54,9 @@
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
@@ -90,6 +93,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Services\DistribAccessService.cs" />
+    <Compile Include="Services\IDistribAccessService.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewServices\IRefreshable.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -135,6 +140,17 @@
   <ItemGroup>
     <Resource Include="Assets\Icons\Wheel-icon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Distrib.Ninject\Distrib.Ninject.csproj">
+      <Project>{55d1064b-f22e-4862-be0a-36ece03d1420}</Project>
+      <Name>Distrib.Ninject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Distrib\Distrib.csproj">
+      <Project>{e7593b79-d107-4595-9b04-c4fff42f035a}</Project>
+      <Name>Distrib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

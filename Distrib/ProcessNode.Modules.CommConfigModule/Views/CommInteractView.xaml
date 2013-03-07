@@ -7,8 +7,32 @@
              d:DesignHeight="300" d:DesignWidth="525">
     <Grid>
         <StackPanel Orientation="Vertical">
-            <TextBlock Text="Comms Interact View" />
-            <StackPanel Orientation="Horizontal">
+            <TextBlock HorizontalAlignment="Center" FontSize="14">
+                <Run Text="Currently Listening (via '" />
+                <Run Text="{Binding Endpoint.EndpointType, Mode=OneWay}" />
+                <Run Text="')" />
+            </TextBlock>
+            <StackPanel Orientation="Vertical" Margin="0,4,0,0" HorizontalAlignment="Stretch">
+                <ItemsControl ItemsSource="{Binding Endpoint.Fields}" Margin="90,0,0,0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ShowGridLines="False" Margin="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width=".5*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="{Binding Name}" HorizontalAlignment="Right" Margin="5" />
+
+                                <StackPanel Grid.Column="1" HorizontalAlignment="Stretch">
+                                    <TextBlock HorizontalAlignment="Stretch" Text="{Binding Value}" Margin="5" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
                 <Button Content="Stop Listening" Command="{Binding StopListeningCommand}" />
             </StackPanel>
         </StackPanel>

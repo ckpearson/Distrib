@@ -12,9 +12,12 @@ namespace DistribApps.Comms
         private IReadOnlyList<CommsEndpointDetailsField> _fields = null;
         private readonly string _endpointType;
 
-        protected CommsEndpointDetails(string endpointType)
+        private readonly ICommsProvider _provider;
+
+        protected CommsEndpointDetails(string endpointType, ICommsProvider provider)
         {
             _endpointType = endpointType;
+            _provider = provider;
         }
 
         protected abstract IEnumerable<CommsEndpointDetailsField> CreateFields();
@@ -27,6 +30,19 @@ namespace DistribApps.Comms
             }
 
             return _fields;
+        }
+
+        public IReadOnlyList<CommsEndpointDetailsField> Fields
+        {
+            get
+            {
+                return GetFields();
+            }
+        }
+
+        public ICommsProvider Provider
+        {
+            get { return _provider; }
         }
 
         public CommsEndpointDetailsField FieldByName(string name)

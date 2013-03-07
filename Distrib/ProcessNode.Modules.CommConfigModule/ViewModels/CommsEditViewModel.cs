@@ -78,7 +78,8 @@ namespace ProcessNode.Modules.CommConfigModule.ViewModels
                 {
                     _startListeningCommand = new DelegateCommand(() =>
                         {
-                            _nodeHosting.StartListening();
+                            _nodeHosting.StartListening((ICommsProvider<IProcessNodeComms>)SelectedEndpoint.Provider,
+                                SelectedEndpoint);
                         });
                 }
 
@@ -107,6 +108,7 @@ namespace ProcessNode.Modules.CommConfigModule.ViewModels
                 }
                 PropChanged();
                 PropChanged("SelectedEndpointFields");
+                PropChanged("CanStartListening");
             }
         }
 

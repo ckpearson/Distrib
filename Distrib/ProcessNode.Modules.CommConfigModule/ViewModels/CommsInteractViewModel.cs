@@ -1,4 +1,5 @@
-﻿using DistribApps.Core.Events;
+﻿using DistribApps.Comms;
+using DistribApps.Core.Events;
 using DistribApps.Core.ViewModels;
 using Microsoft.Practices.Prism.Commands;
 using ProcessNode.Shared.Services;
@@ -28,6 +29,31 @@ namespace ProcessNode.Modules.CommConfigModule.ViewModels
         {
             _nodeHosting = nodeHostingService;
             _eventAgg = eventAgg;
+
+            _eventAgg.Subscribe<Shared.Events.NodeListeningChangedEvent>(OnNodeListeningChanged);
+        }
+
+        private CommsEndpointDetails _endpoint;
+        public CommsEndpointDetails Endpoint
+        {
+            get { return _endpoint; }
+            private set
+            {
+                _endpoint = value;
+                PropChanged();
+            }
+        }
+
+        private void OnNodeListeningChanged(Shared.Events.NodeListeningChangedEvent ev)
+        {
+            if (ev.IsListening)
+            {
+                this.Endpoint = _nodeHosting.CurrentEndpoint;
+            }
+            else
+            {
+                this.Endpoint = null;
+            }
         }
 
         private DelegateCommand _stopListeningCommand;

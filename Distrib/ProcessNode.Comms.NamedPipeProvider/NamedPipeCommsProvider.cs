@@ -6,6 +6,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Distrib.Communication;
 
 namespace ProcessNode.Comms.NamedPipeProvider
 {
@@ -15,7 +16,26 @@ namespace ProcessNode.Comms.NamedPipeProvider
     {
         public Distrib.Communication.IIncomingCommsLink<IProcessNodeComms> CreateIncomingLink(CommsEndpointDetails endpoint)
         {
-            throw new NotImplementedException();
+            if (endpoint is NamedPipeEndpointDetails == false)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var epoint = (NamedPipeEndpointDetails)endpoint;
+
+            try
+            {
+                return new NamedPipeIncomingCommsLink<IProcessNodeComms>(
+                    new Distrib.Communication.NamedPipeEndpointDetails()
+                    {
+                        MachineName = ".",
+                        PipeName = epoint.Pipe,
+                    }, new XmlCommsMessageReaderWriter(new BinaryFormatterCommsMessageFormatter()), new DirectInvocationCommsMessageProcessor());
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to create incoming named pipe link", ex);
+            }
         }
 
         public Distrib.Communication.IOutgoingCommsLink<IProcessNodeComms> CreateOutgoing(CommsEndpointDetails endpoint)
@@ -30,9 +50,10 @@ namespace ProcessNode.Comms.NamedPipeProvider
 
         public CommsEndpointDetails GetEndpointDetailsItem()
         {
-            return new NamedPipeEndpointDetails()
+            return new NamedPipeEndpointDetails(this)
             {
-
+                Machine = Environment.MachineName,
+                Pipe = "ProcessNodePipe",
             };
         }
     }
@@ -43,8 +64,8 @@ namespace ProcessNode.Comms.NamedPipeProvider
         public const string fld_machine = "Machine";
         public const string fld_pipe = "Pipe";
 
-        public NamedPipeEndpointDetails()
-            : base("Named Pipe")
+        public NamedPipeEndpointDetails(ICommsProvider provider)
+            : base("Named Pipe", provider)
         {
 
         }
@@ -68,6 +89,24 @@ namespace ProcessNode.Comms.NamedPipeProvider
                         },
                 },
             };
+        }
+
+        public string Machine
+        {
+            get { return (string)base.FieldByName(fld_machine).Value; }
+            set
+            {
+                base.FieldByName(fld_machine).Value = value;
+            }
+        }
+
+        public string Pipe
+        {
+            get { return (string)base.FieldByName(fld_pipe).Value; }
+            set
+            {
+                base.FieldByName(fld_pipe).Value = value;
+            }
         }
     }
 }

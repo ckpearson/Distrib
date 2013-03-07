@@ -104,9 +104,17 @@
     <None Include="ru\Elysium.chm" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DistribApps.Comms\DistribApps.Comms.csproj">
+      <Project>{88dcd562-3f97-4f78-b9be-575ae135d539}</Project>
+      <Name>DistribApps.Comms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DistribApps.Core\DistribApps.Core.csproj">
       <Project>{7b8450ff-0bca-4709-8233-73190a8b1e0b}</Project>
       <Name>DistribApps.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Distrib\Distrib.csproj">
+      <Project>{e7593b79-d107-4595-9b04-c4fff42f035a}</Project>
+      <Name>Distrib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
