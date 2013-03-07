@@ -73,6 +73,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\SoleBottomValueToThicknessConverter.cs" />
+    <Compile Include="Events\INewEventAggregator.cs" />
+    <Compile Include="Events\NewEventAggregator.cs" />
+    <Compile Include="Events\ViewBecameActiveEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

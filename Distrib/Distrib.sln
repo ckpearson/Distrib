@@ -36,9 +36,29 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{3C4AB9CB-D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistribApps.Core", "DistribApps.Core\DistribApps.Core.csproj", "{7B8450FF-0BCA-4709-8233-73190A8B1E0B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{75C9D676-6189-4B3F-840B-45D44E312C25}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{78E6621B-0A8A-4DEA-BCBB-2357FA4DA3B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessNode.Shared", "ProcessNode.Shared\ProcessNode.Shared.csproj", "{B6BE8413-60A1-4F1B-9AB9-D8AF81F7C561}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessNode.Modules.MainViewModule", "ProcessNode.Modules.MainViewModule\ProcessNode.Modules.MainViewModule.csproj", "{E9694961-4C36-421B-BB3A-08AF0369A5D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessNode.Modules.CommConfigModule", "ProcessNode.Modules.CommConfigModule\ProcessNode.Modules.CommConfigModule.csproj", "{436A6626-B875-4E10-8F0B-A43AF465B265}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Comms", "Comms", "{5F829E00-FB26-4BE1-A376-4AC66CCF3BD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistribApps.Comms", "DistribApps.Comms\DistribApps.Comms.csproj", "{88DCD562-3F97-4F78-B9BE-575AE135D539}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommsProviders", "CommsProviders", "{3F2A89F9-69A6-4D14-88BB-D07A833D0C91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessNode.Comms.TcpProvider", "ProcessNode.Comms.TcpProvider\ProcessNode.Comms.TcpProvider.csproj", "{B874C876-697C-473A-B2F9-9FC640B1EBAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessNode.Comms.NamedPipeProvider", "ProcessNode.Comms.NamedPipeProvider\ProcessNode.Comms.NamedPipeProvider.csproj", "{9D96672A-34F8-46F1-8EC8-827492C442EF}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 8
+		SccNumberOfProjects = 14
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
 		SccLocalPath0 = .
@@ -68,6 +88,30 @@ Global
 		SccProjectTopLevelParentUniqueName7 = Distrib.sln
 		SccProjectName7 = DistribApps.Core
 		SccLocalPath7 = DistribApps.Core
+		SccProjectUniqueName8 = ProcessNode.Shared\\ProcessNode.Shared.csproj
+		SccProjectTopLevelParentUniqueName8 = Distrib.sln
+		SccProjectName8 = ProcessNode.Shared
+		SccLocalPath8 = ProcessNode.Shared
+		SccProjectUniqueName9 = ProcessNode.Modules.MainViewModule\\ProcessNode.Modules.MainViewModule.csproj
+		SccProjectTopLevelParentUniqueName9 = Distrib.sln
+		SccProjectName9 = ProcessNode.Modules.MainViewModule
+		SccLocalPath9 = ProcessNode.Modules.MainViewModule
+		SccProjectUniqueName10 = ProcessNode.Modules.CommConfigModule\\ProcessNode.Modules.CommConfigModule.csproj
+		SccProjectTopLevelParentUniqueName10 = Distrib.sln
+		SccProjectName10 = ProcessNode.Modules.CommConfigModule
+		SccLocalPath10 = ProcessNode.Modules.CommConfigModule
+		SccProjectUniqueName11 = DistribApps.Comms\\DistribApps.Comms.csproj
+		SccProjectTopLevelParentUniqueName11 = Distrib.sln
+		SccProjectName11 = DistribApps.Comms
+		SccLocalPath11 = DistribApps.Comms
+		SccProjectUniqueName12 = ProcessNode.Comms.TcpProvider\\ProcessNode.Comms.TcpProvider.csproj
+		SccProjectTopLevelParentUniqueName12 = Distrib.sln
+		SccProjectName12 = ProcessNode.Comms.TcpProvider
+		SccLocalPath12 = ProcessNode.Comms.TcpProvider
+		SccProjectUniqueName13 = ProcessNode.Comms.NamedPipeProvider\\ProcessNode.Comms.NamedPipeProvider.csproj
+		SccProjectTopLevelParentUniqueName13 = Distrib.sln
+		SccProjectName13 = ProcessNode.Comms.NamedPipeProvider
+		SccLocalPath13 = ProcessNode.Comms.NamedPipeProvider
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,6 +146,30 @@ Global
 		{7B8450FF-0BCA-4709-8233-73190A8B1E0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B8450FF-0BCA-4709-8233-73190A8B1E0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B8450FF-0BCA-4709-8233-73190A8B1E0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6BE8413-60A1-4F1B-9AB9-D8AF81F7C561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6BE8413-60A1-4F1B-9AB9-D8AF81F7C561}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6BE8413-60A1-4F1B-9AB9-D8AF81F7C561}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6BE8413-60A1-4F1B-9AB9-D8AF81F7C561}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9694961-4C36-421B-BB3A-08AF0369A5D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9694961-4C36-421B-BB3A-08AF0369A5D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9694961-4C36-421B-BB3A-08AF0369A5D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9694961-4C36-421B-BB3A-08AF0369A5D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{436A6626-B875-4E10-8F0B-A43AF465B265}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{436A6626-B875-4E10-8F0B-A43AF465B265}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{436A6626-B875-4E10-8F0B-A43AF465B265}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{436A6626-B875-4E10-8F0B-A43AF465B265}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88DCD562-3F97-4F78-B9BE-575AE135D539}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88DCD562-3F97-4F78-B9BE-575AE135D539}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88DCD562-3F97-4F78-B9BE-575AE135D539}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88DCD562-3F97-4F78-B9BE-575AE135D539}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B874C876-697C-473A-B2F9-9FC640B1EBAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B874C876-697C-473A-B2F9-9FC640B1EBAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B874C876-697C-473A-B2F9-9FC640B1EBAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B874C876-697C-473A-B2F9-9FC640B1EBAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D96672A-34F8-46F1-8EC8-827492C442EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D96672A-34F8-46F1-8EC8-827492C442EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D96672A-34F8-46F1-8EC8-827492C442EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D96672A-34F8-46F1-8EC8-827492C442EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,11 +178,21 @@ Global
 		{0A530703-D4D3-409E-9002-032DBD921C90} = {978F4E0F-E9FF-4048-AFA2-D06980DD412B}
 		{59867D26-40D8-4545-A5CD-5E121E602FAD} = {978F4E0F-E9FF-4048-AFA2-D06980DD412B}
 		{223F2F5C-EC2A-4BCC-A790-C5C746904B1E} = {0A530703-D4D3-409E-9002-032DBD921C90}
+		{75C9D676-6189-4B3F-840B-45D44E312C25} = {0A530703-D4D3-409E-9002-032DBD921C90}
+		{78E6621B-0A8A-4DEA-BCBB-2357FA4DA3B5} = {0A530703-D4D3-409E-9002-032DBD921C90}
+		{3F2A89F9-69A6-4D14-88BB-D07A833D0C91} = {0A530703-D4D3-409E-9002-032DBD921C90}
 		{3C942342-E79D-438F-942E-7CF4FCA040E6} = {59867D26-40D8-4545-A5CD-5E121E602FAD}
 		{55D1064B-F22E-4862-BE0A-36ECE03D1420} = {202BE6B1-C0C3-4714-B2CB-0E8D39D21B55}
 		{B98BDBEA-E613-4A9A-BA02-69C24067FD70} = {0827C3F1-DBC8-49D5-8D51-60B78434B930}
 		{B88DE181-F28C-4D22-B9D6-80091C36BB17} = {B98BDBEA-E613-4A9A-BA02-69C24067FD70}
 		{3C4AB9CB-DA47-44A6-8560-393A27D9445E} = {C474F7BB-5D54-4DBA-A52E-0F883D51BF11}
+		{5F829E00-FB26-4BE1-A376-4AC66CCF3BD0} = {C474F7BB-5D54-4DBA-A52E-0F883D51BF11}
 		{7B8450FF-0BCA-4709-8233-73190A8B1E0B} = {3C4AB9CB-DA47-44A6-8560-393A27D9445E}
+		{E9694961-4C36-421B-BB3A-08AF0369A5D0} = {75C9D676-6189-4B3F-840B-45D44E312C25}
+		{436A6626-B875-4E10-8F0B-A43AF465B265} = {75C9D676-6189-4B3F-840B-45D44E312C25}
+		{B6BE8413-60A1-4F1B-9AB9-D8AF81F7C561} = {78E6621B-0A8A-4DEA-BCBB-2357FA4DA3B5}
+		{88DCD562-3F97-4F78-B9BE-575AE135D539} = {5F829E00-FB26-4BE1-A376-4AC66CCF3BD0}
+		{B874C876-697C-473A-B2F9-9FC640B1EBAD} = {3F2A89F9-69A6-4D14-88BB-D07A833D0C91}
+		{9D96672A-34F8-46F1-8EC8-827492C442EF} = {3F2A89F9-69A6-4D14-88BB-D07A833D0C91}
 	EndGlobalSection
 EndGlobal

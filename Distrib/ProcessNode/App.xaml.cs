@@ -1,6 +1,9 @@
-﻿using Microsoft.Practices.Prism.MefExtensions;
+﻿using DistribApps.Core.ViewModels;
+using Microsoft.Practices.Prism.MefExtensions;
+using ProcessNode.Shared;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Configuration;
 using System.Data;
@@ -30,6 +33,11 @@ namespace ProcessNode
         {
             base.ConfigureAggregateCatalog();
             this.AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(PrismBootstrapper).Assembly));
+            this.AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ViewModelBase).Assembly));
+            this.AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(AppRegions).Assembly));
+            string appPath = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            string extendPath = System.IO.Path.Combine(appPath, "Extend");
+            this.AggregateCatalog.Catalogs.Add(new DirectoryCatalog(extendPath));
         }
 
         protected override Microsoft.Practices.Prism.Regions.IRegionBehaviorFactory ConfigureDefaultRegionBehaviors()
@@ -39,7 +47,24 @@ namespace ProcessNode
 
         protected override DependencyObject CreateShell()
         {
-            return new MainWindow();
+            return Container.GetExport<MainWindow>().Value;
+        }
+
+        protected override void InitializeModules()
+        {
+            try
+            {
+                base.InitializeModules();
+            }
+            catch (CompositionException cex)
+            {
+                var errs = cex.Errors;
+                throw cex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         protected override void InitializeShell()

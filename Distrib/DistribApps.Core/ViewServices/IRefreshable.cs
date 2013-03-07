@@ -10,5 +10,6 @@ namespace DistribApps.Core.ViewServices
     {
         bool CanRefresh { get; }
         void Refresh();
+        event Action<IRefreshable, bool> CanRefreshChanged;
     }
 }

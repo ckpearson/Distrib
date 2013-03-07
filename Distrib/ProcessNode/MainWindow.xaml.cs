@@ -1,6 +1,7 @@
 ﻿using Microsoft.Practices.Prism.Regions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,11 +20,15 @@ namespace ProcessNode
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    [Export]
     public partial class MainWindow : Elysium.Controls.Window
     {
-        public MainWindow()
+        [ImportingConstructor]
+        public MainWindow(ViewModels.MainWindowViewModel vm)
         {
             InitializeComponent();
+
+            this.DataContext = vm;
         }
     }
 }

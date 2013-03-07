@@ -16,16 +16,18 @@ namespace DistribApps.Core.ViewModels
     public abstract class ViewModelBase :
         INotifyPropertyChanged,
         INavigationAware,
+        IActiveAware,
         IRefreshable
     {
         private readonly bool _supportsRefresh;
         private bool _refreshEnabled = false;
 
-        private readonly ReaderWriterLockSlim _refreshLock = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim _refreshLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 
         protected ViewModelBase(bool supportsRefresh)
         {
             _supportsRefresh = supportsRefresh;
+            _refreshEnabled = _supportsRefresh;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -60,7 +62,6 @@ namespace DistribApps.Core.ViewModels
 
         protected virtual void OnNavigatedTo(NavigationContext context)
         {
-
         }
 
         // Refresh interface needs to not be explicit so it can be bound (?)
@@ -84,10 +85,16 @@ namespace DistribApps.Core.ViewModels
 
                 if (!_refreshEnabled)
                 {
+                    _refreshLock.ExitReadLock();
+
                     _refreshLock.EnterWriteLock();
                     bDidWrite = true;
                     _refreshEnabled = true;
                     PropChanged("CanRefresh");
+                    if (this.CanRefreshChanged != null)
+                    {
+                        this.CanRefreshChanged(this, _refreshEnabled);
+                    }
                 }
             }
             catch (Exception ex)
@@ -101,8 +108,13 @@ namespace DistribApps.Core.ViewModels
                     _refreshLock.ExitWriteLock();
                     bDidWrite = false;
                 }
-
-                _refreshLock.ExitReadLock();
+                else
+                {
+                    if (_refreshLock.IsReadLockHeld)
+                    {
+                        _refreshLock.ExitReadLock(); 
+                    }
+                }
             }
         }
 
@@ -121,10 +133,16 @@ namespace DistribApps.Core.ViewModels
 
                 if (_refreshEnabled)
                 {
+                    _refreshLock.ExitReadLock();
+
                     _refreshLock.EnterWriteLock();
                     bDidWrite = true;
                     _refreshEnabled = false;
                     PropChanged("CanRefresh");
+                    if (this.CanRefreshChanged != null)
+                    {
+                        this.CanRefreshChanged(this, _refreshEnabled);
+                    }
                 }
             }
             catch (Exception ex)
@@ -138,8 +156,13 @@ namespace DistribApps.Core.ViewModels
                     _refreshLock.ExitWriteLock();
                     bDidWrite = false;
                 }
-
-                _refreshLock.ExitReadLock();
+                else
+                {
+                    if (_refreshLock.IsReadLockHeld)
+                    {
+                        _refreshLock.ExitReadLock();
+                    }
+                }
             }
         }
 
@@ -159,7 +182,10 @@ namespace DistribApps.Core.ViewModels
                 }
                 finally
                 {
-                    _refreshLock.ExitReadLock();
+                    if (_refreshLock.IsReadLockHeld)
+                    {
+                        _refreshLock.ExitReadLock();
+                    }
                 }
             }
         }
@@ -183,7 +209,6 @@ namespace DistribApps.Core.ViewModels
                     throw new ApplicationException("View refreshing isn't currently enabled");
                 }
 
-                DisableRefresh();
                 try
                 {
                     this.OnViewRefreshRequested();
@@ -192,16 +217,33 @@ namespace DistribApps.Core.ViewModels
                 {
                     throw new ApplicationException("Viewmodel implementation threw exception while refreshing", ex);
                 }
-                EnableRefresh();
             }
             catch (Exception ex)
             {
                 throw new ApplicationException("Failed to refresh view", ex);
             }
-            finally
+        }
+
+        private bool _isActive;
+        public bool IsActive
+        {
+            get
             {
-                _refreshLock.ExitReadLock();
+                return _isActive;
+            }
+            set
+            {
+                _isActive = value;
+                if (this.IsActiveChanged != null)
+                {
+                    this.IsActiveChanged(this, new EventArgs());
+                }
             }
         }
+
+        public event EventHandler IsActiveChanged;
+
+
+        public event Action<IRefreshable, bool> CanRefreshChanged;
     }
 }

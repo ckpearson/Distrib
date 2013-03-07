@@ -4,23 +4,30 @@
         xmlns:metro="http://schemas.codeplex.com/elysium"
         xmlns:mpara="http://schemas.codeplex.com/elysium/params"
         xmlns:prism="http://www.codeplex.com/prism"
+        xmlns:shared="clr-namespace:ProcessNode.Shared;assembly=ProcessNode.Shared"
+        xmlns:acoreConv="clr-namespace:DistribApps.Core.Converters;assembly=DistribApps.Core"
         Title="Distrib Process Node" Height="800" Width="525"
         WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize"
         mpara:Manager.Theme="Light"
-        mpara:Manager.AccentBrush="{x:Static metro:AccentBrushes.Lime}"
+        mpara:Manager.AccentBrush="{x:Static metro:AccentBrushes.Sky}"
         mpara:Manager.ContrastBrush="White">
+    <metro:Window.Resources>
+        <acoreConv:SoleBottomValueToThicknessConverter x:Key="bThicknessConv" />
+    </metro:Window.Resources>
     <metro:Window.ApplicationBar>
-        <metro:ApplicationBar>
-            <metro:CommandButton
+        <metro:ApplicationBar IsOpen="True" x:Name="appBar">
+            <!--<metro:CommandButton
                 Margin="{Binding RelativeSource={RelativeSource Self}, Path=(mpara:General.BoldPadding), Mode=OneWay}"
                 Header="Home">
                 <Image Width="{StaticResource appBarItemDimension}"
                        Height="{StaticResource appBarItemDimension}"
                        Source="{StaticResource homeIcon}" />
-            </metro:CommandButton>
+            </metro:CommandButton>-->
             <metro:CommandButton
                 Margin="{Binding RelativeSource={RelativeSource Self}, Path=(mpara:General.BoldPadding), Mode=OneWay}"
-                Header="Refresh">
+                Header="Refresh"
+                IsEnabled="{Binding CanViewRefresh}"
+                Command="{Binding DoRefreshCommand}">
                 <Image Width="{StaticResource appBarItemDimension}"
                        Height="{StaticResource appBarItemDimension}"
                        Source="{StaticResource refreshIcon}" />
@@ -35,6 +42,7 @@
             </metro:CommandButton>
         </metro:ApplicationBar>
     </metro:Window.ApplicationBar>
-    <Grid>
+    <Grid Margin="{Binding ElementName=appBar, Converter={StaticResource bThicknessConv}, Path=ActualHeight, Mode=OneWay}">
+        <ContentControl prism:RegionManager.RegionName="{x:Static shared:AppRegions.MainRegion}" Margin="10"/>
     </Grid>
 </metro:Window>

@@ -82,6 +82,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -90,7 +91,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AppRegions.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -142,18 +142,30 @@
     <Resource Include="en\Elysium.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DistribApps.Comms\DistribApps.Comms.csproj">
+      <Project>{88dcd562-3f97-4f78-b9be-575ae135d539}</Project>
+      <Name>DistribApps.Comms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DistribApps.Core\DistribApps.Core.csproj">
       <Project>{7b8450ff-0bca-4709-8233-73190a8b1e0b}</Project>
       <Name>DistribApps.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ProcessNode.Shared\ProcessNode.Shared.csproj">
+      <Project>{b6be8413-60a1-4f1b-9ab9-d8af81f7c561}</Project>
+      <Name>ProcessNode.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
     <Folder Include="Modules\" />
-    <Folder Include="ViewModels\" />
     <Folder Include="Views\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if exist "$(TargetDir)Extend\" goto end
+mkdir "$(TargetDir)Extend\"
+:end</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
