@@ -10,5 +10,7 @@ namespace ProcessNode.Shared
     {
         public const string MainRegion = "MAIN_REGION";
         public const string CommsRegion = "COMMS_REGION";
+
+        public const string ContentRegion = "CONTENT_REGION";
     }
 }

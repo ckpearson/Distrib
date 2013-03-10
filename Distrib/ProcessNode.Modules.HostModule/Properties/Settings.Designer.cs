@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProcessNode.Modules.MainViewModule.Properties
+namespace ProcessNode.Modules.HostModule.Properties
 {
     
     

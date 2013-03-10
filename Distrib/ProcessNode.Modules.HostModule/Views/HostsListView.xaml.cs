@@ -1,5 +1,4 @@
-﻿using ProcessNode.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -15,16 +14,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ProcessNode.Modules.MainViewModule.Views
+namespace ProcessNode.Modules.HostModule.Views
 {
     /// <summary>
-    /// Interaction logic for MainView.xaml
+    /// Interaction logic for HostsListView.xaml
     /// </summary>
     [Export]
-    public partial class MainView : UserControl
+    public partial class HostsListView : UserControl
     {
         [ImportingConstructor]
-        public MainView(ViewModels.MainViewViewModel vm)
+        public HostsListView(ViewModels.HostsListViewViewModel vm)
         {
             InitializeComponent();
 

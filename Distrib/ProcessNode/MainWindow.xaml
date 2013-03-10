@@ -43,6 +43,18 @@
         </metro:ApplicationBar>
     </metro:Window.ApplicationBar>
     <Grid Margin="{Binding ElementName=appBar, Converter={StaticResource bThicknessConv}, Path=ActualHeight, Mode=OneWay}">
-        <ContentControl prism:RegionManager.RegionName="{x:Static shared:AppRegions.MainRegion}" Margin="10"/>
+        <!--<ContentControl prism:RegionManager.RegionName="{x:Static shared:AppRegions.MainRegion}" Margin="10"/>-->
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="632*"/>
+
+        </Grid.RowDefinitions>
+
+        <GroupBox Header="Comms" Grid.Row="0" Margin="10">
+            <ContentControl prism:RegionManager.RegionName="{x:Static shared:AppRegions.CommsRegion}" Margin="10" />
+        </GroupBox>
+        
+        <ContentControl Grid.Row="1" Margin="10" prism:RegionManager.RegionName="{x:Static shared:AppRegions.ContentRegion}" />
     </Grid>
 </metro:Window>
