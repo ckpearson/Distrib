@@ -25,7 +25,12 @@ namespace Distrib.Separation
     {
         public RemoteDomainBridge()
         {
-
+            AppDomain.CurrentDomain.AssemblyResolve += (s, e) =>
+                {
+                    return AppDomain.CurrentDomain.GetAssemblies()
+                                .DefaultIfEmpty(null)
+                                .SingleOrDefault(asm => asm.FullName == e.Name);
+                };
         }
 
         public void LoadAssembly(string filePath)
