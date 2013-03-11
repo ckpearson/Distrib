@@ -113,6 +113,22 @@ namespace Distrib.IOC
         /// <returns><c>True</c> if the type has been registered, <c>False</c> otherwise</returns>
         protected abstract bool IsTypeRegistered(Type serviceType);
 
+        /// <summary>
+        /// When overridden in a derived class, rebinds a given service type to a new instance type
+        /// in a chosen scope
+        /// </summary>
+        /// <param name="serviceType">The service type to rebind</param>
+        /// <param name="concreteType">The implementation type to bind to</param>
+        /// <param name="singleton">Whether the binding should be in the singleton scope</param>
+        protected abstract void Rebind(Type serviceType, Type concreteType, bool singleton);
+
+        /// <summary>
+        /// When overridden in a derived class, rebinds a given service type to a given instance
+        /// </summary>
+        /// <param name="serviceType">The service type to rebind</param>
+        /// <param name="instance">The instance to bind to</param>
+        protected abstract void RebindToConstant(Type serviceType, object instance);
+
 
         public void Start()
         {
@@ -289,7 +305,26 @@ namespace Distrib.IOC
 
         public bool IsTypeBound(Type serviceType)
         {
+            if (serviceType == null) throw Ex.ArgNull(() => serviceType);
+
             return this.IsTypeRegistered(serviceType);
         }
+
+
+        public void Rebind<TInterface, TImplementation>(bool singleton)
+            where TInterface : class
+            where TImplementation : class, TInterface
+        {
+            this.Rebind(typeof(TInterface), typeof(TImplementation), singleton);
+        }
+
+
+        public void RebindToConstant<TInterface>(TInterface instance)
+        {
+            if (instance == null) throw Ex.ArgNull(() => instance);
+
+            this.RebindToConstant(typeof(TInterface), instance);
+        }
+
     }
 }

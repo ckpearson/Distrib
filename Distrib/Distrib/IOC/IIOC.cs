@@ -56,5 +56,33 @@ namespace Distrib.IOC
         /// Starts this bootstrapper off as the current bootstrapper
         /// </summary>
         void Start();
+
+        /// <summary>
+        /// Overrides an existing IOC binding
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This method requires a binding to already exist, so, if you're overriding
+        /// a Distrib binding, call this after the Start method has been called,
+        /// otherwise be sure to call it after the binding has been made.
+        /// </para>
+        /// <para>
+        /// This method allows continuous rebinding, so there is a danger that
+        /// rebindings could themselves be rebound, keep this in mind!
+        /// </para>
+        /// </remarks>
+        /// <typeparam name="TInterface">The service type</typeparam>
+        /// <typeparam name="TImplementation">The implementation type</typeparam>
+        /// <param name="singleton">Whether the binding should function as a singleton</param>
+        void Rebind<TInterface, TImplementation>(bool singleton)
+            where TInterface : class
+            where TImplementation : class, TInterface;
+
+        /// <summary>
+        /// Overrides an existing IOC binding with a constant implementation
+        /// </summary>
+        /// <typeparam name="TInterface">The service type</typeparam>
+        /// <param name="instance">The constant implementation to bind to</param>
+        void RebindToConstant<TInterface>(TInterface instance);
     }
 }
