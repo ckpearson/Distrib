@@ -33,6 +33,7 @@ namespace Distrib.IOC
 
         private IReadOnlyList<IOCRegistrar> _registrars;
 
+
         public DistribBootstrapper()
             : this(true)
         {
@@ -203,8 +204,7 @@ namespace Distrib.IOC
                     return args;
                 }
 
-                var bindingEntry = _registrars.SelectMany(reg => reg.BindingEntries)
-                    .SingleOrDefault(be => be.Service == serviceType);
+                var bindingEntry = _getBindingEntry(serviceType);
 
                 if (bindingEntry == null)
                 {
@@ -315,13 +315,64 @@ namespace Distrib.IOC
             where TInterface : class
             where TImplementation : class, TInterface
         {
-            this.Rebind(typeof(TInterface), typeof(TImplementation), singleton);
+            try
+            {
+                _updateBindingEntry<TInterface>((entry) =>
+                    {
+                        entry.IsSingleton = singleton;
+                        entry.Implementation = typeof(TImplementation);
+                    });
+
+                this.Rebind(typeof(TInterface), typeof(TImplementation), singleton);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to rebind service type", ex);
+            }
+        }
+
+        private IOCRegistrar.BindingEntry _getBindingEntry(Type serviceType)
+        {
+            try
+            {
+                return _registrars.SelectMany(reg => reg.BindingEntries)
+                        .SingleOrDefault(be => be.Service == serviceType);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to get binding entry", ex);
+            }
+        }
+
+        private void _updateBindingEntry<TService>(Action<IOCRegistrar.BindingEntry> updater)
+        {
+            try
+            {
+                var entry = _getBindingEntry(typeof(TService));
+
+                if (entry == null)
+                {
+                    throw new InvalidOperationException("Failed to find binding entry");
+                }
+
+                updater(entry);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to update binding entry", ex);
+            }
         }
 
 
         public void RebindToConstant<TInterface>(TInterface instance)
         {
             if (instance == null) throw Ex.ArgNull(() => instance);
+
+            _updateBindingEntry<TInterface>((entry) =>
+                {
+                    entry.IsSingleton = false;
+                    entry.Implementation = instance.GetType();
+                });
 
             this.RebindToConstant(typeof(TInterface), instance);
         }

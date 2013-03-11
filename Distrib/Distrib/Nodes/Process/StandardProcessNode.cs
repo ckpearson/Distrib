@@ -57,28 +57,6 @@ namespace Distrib.Nodes.Process
         }
     }
 
-    public sealed class NewProcessNode : IProcessNode
-    {
-        public NewProcessNode(
-            [IOC(true)] IProcessHostFactory hostFactory,
-            [IOC(true)] IProcessHostTypeService hostTypeService,
-            [IOC(false)] IIncomingCommsLink<IProcessNodeComms> nodeIncoming)
-        {
-
-        }
-
-        public void CreateAndHost(Type processType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CreateAndHost(IPluginDescriptor processPluginDescriptor)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-
     public sealed class StandardProcessNode : IProcessNode, IProcessNodeComms
     {
         private readonly IProcessHostFactory _hostFactory;

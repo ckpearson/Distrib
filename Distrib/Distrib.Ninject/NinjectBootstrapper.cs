@@ -30,13 +30,13 @@ namespace Distrib.IOC.Ninject
     {
         private IKernel _kernel = null;
 
-        public NinjectBootstrapper() { }
+        public NinjectBootstrapper() : base(true) { }
 
         /// <summary>
         /// Instantiates a new instance
         /// </summary>
         /// <param name="ninjectKernel">The ninject kernel you want distrib to utilise</param>
-        public NinjectBootstrapper(IKernel ninjectKernel)
+        public NinjectBootstrapper(IKernel ninjectKernel)  : base(true)
         {
             _kernel = ninjectKernel;
         }
@@ -87,6 +87,23 @@ namespace Distrib.IOC.Ninject
         {
             var bindings = _kernel.GetBindings(serviceType);
             return bindings != null && bindings.Count() > 0;
+        }
+
+        protected override void Rebind(Type serviceType, Type concreteType, bool singleton)
+        {
+            if (singleton)
+            {
+                _kernel.Rebind(serviceType).To(concreteType).InSingletonScope();
+            }
+            else
+            {
+                _kernel.Rebind(serviceType).To(concreteType);
+            }
+        }
+
+        protected override void RebindToConstant(Type type, object instance)
+        {
+            _kernel.Rebind(type).ToConstant(instance);
         }
     }
 }

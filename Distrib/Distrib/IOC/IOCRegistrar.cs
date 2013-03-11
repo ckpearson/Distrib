@@ -30,8 +30,10 @@ namespace Distrib.IOC
         public sealed class BindingEntry
         {
             private readonly Type _serviceType;
-            private readonly Type _impType;
-            private readonly bool _isSingleton = false;
+            private Type _impType;
+            private bool _isSingleton = false;
+
+            private readonly object _lock = new object();
 
             internal BindingEntry(Type service, Type imp, bool singleton)
             {
@@ -40,9 +42,47 @@ namespace Distrib.IOC
                 _isSingleton = singleton;
             }
 
-            public Type Service { get { return _serviceType; } }
-            public Type Implementation { get { return _impType; } }
-            public bool IsSingleton { get { return _isSingleton; } }
+            public Type Service
+            {
+                get { return _serviceType; }
+            }
+
+            public Type Implementation
+            {
+                get
+                {
+                    lock (_lock)
+                    {
+                        return _impType;
+                    }
+                }
+                set
+                {
+                    lock (_lock)
+                    {
+                        _impType = value;
+                    }
+                }
+            }
+
+            public bool IsSingleton
+            {
+                get
+                {
+                    lock (_lock)
+                    {
+                        return _isSingleton;
+                    }
+                }
+
+                set
+                {
+                    lock (_lock)
+                    {
+                        _isSingleton = value;
+                    }
+                }
+            }
         }
 
         private List<BindingEntry> _bindings = new List<BindingEntry>();
