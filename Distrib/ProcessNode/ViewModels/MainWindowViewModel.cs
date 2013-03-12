@@ -1,7 +1,10 @@
-﻿using DistribApps.Core.Events;
+﻿using Distrib.Nodes.Process;
+using DistribApps.Core.Events;
+using DistribApps.Core.Services;
 using DistribApps.Core.ViewModels;
 using DistribApps.Core.ViewServices;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;

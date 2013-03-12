@@ -1,4 +1,8 @@
-﻿using DistribApps.Core.ViewModels;
+﻿using DistribApps.Core.Events;
+using DistribApps.Core.ViewModels;
+using Microsoft.Practices.Prism.Regions;
+using Microsoft.Practices.ServiceLocation;
+using ProcessNode.Shared.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -13,19 +17,41 @@ namespace ProcessNode.Modules.HostModule.ViewModels
     public sealed class HostsListViewViewModel : 
         ViewModelBase
     {
-        public HostsListViewViewModel()
-            : base(true)
+        private readonly INewEventAggregator _eventAgg;
+        private readonly INodeHostingService _hosting;
+
+        private readonly IRegionManager _regionManager;
+
+        [ImportingConstructor]
+        public HostsListViewViewModel(
+            INewEventAggregator eventAgg,
+            INodeHostingService hosting,
+            IRegionManager regionManager)
+            : base(false)
         {
-            base.IsActiveChanged += HostsListViewViewModel_IsActiveChanged;
+            _eventAgg = eventAgg;
+            _hosting = hosting;
+            _regionManager = regionManager;
+
+            _eventAgg.Subscribe<Shared.Events.NodeListeningChangedEvent>(OnNodeListeningChanged);
         }
 
-        void HostsListViewViewModel_IsActiveChanged(object sender, EventArgs e)
+        private void OnNodeListeningChanged(Shared.Events.NodeListeningChangedEvent ev)
         {
-            var b = base.IsActive;
+            PropChanged("IsListening");
+            if (ev.IsListening)
+            {
+                _regionManager.Regions[Regions.NodeListening].Add(ServiceLocator.Current.GetInstance<Views.NodeListeningHostsListView>());
+            }
+            else
+            {
+                _regionManager.Regions[Regions.NodeListening].Remove(ServiceLocator.Current.GetInstance<Views.NodeListeningHostsListView>());
+            }
         }
 
-        protected override void OnNavigatedTo(Microsoft.Practices.Prism.Regions.NavigationContext context)
+        public bool IsListening
         {
+            get { return _hosting.IsListening; }
         }
     }
 }

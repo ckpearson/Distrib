@@ -63,4 +63,47 @@ namespace MathOperationsProcessLibary
                 .Execute(job.Definition);
         }
     }
+
+    [Distrib.Processes.TypePowered.ProcessMetadata("Dummy", "Dummy type process", 1.0, "Clint")]
+    public sealed class DummyTypeProcess : CrossAppDomainObject, IProcess
+    {
+        public void InitProcess()
+        {
+        }
+
+        public void UninitProcess()
+        {
+        }
+
+        public IReadOnlyList<IJobDefinition> JobDefinitions
+        {
+            get { return null; }
+        }
+
+        public void ProcessJob(IJob job)
+        {
+        }
+    }
+
+    [Distrib.Processes.TypePowered.ProcessMetadata("Dummy 2", "Dummy type process", 1.0, "Clint")]
+    public sealed class DummyTypeProcess2 : CrossAppDomainObject, IProcess
+    {
+        public void InitProcess()
+        {
+        }
+
+        public void UninitProcess()
+        {
+        }
+
+        public IReadOnlyList<IJobDefinition> JobDefinitions
+        {
+            get { return null; }
+        }
+
+        public void ProcessJob(IJob job)
+        {
+        }
+    }
+
 }

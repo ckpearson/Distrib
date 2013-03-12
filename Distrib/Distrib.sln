@@ -56,9 +56,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessNode.Comms.NamedPipe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessNode.Modules.HostModule", "ProcessNode.Modules.HostModule\ProcessNode.Modules.HostModule.csproj", "{EE64EBE3-6138-4D14-A643-F338AB97ACAD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HostProviders", "HostProviders", "{EC1278DD-647A-43C4-8E13-920D21D2F009}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessNode.HostProviders.TypePowered", "ProcessNode.HostProviders.TypePowered\ProcessNode.HostProviders.TypePowered.csproj", "{44324E6E-C57A-428C-8346-AB2C280794BC}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 14
+		SccNumberOfProjects = 15
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
 		SccLocalPath0 = .
@@ -112,6 +116,10 @@ Global
 		SccProjectTopLevelParentUniqueName13 = Distrib.sln
 		SccProjectName13 = ProcessNode.Modules.HostModule
 		SccLocalPath13 = ProcessNode.Modules.HostModule
+		SccProjectUniqueName14 = ProcessNode.HostProviders.TypePowered\\ProcessNode.HostProviders.TypePowered.csproj
+		SccProjectTopLevelParentUniqueName14 = Distrib.sln
+		SccProjectName14 = ProcessNode.HostProviders.TypePowered
+		SccLocalPath14 = ProcessNode.HostProviders.TypePowered
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -170,6 +178,10 @@ Global
 		{EE64EBE3-6138-4D14-A643-F338AB97ACAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE64EBE3-6138-4D14-A643-F338AB97ACAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE64EBE3-6138-4D14-A643-F338AB97ACAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44324E6E-C57A-428C-8346-AB2C280794BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44324E6E-C57A-428C-8346-AB2C280794BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44324E6E-C57A-428C-8346-AB2C280794BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44324E6E-C57A-428C-8346-AB2C280794BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -181,6 +193,7 @@ Global
 		{75C9D676-6189-4B3F-840B-45D44E312C25} = {0A530703-D4D3-409E-9002-032DBD921C90}
 		{78E6621B-0A8A-4DEA-BCBB-2357FA4DA3B5} = {0A530703-D4D3-409E-9002-032DBD921C90}
 		{3F2A89F9-69A6-4D14-88BB-D07A833D0C91} = {0A530703-D4D3-409E-9002-032DBD921C90}
+		{EC1278DD-647A-43C4-8E13-920D21D2F009} = {0A530703-D4D3-409E-9002-032DBD921C90}
 		{3C942342-E79D-438F-942E-7CF4FCA040E6} = {59867D26-40D8-4545-A5CD-5E121E602FAD}
 		{55D1064B-F22E-4862-BE0A-36ECE03D1420} = {202BE6B1-C0C3-4714-B2CB-0E8D39D21B55}
 		{B98BDBEA-E613-4A9A-BA02-69C24067FD70} = {0827C3F1-DBC8-49D5-8D51-60B78434B930}
@@ -194,5 +207,6 @@ Global
 		{88DCD562-3F97-4F78-B9BE-575AE135D539} = {5F829E00-FB26-4BE1-A376-4AC66CCF3BD0}
 		{B874C876-697C-473A-B2F9-9FC640B1EBAD} = {3F2A89F9-69A6-4D14-88BB-D07A833D0C91}
 		{9D96672A-34F8-46F1-8EC8-827492C442EF} = {3F2A89F9-69A6-4D14-88BB-D07A833D0C91}
+		{44324E6E-C57A-428C-8346-AB2C280794BC} = {EC1278DD-647A-43C4-8E13-920D21D2F009}
 	EndGlobalSection
 EndGlobal

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Practices.Prism.Regions;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -15,23 +16,20 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ProcessNode
+namespace ProcessNode.Modules.HostModule.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for NodeListeningHostsListView.xaml
     /// </summary>
     [Export]
-    public partial class MainWindow : Elysium.Controls.Window
+    public partial class NodeListeningHostsListView : UserControl
     {
-        [ImportingConstructor]
-        public MainWindow(ViewModels.MainWindowViewModel vm)
+        public NodeListeningHostsListView()
         {
             InitializeComponent();
 
-            this.DataContext = vm;
-
-            Elysium.Manager.Apply(Application.Current, Elysium.Theme.Light,
-                Elysium.AccentBrushes.Sky, Brushes.White);
+            RegionManager.SetRegionManager(this, ServiceLocator.Current.GetInstance<IRegionManager>());
+            this.DataContext = ServiceLocator.Current.GetInstance<ViewModels.NodeListeningHostsListViewModel>();
         }
     }
 }

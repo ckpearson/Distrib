@@ -87,9 +87,18 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Regions.cs" />
+    <Compile Include="ViewModels\HostCreationUIWindowViewModel.cs" />
     <Compile Include="ViewModels\HostsListViewViewModel.cs" />
+    <Compile Include="ViewModels\NodeListeningHostsListViewModel.cs" />
+    <Compile Include="Views\HostCreationUIWindow.xaml.cs">
+      <DependentUpon>HostCreationUIWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HostsListView.xaml.cs">
       <DependentUpon>HostsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NodeListeningHostsListView.xaml.cs">
+      <DependentUpon>NodeListeningHostsListView.xaml</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -134,7 +143,15 @@
     <Resource Include="en\Elysium.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\HostCreationUIWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\HostsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NodeListeningHostsListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

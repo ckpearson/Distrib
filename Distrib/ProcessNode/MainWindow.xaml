@@ -7,10 +7,7 @@
         xmlns:shared="clr-namespace:ProcessNode.Shared;assembly=ProcessNode.Shared"
         xmlns:acoreConv="clr-namespace:DistribApps.Core.Converters;assembly=DistribApps.Core"
         Title="Distrib Process Node" Height="800" Width="525"
-        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize"
-        mpara:Manager.Theme="Light"
-        mpara:Manager.AccentBrush="{x:Static metro:AccentBrushes.Sky}"
-        mpara:Manager.ContrastBrush="White">
+        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <metro:Window.Resources>
         <acoreConv:SoleBottomValueToThicknessConverter x:Key="bThicknessConv" />
     </metro:Window.Resources>
