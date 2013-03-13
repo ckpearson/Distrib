@@ -60,9 +60,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HostProviders", "HostProvid
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessNode.HostProviders.TypePowered", "ProcessNode.HostProviders.TypePowered\ProcessNode.HostProviders.TypePowered.csproj", "{44324E6E-C57A-428C-8346-AB2C280794BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessNode.HostProviders.PluginPowered", "ProcessNode.HostProviders.PluginPowered\ProcessNode.HostProviders.PluginPowered.csproj", "{B1AA4272-32C0-4AA3-B4FF-29543FE2C981}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 15
+		SccNumberOfProjects = 16
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
 		SccLocalPath0 = .
@@ -120,6 +122,10 @@ Global
 		SccProjectTopLevelParentUniqueName14 = Distrib.sln
 		SccProjectName14 = ProcessNode.HostProviders.TypePowered
 		SccLocalPath14 = ProcessNode.HostProviders.TypePowered
+		SccProjectUniqueName15 = ProcessNode.HostProviders.PluginPowered\\ProcessNode.HostProviders.PluginPowered.csproj
+		SccProjectTopLevelParentUniqueName15 = Distrib.sln
+		SccProjectName15 = ProcessNode.HostProviders.PluginPowered
+		SccLocalPath15 = ProcessNode.HostProviders.PluginPowered
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -182,6 +188,10 @@ Global
 		{44324E6E-C57A-428C-8346-AB2C280794BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44324E6E-C57A-428C-8346-AB2C280794BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44324E6E-C57A-428C-8346-AB2C280794BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1AA4272-32C0-4AA3-B4FF-29543FE2C981}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1AA4272-32C0-4AA3-B4FF-29543FE2C981}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1AA4272-32C0-4AA3-B4FF-29543FE2C981}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1AA4272-32C0-4AA3-B4FF-29543FE2C981}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -208,5 +218,6 @@ Global
 		{B874C876-697C-473A-B2F9-9FC640B1EBAD} = {3F2A89F9-69A6-4D14-88BB-D07A833D0C91}
 		{9D96672A-34F8-46F1-8EC8-827492C442EF} = {3F2A89F9-69A6-4D14-88BB-D07A833D0C91}
 		{44324E6E-C57A-428C-8346-AB2C280794BC} = {EC1278DD-647A-43C4-8E13-920D21D2F009}
+		{B1AA4272-32C0-4AA3-B4FF-29543FE2C981} = {EC1278DD-647A-43C4-8E13-920D21D2F009}
 	EndGlobalSection
 EndGlobal

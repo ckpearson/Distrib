@@ -231,11 +231,9 @@ namespace Distrib.Separation
                 return _CreateInstance(type, args,
                         (t, a) =>
                         {
-                            var typLoading = a[0] as Type;
                             var domain = AppDomain.CreateDomain(Guid.NewGuid().ToString());
                             var bridge = _bridgeFactory.ForAppDomain(domain);
                             bridge.LoadAssembly(type.Assembly.Location);
-                            bridge.LoadAssembly(typLoading.Assembly.Location);
                             domain.InitializeLifetimeService();
                             return bridge.CreateInstance(t.FullName, a);
                         });

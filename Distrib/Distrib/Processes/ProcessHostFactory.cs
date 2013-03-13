@@ -39,11 +39,6 @@ namespace Distrib.Processes
 
         public IProcessHost CreateHostFromPlugin(IPluginDescriptor descriptor)
         {
-            //return (IProcessHost)_ioc.Get<IPluginPoweredProcessHost>(new[]
-            //{
-            //    new IOCConstructorArgument("descriptor", descriptor),
-            //});
-
             return (IProcessHost)_instFactory.CreateCreator()
                 .CreateInstanceWithSeparation(_ioc.Get<IPluginPoweredProcessHost>(new[]
                 {
@@ -54,40 +49,18 @@ namespace Distrib.Processes
                 });
         }
 
-        //public IProcessHost CreateHostFromPluginSeparated(IPluginDescriptor descriptor)
-        //{
-        //    return _instFactory.CreateCreator()
-        //        .CreateInstanceWithSeparation(CreateHostFromPlugin(descriptor).GetType(), new[]
-        //        {
-        //            new IOCConstructorArgument("descriptor", descriptor),
-        //        }) as IProcessHost;
-        //}
-
-
         public IProcessHost CreateHostFromType(Type type)
         {
+            // Need to create the instance and have the assembly the type lives in loaded into the domain
             return (IProcessHost)_instFactory.CreateCreator()
-                .CreateInstanceWithSeparation(_ioc.Get<ITypePoweredProcessHost>(new[]
+                .CreateInstanceSeparatedWithLoadedAssembly(_ioc.Get<ITypePoweredProcessHost>(new[]
                 {
                     new IOCConstructorArgument("instanceType", type),
-                }).GetType(), new[]
+                }).GetType(), type.Assembly.Location,
+                new[]
                 {
                     new IOCConstructorArgument("instanceType", type),
                 });
-
-            //return (IProcessHost)_ioc.Get<ITypePoweredProcessHost>(new[]
-            //{
-            //    new IOCConstructorArgument("instanceType", type),
-            //});
         }
-
-        //public IProcessHost CreateHostFromTypeSeparated(Type type)
-        //{
-        //    return _instFactory.CreateCreator()
-        //        .CreateInstanceWithSeparation(CreateHostFromType(type).GetType(), new[]
-        //        {
-        //            new IOCConstructorArgument("instanceType", type),
-        //        }) as IProcessHost;
-        //}
     }
 }
