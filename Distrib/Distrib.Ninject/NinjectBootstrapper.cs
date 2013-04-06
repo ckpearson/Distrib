@@ -30,13 +30,13 @@ namespace Distrib.IOC.Ninject
     {
         private IKernel _kernel = null;
 
-        public NinjectBootstrapper() : base(true) { }
+        public NinjectBootstrapper() { }
 
         /// <summary>
         /// Instantiates a new instance
         /// </summary>
         /// <param name="ninjectKernel">The ninject kernel you want distrib to utilise</param>
-        public NinjectBootstrapper(IKernel ninjectKernel)  : base(true)
+        public NinjectBootstrapper(IKernel ninjectKernel)
         {
             _kernel = ninjectKernel;
         }

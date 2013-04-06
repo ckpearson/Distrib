@@ -29,24 +29,12 @@ namespace Distrib.IOC
         private static DistribBootstrapper _currentBootstrapper = null;
         private static object _lock = new object();
 
-        private readonly bool _attemptArgumentMatching = false;
-
         private IReadOnlyList<IOCRegistrar> _registrars;
 
 
         public DistribBootstrapper()
-            : this(true)
         {
 
-        }
-
-        /// <summary>
-        /// Instantiates a new instance
-        /// </summary>
-        /// <param name="attemptArgumentMatching">Whether to attempt automatic argument matching</param>
-        public DistribBootstrapper(bool attemptArgumentMatching)
-        {
-            _attemptArgumentMatching = attemptArgumentMatching;
         }
 
         /// <summary>
@@ -194,11 +182,6 @@ namespace Distrib.IOC
 
             try
             {
-                if (!_attemptArgumentMatching)
-                {
-                    return args;
-                }
-
                 if (args == null)
                 {
                     return args;
