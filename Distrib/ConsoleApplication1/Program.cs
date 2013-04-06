@@ -13,6 +13,7 @@
 	If you wish to contact me about the software / licensing you can reach me at distribgrid@gmail.com
 */
 using Distrib.Communication;
+using Distrib.Data.Transport;
 using Distrib.IOC;
 using Distrib.IOC.Ninject;
 using Distrib.Nodes.Process;
@@ -42,7 +43,40 @@ using System.Xml.Serialization;
 
 namespace ConsoleApplication1
 {
-    
+
+    public sealed class Person
+    {
+        [DataTransportPoint(DataTransportPointDirection.Both, new []
+            {
+                "fname",
+                "firstname",
+                "first name",
+                "forename"
+            })]
+        public string FName { get; set; }
+        public string LName { get; set; }
+    }
+
+    public sealed class Student
+    {
+        [DataTransportPoint(DataTransportPointDirection.Both, new[]
+            {
+                "firstname",
+                "first name",
+                "forename",
+            })]
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+
+        [DataTransportPoint(DataTransportPointDirection.Both, new[]
+            {
+                "lastname",
+                "last name",
+                "surname",
+                "family name",
+            })]
+        public string LastName { get; set; }
+    }
 
     class Program
     {
@@ -52,10 +86,29 @@ namespace ConsoleApplication1
         {
             var p = new Program();
 
+            p.RunDataTransportTest();
 
             //p.NaiveDistribTest();
 
             Console.ReadLine();
+        }
+
+        private void RunDataTransportTest()
+        {
+            var nboot = new NinjectBootstrapper();
+            nboot.Start();
+
+            var svc = nboot.Get<IDataTransportService>();
+
+            var student = new Student()
+            {
+                FirstName = "Clint",
+                LastName = "Pearson",
+            };
+
+            var person = svc.MapLTR(student, new Person());
+
+            var s = "";
         }
 
         public Delegate BuildDynamicAction(ParameterInfo actionParameter, out List<object> valuesList)

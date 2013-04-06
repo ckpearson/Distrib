@@ -36,5 +36,7 @@ namespace ProcessNode.Shared.Services
     public interface IManagedProcessHost
     {
         IProcessHost CoreHost { get; }
+
+        IProcessMetadata Metadata { get; }
     }
 }

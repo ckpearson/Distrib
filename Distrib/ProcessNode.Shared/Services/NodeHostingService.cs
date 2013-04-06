@@ -118,6 +118,12 @@ namespace ProcessNode.Shared.Services
         {
             get { return _host; }
         }
+
+
+        public IProcessMetadata Metadata
+        {
+            get { return _host.Metadata; }
+        }
     }
 
     [Export(typeof(INodeHostingService))]

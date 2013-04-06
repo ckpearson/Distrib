@@ -79,6 +79,15 @@
     <Compile Include="Communication\TcpIncomingCommsLink.cs" />
     <Compile Include="Communication\TcpOutgoingCommsLink.cs" />
     <Compile Include="Communication\XmlCommsMessageReaderWriter.cs" />
+    <Compile Include="Data\Transport\DataTransportIOCRegistrar.cs" />
+    <Compile Include="Data\Transport\DataTransportPoint.cs" />
+    <Compile Include="Data\Transport\DataTransportPointDirection.cs" />
+    <Compile Include="Data\Transport\DataTransportPointFactory.cs" />
+    <Compile Include="Data\Transport\DataTransportService.cs" />
+    <Compile Include="Data\Transport\IDataTransportPointFactory.cs" />
+    <Compile Include="Data\Transport\IDataTransportService.cs" />
+    <Compile Include="Data\Transport\IDataTransportPoint.cs" />
+    <Compile Include="Data\Transport\DataTransportPointAttribute.cs" />
     <Compile Include="IOC\DistribBootstrapper.cs" />
     <Compile Include="IOC\IIOC.cs" />
     <Compile Include="IOC\IOCAttribute.cs" />

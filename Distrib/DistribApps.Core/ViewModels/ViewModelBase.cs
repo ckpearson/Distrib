@@ -30,6 +30,12 @@ namespace DistribApps.Core.ViewModels
             _refreshEnabled = _supportsRefresh;
         }
 
+        protected ViewModelBase()
+            : this(false)
+        {
+
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void PropChanged([CallerMemberName] string property = "")

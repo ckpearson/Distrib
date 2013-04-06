@@ -14,8 +14,14 @@
         </Grid.RowDefinitions>
         
         <GroupBox Header="Hosts" Grid.Row="0">
-            <ListBox ItemsSource="{Binding Node.Hosts}">
-                
+            <ListBox ItemsSource="{Binding Node.Hosts}" HorizontalContentAlignment="Stretch">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <TextBlock Text="{Binding Metadata.Name}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
         </GroupBox>
         

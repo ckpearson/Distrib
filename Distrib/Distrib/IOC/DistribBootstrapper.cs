@@ -265,7 +265,48 @@ namespace Distrib.IOC
                     else
                     {
                         // Look for the argument with the matching type
-                        foundArg = args.SingleOrDefault(arg => arg.Value.GetType().Equals(param.ParameterType));
+                       // foundArg = args.SingleOrDefault(arg => arg.Value.GetType().Equals(param.ParameterType));
+
+                        var foundargs = args.Where(arg => (arg.Value != null ? (arg.Value.GetType()) : typeof(object)).Equals(param.ParameterType)).ToList();
+
+                        if (foundargs == null || foundargs.Count == 0)
+                        {
+                            foundArg = null;
+                        }
+                        else if (foundargs.Count == 1)
+                        {
+                            foundArg = foundargs[0];
+                        }
+                        else if (foundargs.Count > 1)
+                        {
+                            // The ctor param we're on now doesn't have a named argument counterpart
+                            // and when getting IOC arguments with a matching value type multiple matches were found
+                            // this leads to ambiguity in which one is inteded to fulfil this slot
+                            // attempt to resolve by name any of the matches that have names and by process
+                            // of elimination identify the argument that supplies this parameter
+
+                            var withNames = foundargs.Where(arg => !string.IsNullOrEmpty(arg.Name)).ToList();
+
+                            if (withNames.Count == (foundargs.Count - 1))
+                            {
+                                // We've potentially done it, all the other arguments have names except one
+                                // so we can likely assume the one without the name is the one to use in this instance
+                                // given we've had to resolve by type
+
+                                foundArg = foundargs.Single(arg => string.IsNullOrEmpty(arg.Name));
+                            }
+                            else
+                            {
+                                // Unfortunately there really is a clash here, exception time
+
+                                throw new ApplicationException(string.Format(
+                                    "IOC arg matching for service type '{0}' failed because of multiple type matches " +
+                                    "for parameter '{1}'. Consider revising ctor signature to eliminate parameters " +
+                                    "sharing types, or provide names with IOC arguments likely to be ambigious (e.g. object params)",
+                                    serviceType.FullName,
+                                    param.Name));
+                            }
+                        }
 
                         if (foundArg != null)
                         {
@@ -277,7 +318,7 @@ namespace Distrib.IOC
                         {
                             // Look for the argument with an assignable type in the event the parameter
                             // is looking for an interface or a base-type
-                            foundArg = args.SingleOrDefault(arg => param.ParameterType.IsAssignableFrom(arg.Value.GetType()));
+                            foundArg = args.SingleOrDefault(arg => param.ParameterType.IsAssignableFrom(arg.Value != null ? arg.Value.GetType() : typeof(object)));
 
                             if (foundArg != null)
                             {
