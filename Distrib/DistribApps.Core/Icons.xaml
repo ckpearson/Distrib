@@ -1,7 +1,0 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-    <BitmapImage x:Key="refreshIcon" UriSource="Assets/Icons/refresh-icon.png" />
-    <BitmapImage x:Key="settingsIcon" UriSource="Assets/Icons/wheel-icon.png" />
-    <BitmapImage x:Key="homeIcon" UriSource="Assets/Icons/home-icon.png" />
-</ResourceDictionary>
