@@ -213,6 +213,10 @@
     <Compile Include="Separation\SeparateInstanceCreator.cs" />
     <Compile Include="Separation\SeparateInstanceCreatorFactory.cs" />
     <Compile Include="Separation\SerType.cs" />
+    <Compile Include="Storage\IPersist.cs" />
+    <Compile Include="Storage\PersistHelper.cs" />
+    <Compile Include="Storage\PersistRecords.cs" />
+    <Compile Include="Storage\XmlPersistor.cs" />
     <Compile Include="SystemPowerType.cs" />
     <Compile Include="TypePoweredMetadataAttribute.cs" />
     <Compile Include="Utils\AllCChain.cs" />
