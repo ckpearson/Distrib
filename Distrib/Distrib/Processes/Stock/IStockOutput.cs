@@ -20,6 +20,11 @@ using System.Threading.Tasks;
 
 namespace Distrib.Processes.Stock
 {
+    public interface IStockNoOutput
+    {
+
+    }
+
     public interface IStockOutput<T>
     {
         T Output { get; set; }

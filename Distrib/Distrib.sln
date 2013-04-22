@@ -30,9 +30,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{C474F7BB-5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Process Node", "Process Node", "{97C494C2-D5B8-43CE-9C34-A7DDBBA93EA3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{7BA7EED9-880B-4BF2-A83C-7BA444B6B671}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Process Plugins", "Process Plugins", "{3F4ED901-046D-4A2B-A25D-98B9CD9DA66E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Creation", "Creation", "{387BACD4-4F47-4D50-8914-73E9D26CC2A2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Consumption", "Consumption", "{72A7DE5C-BF2E-4480-9078-05D4C063D3D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Distrib.Samples.ProcessPlugins.Creation", "Distrib.Samples.ProcessPlugins.Creation\Distrib.Samples.ProcessPlugins.Creation.csproj", "{FEC28351-C652-461E-B0D7-3AF6F71A1758}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 6
+		SccNumberOfProjects = 7
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
 		SccLocalPath0 = .
@@ -54,6 +64,10 @@ Global
 		SccProjectTopLevelParentUniqueName5 = Distrib.sln
 		SccProjectName5 = MathOperationsProcessLibary
 		SccLocalPath5 = MathOperationsProcessLibary
+		SccProjectUniqueName6 = Distrib.Samples.ProcessPlugins.Creation\\Distrib.Samples.ProcessPlugins.Creation.csproj
+		SccProjectTopLevelParentUniqueName6 = Distrib.sln
+		SccProjectName6 = Distrib.Samples.ProcessPlugins.Creation
+		SccLocalPath6 = Distrib.Samples.ProcessPlugins.Creation
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +94,10 @@ Global
 		{B88DE181-F28C-4D22-B9D6-80091C36BB17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B88DE181-F28C-4D22-B9D6-80091C36BB17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B88DE181-F28C-4D22-B9D6-80091C36BB17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEC28351-C652-461E-B0D7-3AF6F71A1758}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEC28351-C652-461E-B0D7-3AF6F71A1758}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEC28351-C652-461E-B0D7-3AF6F71A1758}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEC28351-C652-461E-B0D7-3AF6F71A1758}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,5 +109,9 @@ Global
 		{55D1064B-F22E-4862-BE0A-36ECE03D1420} = {202BE6B1-C0C3-4714-B2CB-0E8D39D21B55}
 		{B98BDBEA-E613-4A9A-BA02-69C24067FD70} = {0827C3F1-DBC8-49D5-8D51-60B78434B930}
 		{B88DE181-F28C-4D22-B9D6-80091C36BB17} = {B98BDBEA-E613-4A9A-BA02-69C24067FD70}
+		{3F4ED901-046D-4A2B-A25D-98B9CD9DA66E} = {7BA7EED9-880B-4BF2-A83C-7BA444B6B671}
+		{387BACD4-4F47-4D50-8914-73E9D26CC2A2} = {3F4ED901-046D-4A2B-A25D-98B9CD9DA66E}
+		{72A7DE5C-BF2E-4480-9078-05D4C063D3D1} = {3F4ED901-046D-4A2B-A25D-98B9CD9DA66E}
+		{FEC28351-C652-461E-B0D7-3AF6F71A1758} = {387BACD4-4F47-4D50-8914-73E9D26CC2A2}
 	EndGlobalSection
 EndGlobal
