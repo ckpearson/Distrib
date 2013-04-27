@@ -40,9 +40,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Consumption", "Consumption"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Distrib.Samples.ProcessPlugins.Creation", "Distrib.Samples.ProcessPlugins.Creation\Distrib.Samples.ProcessPlugins.Creation.csproj", "{FEC28351-C652-461E-B0D7-3AF6F71A1758}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Remote Processing", "Remote Processing", "{3D852452-5650-4532-AA05-A911FDBDB100}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleProcessNode", "SimpleProcessNode\SimpleProcessNode.csproj", "{70A6AF96-D558-4D5F-B1AE-6522BDFF9CC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteProcessing.Shared", "RemoteProcessing.Shared\RemoteProcessing.Shared.csproj", "{5CE19F80-FE02-40D7-8214-BAA7802CA41C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleProcessClient", "SimpleProcessClient\SimpleProcessClient.csproj", "{719251C0-6E20-4ACF-887B-071526196C8C}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 10
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
 		SccLocalPath0 = .
@@ -68,6 +76,18 @@ Global
 		SccProjectTopLevelParentUniqueName6 = Distrib.sln
 		SccProjectName6 = Distrib.Samples.ProcessPlugins.Creation
 		SccLocalPath6 = Distrib.Samples.ProcessPlugins.Creation
+		SccProjectUniqueName7 = SimpleProcessNode\\SimpleProcessNode.csproj
+		SccProjectTopLevelParentUniqueName7 = Distrib.sln
+		SccProjectName7 = SimpleProcessNode
+		SccLocalPath7 = SimpleProcessNode
+		SccProjectUniqueName8 = RemoteProcessing.Shared\\RemoteProcessing.Shared.csproj
+		SccProjectTopLevelParentUniqueName8 = Distrib.sln
+		SccProjectName8 = RemoteProcessing.Shared
+		SccLocalPath8 = RemoteProcessing.Shared
+		SccProjectUniqueName9 = SimpleProcessClient\\SimpleProcessClient.csproj
+		SccProjectTopLevelParentUniqueName9 = Distrib.sln
+		SccProjectName9 = SimpleProcessClient
+		SccLocalPath9 = SimpleProcessClient
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -98,6 +118,18 @@ Global
 		{FEC28351-C652-461E-B0D7-3AF6F71A1758}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEC28351-C652-461E-B0D7-3AF6F71A1758}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEC28351-C652-461E-B0D7-3AF6F71A1758}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70A6AF96-D558-4D5F-B1AE-6522BDFF9CC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70A6AF96-D558-4D5F-B1AE-6522BDFF9CC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70A6AF96-D558-4D5F-B1AE-6522BDFF9CC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70A6AF96-D558-4D5F-B1AE-6522BDFF9CC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CE19F80-FE02-40D7-8214-BAA7802CA41C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CE19F80-FE02-40D7-8214-BAA7802CA41C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CE19F80-FE02-40D7-8214-BAA7802CA41C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CE19F80-FE02-40D7-8214-BAA7802CA41C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{719251C0-6E20-4ACF-887B-071526196C8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{719251C0-6E20-4ACF-887B-071526196C8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{719251C0-6E20-4ACF-887B-071526196C8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{719251C0-6E20-4ACF-887B-071526196C8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,8 +142,12 @@ Global
 		{B98BDBEA-E613-4A9A-BA02-69C24067FD70} = {0827C3F1-DBC8-49D5-8D51-60B78434B930}
 		{B88DE181-F28C-4D22-B9D6-80091C36BB17} = {B98BDBEA-E613-4A9A-BA02-69C24067FD70}
 		{3F4ED901-046D-4A2B-A25D-98B9CD9DA66E} = {7BA7EED9-880B-4BF2-A83C-7BA444B6B671}
+		{3D852452-5650-4532-AA05-A911FDBDB100} = {7BA7EED9-880B-4BF2-A83C-7BA444B6B671}
 		{387BACD4-4F47-4D50-8914-73E9D26CC2A2} = {3F4ED901-046D-4A2B-A25D-98B9CD9DA66E}
 		{72A7DE5C-BF2E-4480-9078-05D4C063D3D1} = {3F4ED901-046D-4A2B-A25D-98B9CD9DA66E}
 		{FEC28351-C652-461E-B0D7-3AF6F71A1758} = {387BACD4-4F47-4D50-8914-73E9D26CC2A2}
+		{70A6AF96-D558-4D5F-B1AE-6522BDFF9CC6} = {3D852452-5650-4532-AA05-A911FDBDB100}
+		{5CE19F80-FE02-40D7-8214-BAA7802CA41C} = {3D852452-5650-4532-AA05-A911FDBDB100}
+		{719251C0-6E20-4ACF-887B-071526196C8C} = {3D852452-5650-4532-AA05-A911FDBDB100}
 	EndGlobalSection
 EndGlobal

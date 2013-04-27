@@ -1,4 +1,6 @@
-﻿using Distrib.Plugins;
+﻿#define JOB_CONFIG // Toggle to see the effects of having config against jobs
+
+using Distrib.Plugins;
 using Distrib.Processes;
 using Distrib.Processes.PluginPowered;
 using Distrib.Processes.Stock;
@@ -125,6 +127,11 @@ namespace Distrib.Samples.ProcessPlugins.Creation
                     _addDef = new ProcessJobDefinition<IStockInput<int, int>, IStockOutput<int>>(
                         "Add",
                         "Adds two integers");
+
+#if  JOB_CONFIG
+                    _addDef.ConfigInput(i => i.FirstInput).DisplayName = "x";
+                    _addDef.ConfigInput(i => i.SecondInput).DisplayName = "y";
+#endif
                 }
 
                 return _addDef;
@@ -140,7 +147,13 @@ namespace Distrib.Samples.ProcessPlugins.Creation
                     _subDef = new ProcessJobDefinition<IStockInput<int, int>, IStockOutput<int>>(
                         "Subtract",
                         "Subtracts two integers");
+
+#if JOB_CONFIG
+                    _subDef.ConfigInput(i => i.FirstInput).DisplayName = "x";
+                    _subDef.ConfigInput(i => i.SecondInput).DisplayName = "y";
+#endif
                 }
+
 
                 return _subDef;
             }
@@ -155,6 +168,11 @@ namespace Distrib.Samples.ProcessPlugins.Creation
                     _mulDef = new ProcessJobDefinition<IStockInput<int, int>, IStockOutput<int>>(
                         "Multiply",
                         "Multiplies two integers");
+
+#if  JOB_CONFIG
+                    _mulDef.ConfigInput(i => i.FirstInput).DisplayName = "x";
+                    _mulDef.ConfigInput(i => i.SecondInput).DisplayName = "y";
+#endif
                 }
 
                 return _mulDef;
@@ -171,6 +189,10 @@ namespace Distrib.Samples.ProcessPlugins.Creation
                         "Divide",
                         "Divides two integers");
 
+#if JOB_CONFIG
+                    _divDef.ConfigInput(i => i.FirstInput).DisplayName = "x";
+                    _divDef.ConfigInput(i => i.SecondInput).DisplayName = "y";
+#endif
                     
                 }
 

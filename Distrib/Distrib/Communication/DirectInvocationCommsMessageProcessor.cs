@@ -140,7 +140,7 @@ namespace Distrib.Communication
 
                         var interfaces = typ.GetInterfaces();
 
-                        if (interfaces != null && interfaces.Length > 1)
+                        if (interfaces != null && interfaces.Length > 0)
                         {
                             var methNames =
                                 interfaces.Where(i => i.GetMethod(msg.MethodName) != null)
