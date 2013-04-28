@@ -102,8 +102,23 @@ namespace Distrib.Communication
                     sw.AutoFlush = true;
 
                     var incoming = _readerWriter.Read(sr.ReadLine());
-                    sw.WriteLine(_readerWriter.Write(_messageProcessor.ProcessMessage(_invokeTarget, incoming)));
-
+                    //sw.WriteLine(_readerWriter.Write(_messageProcessor.ProcessMessage(_invokeTarget, incoming)));
+                    try
+                    {
+                        sw.WriteLine(_readerWriter.Write(_messageProcessor.ProcessMessage(_invokeTarget, incoming)));
+                    }
+                    catch (Exception ex)
+                    {
+                        if (_server != null && _server.IsConnected)
+                        {
+                            try
+                            {
+                                sw.WriteLine(_readerWriter.Write(new ExceptionCommsMessage(incoming, ex)));
+                            }
+                            catch { }
+                        }
+                        throw new ApplicationException("Failed to write processed response", ex);
+                    }
                     _server.WaitForPipeDrain();
                     _server.Disconnect();
 

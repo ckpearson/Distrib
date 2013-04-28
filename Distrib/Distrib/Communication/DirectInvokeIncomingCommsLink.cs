@@ -50,7 +50,14 @@ namespace Distrib.Communication
                     throw new InvalidOperationException("Direct incoming link received a message but isn't listening");
                 }
 
-                return _processor.ProcessMessage(_target, msg); 
+                try
+                {
+                    return _processor.ProcessMessage(_target, msg);
+                }
+                catch (Exception ex)
+                {
+                    return new ExceptionCommsMessage(msg, ex);
+                }
             }
         }
 

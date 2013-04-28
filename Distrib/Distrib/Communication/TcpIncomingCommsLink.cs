@@ -127,7 +127,22 @@ namespace Distrib.Communication
                     sw.AutoFlush = true;
 
                     var incomingMsg = _readerWriter.Read(sr.ReadLine());
-                    sw.WriteLine(_readerWriter.Write(_messageProcessor.ProcessMessage(_invokeTarget, incomingMsg)));
+                    try
+                    {
+                        sw.WriteLine(_readerWriter.Write(_messageProcessor.ProcessMessage(_invokeTarget, incomingMsg)));
+                    }
+                    catch (Exception ex)
+                    {
+                        if (client != null && client.Connected)
+                        {
+                            try
+                            {
+                                sw.WriteLine(_readerWriter.Write(new ExceptionCommsMessage(incomingMsg, ex)));
+                            }
+                            catch { }
+                        }
+                        throw new ApplicationException("Failed to write processed response", ex);
+                    }
 
                     client.Close();
                     _listener.AcceptTcpClientAsync()
